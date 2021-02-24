@@ -216,12 +216,18 @@ class ApiTests(unittest.TestCase):
         expected += r'\{"query": SQL query\}\.'
         self.assertRegex(result, expected)
 
-    def test_search_bad_json(self):
+    def test_search_bad_query(self):
         query = {'foo': 'bar'}
         query = json.dumps(query)
         result = self.client.post('/api/search', json=query).json['message']
         expected = 'Please supply valid search params in the form '
         expected += r'\{"query": SQL query\}\.'
+        self.assertRegex(result, expected)
+
+    def test_search_bad_json(self):
+        query = 'some bad json'
+        result = self.client.post('/api/search', json=query).json['error']
+        expected = 'JSONDecodeError'
         self.assertRegex(result, expected)
 
     def test_search_bad_query(self):
