@@ -1,0 +1,538 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>shekels.core.config &mdash; shekels  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> shekels
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../enforce.html">enforce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">shekels</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>shekels.core.config</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for shekels.core.config</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span> <span class="nn">schematics.types</span> <span class="k">as</span> <span class="nn">sty</span>
+<span class="kn">from</span> <span class="nn">schematics.models</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">CompoundError</span><span class="p">,</span> <span class="n">DataError</span><span class="p">,</span> <span class="n">ValidationError</span>
+
+
+<span class="c1"># VALIDATORS--------------------------------------------------------------------</span>
+<span class="n">COLOR_SCHEME</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">dark1</span><span class="o">=</span><span class="s1">&#39;#040404&#39;</span><span class="p">,</span>
+    <span class="n">dark2</span><span class="o">=</span><span class="s1">&#39;#141414&#39;</span><span class="p">,</span>
+    <span class="n">bg</span><span class="o">=</span><span class="s1">&#39;#181818&#39;</span><span class="p">,</span>
+    <span class="n">grey1</span><span class="o">=</span><span class="s1">&#39;#242424&#39;</span><span class="p">,</span>
+    <span class="n">grey2</span><span class="o">=</span><span class="s1">&#39;#444444&#39;</span><span class="p">,</span>
+    <span class="n">light1</span><span class="o">=</span><span class="s1">&#39;#A4A4A4&#39;</span><span class="p">,</span>
+    <span class="n">light2</span><span class="o">=</span><span class="s1">&#39;#F4F4F4&#39;</span><span class="p">,</span>
+    <span class="n">dialog1</span><span class="o">=</span><span class="s1">&#39;#444459&#39;</span><span class="p">,</span>
+    <span class="n">dialog2</span><span class="o">=</span><span class="s1">&#39;#5D5D7A&#39;</span><span class="p">,</span>
+    <span class="n">red1</span><span class="o">=</span><span class="s1">&#39;#F77E70&#39;</span><span class="p">,</span>
+    <span class="n">red2</span><span class="o">=</span><span class="s1">&#39;#DE958E&#39;</span><span class="p">,</span>
+    <span class="n">orange1</span><span class="o">=</span><span class="s1">&#39;#EB9E58&#39;</span><span class="p">,</span>
+    <span class="n">orange2</span><span class="o">=</span><span class="s1">&#39;#EBB483&#39;</span><span class="p">,</span>
+    <span class="n">yellow1</span><span class="o">=</span><span class="s1">&#39;#E8EA7E&#39;</span><span class="p">,</span>
+    <span class="n">yellow2</span><span class="o">=</span><span class="s1">&#39;#E9EABE&#39;</span><span class="p">,</span>
+    <span class="n">green1</span><span class="o">=</span><span class="s1">&#39;#8BD155&#39;</span><span class="p">,</span>
+    <span class="n">green2</span><span class="o">=</span><span class="s1">&#39;#A0D17B&#39;</span><span class="p">,</span>
+    <span class="n">cyan1</span><span class="o">=</span><span class="s1">&#39;#7EC4CF&#39;</span><span class="p">,</span>
+    <span class="n">cyan2</span><span class="o">=</span><span class="s1">&#39;#B6ECF3&#39;</span><span class="p">,</span>
+    <span class="n">blue1</span><span class="o">=</span><span class="s1">&#39;#5F95DE&#39;</span><span class="p">,</span>
+    <span class="n">blue2</span><span class="o">=</span><span class="s1">&#39;#93B6E6&#39;</span><span class="p">,</span>
+    <span class="n">purple1</span><span class="o">=</span><span class="s1">&#39;#C98FDE&#39;</span><span class="p">,</span>
+    <span class="n">purple2</span><span class="o">=</span><span class="s1">&#39;#AC92DE&#39;</span><span class="p">,</span>
+<span class="p">)</span>  <span class="c1"># type: Dict[str, str]</span>
+
+
+<div class="viewcode-block" id="is_color_scheme"><a class="viewcode-back" href="../../../core.html#shekels.core.config.is_color_scheme">[docs]</a><span class="k">def</span> <span class="nf">is_color_scheme</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="c1"># type: (dict) -&gt; None</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Determines if given dict is a valid color scheme.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        item (dict): Color scheme dictionary.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If item contains invalid keys.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">COLOR_SCHEME</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">ikeys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="n">diff</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">ikeys</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>  <span class="c1"># type: Any</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">diff</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Invalid color scheme keys: </span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s1">.&#39;</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_csv"><a class="viewcode-back" href="../../../core.html#shekels.core.config.is_csv">[docs]</a><span class="k">def</span> <span class="nf">is_csv</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+    <span class="c1"># type: (Union[str, Path]) -&gt; None</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Determines if given filepath is a CSV.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filepath (str or Path): Filepath.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If filepath is not a CSV.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+    <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filepath</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="ow">or</span> <span class="n">ext</span> <span class="o">!=</span> <span class="s1">&#39;csv&#39;</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s1"> is not a valid CSV file.&#39;</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_comparator"><a class="viewcode-back" href="../../../core.html#shekels.core.config.is_comparator">[docs]</a><span class="k">def</span> <span class="nf">is_comparator</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="c1"># type: (str) -&gt; None</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Ensures that given string is a legal comparator.</span>
+
+<span class="sd">    Legal comparators:</span>
+
+<span class="sd">        * ==</span>
+<span class="sd">        * !=</span>
+<span class="sd">        * &gt;</span>
+<span class="sd">        * &gt;=</span>
+<span class="sd">        * &lt;</span>
+<span class="sd">        * =&lt;</span>
+<span class="sd">        * ~</span>
+<span class="sd">        * !~</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        item (str): String to be tested.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If item is not a legal comparator.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">comps</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;==&#39;</span><span class="p">,</span> <span class="s1">&#39;!=&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;&#39;</span><span class="p">,</span> <span class="s1">&#39;=&lt;&#39;</span><span class="p">,</span> <span class="s1">&#39;~&#39;</span><span class="p">,</span> <span class="s1">&#39;!~&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">comps</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s1"> is not a legal comparator. Legal comparators: </span><span class="si">{</span><span class="n">comps</span><span class="si">}</span><span class="s1">.&#39;</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_metric"><a class="viewcode-back" href="../../../core.html#shekels.core.config.is_metric">[docs]</a><span class="k">def</span> <span class="nf">is_metric</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="c1"># type: (str) -&gt; None</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Ensures that given string is a legal metric.</span>
+
+<span class="sd">    Legal metrics:</span>
+
+<span class="sd">        * max</span>
+<span class="sd">        * mean</span>
+<span class="sd">        * min</span>
+<span class="sd">        * std</span>
+<span class="sd">        * sum</span>
+<span class="sd">        * var</span>
+<span class="sd">        * count</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        item (str): String to be tested.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If item is not a legal metric.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;std&#39;</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="s1">&#39;var&#39;</span><span class="p">,</span> <span class="s1">&#39;count&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s1"> is not a legal metric. Legal metrics: </span><span class="si">{</span><span class="n">metrics</span><span class="si">}</span><span class="s1">.&#39;</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_plot_kind"><a class="viewcode-back" href="../../../core.html#shekels.core.config.is_plot_kind">[docs]</a><span class="k">def</span> <span class="nf">is_plot_kind</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Ensures item is a kind of plotly plot.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        item (str): Kind of plot.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If item is a plot kind.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">kinds</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;area&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="s1">&#39;barh&#39;</span><span class="p">,</span> <span class="s1">&#39;line&#39;</span> <span class="s1">&#39;lines&#39;</span><span class="p">,</span> <span class="s1">&#39;ratio&#39;</span><span class="p">,</span> <span class="s1">&#39;scatter&#39;</span><span class="p">,</span> <span class="s1">&#39;spread&#39;</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s1"> is not a legal plot kind. Legal kinds: </span><span class="si">{</span><span class="n">kinds</span><span class="si">}</span><span class="s1">.&#39;</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_percentage"><a class="viewcode-back" href="../../../core.html#shekels.core.config.is_percentage">[docs]</a><span class="k">def</span> <span class="nf">is_percentage</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Ensures number is between 0 and 100.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        number (float): Number to be tested.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If number is not between 0 and 100.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">number</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">number</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">number</span><span class="si">}</span><span class="s1"> is not a legal percentage. &#39;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">number</span><span class="si">}</span><span class="s1"> is not between 0 and 100.&#39;</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<span class="c1"># SCHEMATICS--------------------------------------------------------------------</span>
+<div class="viewcode-block" id="FilterAction"><a class="viewcode-back" href="../../../core.html#shekels.core.config.FilterAction">[docs]</a><span class="k">class</span> <span class="nc">FilterAction</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Schematic for filter actions.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        column (str): Column name.</span>
+<span class="sd">        comparator (str): String representation of comparator.</span>
+<span class="sd">        value (object): Value to be compared.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">column</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">comparator</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">is_comparator</span><span class="p">])</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">BaseType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GroupAction"><a class="viewcode-back" href="../../../core.html#shekels.core.config.GroupAction">[docs]</a><span class="k">class</span> <span class="nc">GroupAction</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Schematic for group actions.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        columns (str or list[str]): Columns to group data by.</span>
+<span class="sd">        metric (str): Aggregation metric.</span>
+<span class="sd">        datetime_column (str, optinal): Datetime column for time grouping.</span>
+<span class="sd">            Default: date.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">ListType</span><span class="p">(</span><span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">metric</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">is_metric</span><span class="p">])</span>
+    <span class="n">datetime_column</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PivotAction"><a class="viewcode-back" href="../../../core.html#shekels.core.config.PivotAction">[docs]</a><span class="k">class</span> <span class="nc">PivotAction</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Schematic for group actions.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        columns (list[str]): Columns whose unique values become separate traces</span>
+<span class="sd">            within a plot.</span>
+<span class="sd">        values (list[str], optional): Columns whose values become the values</span>
+<span class="sd">            within each trace of a plot. Default: [].</span>
+<span class="sd">        index (str, optional): Column whose values become the y axis values of a</span>
+<span class="sd">            plot. Default: None.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">ListType</span><span class="p">(</span><span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">ListType</span><span class="p">(</span><span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ConformAction"><a class="viewcode-back" href="../../../core.html#shekels.core.config.ConformAction">[docs]</a><span class="k">class</span> <span class="nc">ConformAction</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Schematic for conform actions.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        action (str): Must be &#39;overwrite&#39; or &#39;substitute&#39;.</span>
+<span class="sd">        source_column (str): Source column to be matched.</span>
+<span class="sd">        target_column (str): Target column to be overwritten.</span>
+<span class="sd">        mapping (dict): Mapping of matched key in source column with replacement</span>
+<span class="sd">            value in target column.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;overwrite&#39;</span><span class="p">,</span> <span class="s1">&#39;substitute&#39;</span><span class="p">])</span>
+    <span class="n">source_column</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">target_column</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">DictType</span><span class="p">(</span>
+        <span class="n">sty</span><span class="o">.</span><span class="n">UnionType</span><span class="p">(</span>
+            <span class="n">types</span><span class="o">=</span><span class="p">[</span><span class="n">sty</span><span class="o">.</span><span class="n">FloatType</span><span class="p">,</span> <span class="n">sty</span><span class="o">.</span><span class="n">IntType</span><span class="p">,</span> <span class="n">sty</span><span class="o">.</span><span class="n">BooleanType</span><span class="p">,</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">]</span>
+        <span class="p">),</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="ConformAction.validate"><a class="viewcode-back" href="../../../core.html#shekels.core.config.ConformAction.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Validates the state of the model. If the data is invalid, raises a</span>
+<span class="sd">        DataError with error messages. Also, performs a stricter validation on</span>
+<span class="sd">        mapping if action is substitute.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            partial (bool, optional): Allow partial data to validate.</span>
+<span class="sd">                Essentially drops the required=True settings from field</span>
+<span class="sd">                definitions. Default: False.</span>
+<span class="sd">            convert (bool, optional): Controls whether to perform import</span>
+<span class="sd">                conversion before validating. Can be turned off to skip an</span>
+<span class="sd">                unnecessary conversion step if all values are known to have the</span>
+<span class="sd">                right datatypes (e.g., when validating immediately after the</span>
+<span class="sd">                initial import). Default: True.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            DataError: If data is invalid.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s1">&#39;substitute&#39;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">sty</span><span class="o">.</span><span class="n">DictType</span><span class="p">(</span><span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>\
+                    <span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">CompoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">DataError</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">to_primitive</span><span class="p">())</span></div></div>
+
+
+<div class="viewcode-block" id="FigureItem"><a class="viewcode-back" href="../../../core.html#shekels.core.config.FigureItem">[docs]</a><span class="k">class</span> <span class="nc">FigureItem</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Schematic for a plot figure.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        kind (str): Type of plot. Default: bar.</span>
+<span class="sd">        color_scheme (dict[str, str]): Color scheme for plot.</span>
+<span class="sd">            Default: {&#39;grey1&#39;: &#39;#181818&#39;, &#39;bg&#39;: &#39;#242424&#39;}.</span>
+<span class="sd">        x_axis (str): Column to use as x axis: Default: None.</span>
+<span class="sd">        y_axis (str): Column to use as y axis: Default: None.</span>
+<span class="sd">        title (str): Title of plot. Default: None.</span>
+<span class="sd">        x_title (str): Title of plot x axis. Default: None.</span>
+<span class="sd">        y_title (str): Title of plot y axis. Default: None.</span>
+<span class="sd">        bins (int): Number of bins if histogram. Default: 50.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">kind</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">is_plot_kind</span><span class="p">])</span>
+    <span class="n">color_scheme</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">DictType</span><span class="p">(</span>
+        <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(),</span> <span class="n">default</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">grey1</span><span class="o">=</span><span class="s1">&#39;#181818&#39;</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="s1">&#39;#242424&#39;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">x_axis</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">y_axis</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">x_title</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">y_title</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">bins</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">IntType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PlotItem"><a class="viewcode-back" href="../../../core.html#shekels.core.config.PlotItem">[docs]</a><span class="k">class</span> <span class="nc">PlotItem</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Schematic for a plot.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        filters (list[dict]): How data is filtered. Default: [].</span>
+<span class="sd">        group (dict): How data is grouped. Default: {}.</span>
+<span class="sd">        pivot (dict): How data is pivoted. Default: {}.</span>
+<span class="sd">        figure (dict): Plot figure details. Default: {}.</span>
+<span class="sd">        min_width (float): Minimum width of plot. Default: 0.25.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">filters</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">ListType</span><span class="p">(</span><span class="n">sty</span><span class="o">.</span><span class="n">ModelType</span><span class="p">(</span><span class="n">FilterAction</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>
+    <span class="n">group</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">ModelType</span><span class="p">(</span><span class="n">GroupAction</span><span class="p">)</span>
+    <span class="n">pivot</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">ModelType</span><span class="p">(</span><span class="n">PivotAction</span><span class="p">)</span>
+    <span class="n">figure</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">ModelType</span><span class="p">(</span><span class="n">FigureItem</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">{})</span>
+    <span class="n">min_width</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">FloatType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">is_percentage</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="Config"><a class="viewcode-back" href="../../../core.html#shekels.core.config.Config">[docs]</a><span class="k">class</span> <span class="nc">Config</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Configuration of database.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        data_path (str): Path to CSV file.</span>
+<span class="sd">        font_family (str): Font family.</span>
+<span class="sd">        color_scheme (dict): Color scheme.</span>
+<span class="sd">        conform (lit[dict]): List of conform actions.</span>
+<span class="sd">        plots (list[dict]): List of plots.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">data_path</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">is_csv</span><span class="p">])</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">ListType</span><span class="p">(</span><span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>
+    <span class="n">font_family</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;sans-serif, &quot;sans serif&quot;&#39;</span><span class="p">)</span>
+    <span class="n">color_scheme</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">DictType</span><span class="p">(</span>
+        <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(),</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">is_color_scheme</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="n">COLOR_SCHEME</span>
+    <span class="p">)</span>
+    <span class="n">conform</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">ListType</span><span class="p">(</span><span class="n">sty</span><span class="o">.</span><span class="n">ModelType</span><span class="p">(</span><span class="n">ConformAction</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>
+    <span class="n">plots</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">ListType</span><span class="p">(</span><span class="n">sty</span><span class="o">.</span><span class="n">ModelType</span><span class="p">(</span><span class="n">PlotItem</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Alex Braun &lt;TheNewFlesh@github.com&gt;.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

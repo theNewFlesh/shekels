@@ -1,0 +1,693 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>shekels.server.components &mdash; shekels  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> shekels
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../enforce.html">enforce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">shekels</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>shekels.server.components</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for shekels.server.components</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">lunchbox.enforce</span> <span class="kn">import</span> <span class="n">Enforce</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">DatetimeIndex</span>
+<span class="kn">import</span> <span class="nn">dash</span>
+<span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="nn">dcc</span>
+<span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="k">as</span> <span class="nn">html</span>
+<span class="kn">import</span> <span class="nn">dash_table</span>
+<span class="kn">import</span> <span class="nn">flask</span>
+<span class="kn">import</span> <span class="nn">rolling_pin.blob_etl</span> <span class="k">as</span> <span class="nn">blob_etl</span>
+
+<span class="kn">import</span> <span class="nn">shekels.core.config</span> <span class="k">as</span> <span class="nn">cfg</span>
+<span class="kn">import</span> <span class="nn">shekels.core.data_tools</span> <span class="k">as</span> <span class="nn">sdt</span>
+
+
+<span class="c1"># APP---------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="get_dash_app"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_dash_app">[docs]</a><span class="k">def</span> <span class="nf">get_dash_app</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">storage_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">):</span>
+    <span class="c1"># type: (flask.Flask, str) -&gt; dash.Dash</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Generate Dash Flask app instance.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        server (Flask): Flask instance.</span>
+<span class="sd">        storage_type (str): Storage type (used for testing). Default: memory.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dash: Dash app instance.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">store</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="n">storage_type</span><span class="o">=</span><span class="n">storage_type</span><span class="p">)</span>
+
+    <span class="n">tab_style</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;padding&#39;</span><span class="p">:</span> <span class="s1">&#39;4px&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;border&#39;</span><span class="p">:</span> <span class="s1">&#39;0px&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;min-width&#39;</span><span class="p">:</span> <span class="s1">&#39;200px&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">tab_selected_style</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;padding&#39;</span><span class="p">:</span> <span class="s1">&#39;4px&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;border&#39;</span><span class="p">:</span> <span class="s1">&#39;0px&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">tabs</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Tabs</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;tabs&#39;</span><span class="p">,</span>
+        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;tabs&#39;</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="s1">&#39;plots&#39;</span><span class="p">,</span>
+        <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">dcc</span><span class="o">.</span><span class="n">Tab</span><span class="p">(</span>
+                <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;logo&#39;</span><span class="p">,</span>
+                <span class="n">className</span><span class="o">=</span><span class="s1">&#39;tab&#39;</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$HEKELS&#39;</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+                <span class="n">disabled_style</span><span class="o">=</span><span class="n">tab_style</span><span class="p">,</span>
+                <span class="n">disabled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">dcc</span><span class="o">.</span><span class="n">Tab</span><span class="p">(</span>
+                <span class="n">className</span><span class="o">=</span><span class="s1">&#39;tab&#39;</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;plots&#39;</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="s1">&#39;plots&#39;</span><span class="p">,</span>
+                <span class="n">style</span><span class="o">=</span><span class="n">tab_style</span><span class="p">,</span>
+                <span class="n">selected_style</span><span class="o">=</span><span class="n">tab_selected_style</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">dcc</span><span class="o">.</span><span class="n">Tab</span><span class="p">(</span>
+                <span class="n">className</span><span class="o">=</span><span class="s1">&#39;tab&#39;</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span>
+                <span class="n">style</span><span class="o">=</span><span class="n">tab_style</span><span class="p">,</span>
+                <span class="n">selected_style</span><span class="o">=</span><span class="n">tab_selected_style</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">dcc</span><span class="o">.</span><span class="n">Tab</span><span class="p">(</span>
+                <span class="n">className</span><span class="o">=</span><span class="s1">&#39;tab&#39;</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span>
+                <span class="n">style</span><span class="o">=</span><span class="n">tab_style</span><span class="p">,</span>
+                <span class="n">selected_style</span><span class="o">=</span><span class="n">tab_selected_style</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">dcc</span><span class="o">.</span><span class="n">Tab</span><span class="p">(</span>
+                <span class="n">className</span><span class="o">=</span><span class="s1">&#39;tab&#39;</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;api&#39;</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="s1">&#39;api&#39;</span><span class="p">,</span>
+                <span class="n">style</span><span class="o">=</span><span class="n">tab_style</span><span class="p">,</span>
+                <span class="n">selected_style</span><span class="o">=</span><span class="n">tab_selected_style</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">dcc</span><span class="o">.</span><span class="n">Tab</span><span class="p">(</span>
+                <span class="n">className</span><span class="o">=</span><span class="s1">&#39;tab&#39;</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;docs&#39;</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="s1">&#39;docs&#39;</span><span class="p">,</span>
+                <span class="n">style</span><span class="o">=</span><span class="n">tab_style</span><span class="p">,</span>
+                <span class="n">selected_style</span><span class="o">=</span><span class="n">tab_selected_style</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;content&#39;</span><span class="p">)</span>
+
+    <span class="n">app</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">Dash</span><span class="p">(</span>
+        <span class="vm">__name__</span><span class="p">,</span>
+        <span class="n">server</span><span class="o">=</span><span class="n">server</span><span class="p">,</span>
+        <span class="n">external_stylesheets</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;http://0.0.0.0:5014/static/style.css&#39;</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;layout&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">store</span><span class="p">,</span> <span class="n">tabs</span><span class="p">,</span> <span class="n">content</span><span class="p">])</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;suppress_callback_exceptions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="n">app</span></div>
+
+
+<span class="c1"># TABS--------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="get_data_tab"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_data_tab">[docs]</a><span class="k">def</span> <span class="nf">get_data_tab</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># type: (Optional[str]) -&gt; List</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Get tab element for Shekels data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        query (str, optional): Query string. Default: None.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        list: List of elements for data tab.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># dummies must go first for element props behavior to work</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;lower-content&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;table-content&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;col&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[])</span>
+    <span class="p">])</span>
+    <span class="k">return</span> <span class="p">[</span><span class="o">*</span><span class="n">get_dummy_elements</span><span class="p">(),</span> <span class="n">get_searchbar</span><span class="p">(</span><span class="n">query</span><span class="p">),</span> <span class="n">content</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_plots_tab"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_plots_tab">[docs]</a><span class="k">def</span> <span class="nf">get_plots_tab</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># type: (Optional[str]) -&gt; List</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Get tab element for Shekels plots.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        query (str, optional): Query string. Default: None.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        list: List of elements for plots tab.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># dummies must go first for element props behavior to work</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;lower-content&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;plots-content&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;col&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[])</span>
+    <span class="p">])</span>
+    <span class="k">return</span> <span class="p">[</span><span class="o">*</span><span class="n">get_dummy_elements</span><span class="p">(),</span> <span class="n">get_searchbar</span><span class="p">(</span><span class="n">query</span><span class="p">),</span> <span class="n">content</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_config_tab"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_config_tab">[docs]</a><span class="k">def</span> <span class="nf">get_config_tab</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="c1"># type: (Dict) -&gt; List</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Get tab element for Shekels config.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config (dict): Configuration to be displayed.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        list: List of elements for config tab.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># dummies must go first for element props behavior to work</span>
+    <span class="k">return</span> <span class="p">[</span><span class="o">*</span><span class="n">get_dummy_elements</span><span class="p">(),</span> <span class="n">get_configbar</span><span class="p">(</span><span class="n">config</span><span class="p">)]</span></div>
+
+
+<span class="c1"># MENUBARS----------------------------------------------------------------------</span>
+<div class="viewcode-block" id="get_searchbar"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_searchbar">[docs]</a><span class="k">def</span> <span class="nf">get_searchbar</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># type: (Optional[str]) -&gt; html.Div</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Get a row of elements used for querying Shekels data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        query (str, optional): Query string. Default: None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Div: Div with query field and buttons.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">query</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;SELECT * FROM data&#39;</span>
+
+    <span class="n">spacer</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;col spacer&#39;</span><span class="p">)</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;query&#39;</span><span class="p">,</span>
+        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;col query&#39;</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="n">query</span><span class="p">,</span>
+        <span class="n">placeholder</span><span class="o">=</span><span class="s1">&#39;SQL query that uses &quot;FROM data&quot;&#39;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;text&#39;</span><span class="p">,</span>
+        <span class="n">autoFocus</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">debounce</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="n">search</span> <span class="o">=</span> <span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;search&#39;</span><span class="p">)</span>
+    <span class="n">init</span> <span class="o">=</span> <span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+    <span class="n">update</span> <span class="o">=</span> <span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">)</span>
+
+    <span class="n">row</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">,</span>
+        <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">query</span><span class="p">,</span>
+            <span class="n">spacer</span><span class="p">,</span>
+            <span class="n">search</span><span class="p">,</span>
+            <span class="n">spacer</span><span class="p">,</span>
+            <span class="n">init</span><span class="p">,</span>
+            <span class="n">spacer</span><span class="p">,</span>
+            <span class="n">update</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">searchbar</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;searchbar&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;menubar&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">searchbar</span></div>
+
+
+<div class="viewcode-block" id="get_dummy_elements"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_dummy_elements">[docs]</a><span class="k">def</span> <span class="nf">get_dummy_elements</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; List</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Returns a list of all elements with callbacks so that the client will not</span>
+<span class="sd">    throw errors in each tab.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: List of html elements.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">dcc</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;search-button&#39;</span><span class="p">,</span> <span class="n">n_clicks</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;init-button&#39;</span><span class="p">,</span> <span class="n">n_clicks</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;update-button&#39;</span><span class="p">,</span> <span class="n">n_clicks</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
+        <span class="n">dcc</span><span class="o">.</span><span class="n">Upload</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;upload&#39;</span><span class="p">,</span> <span class="n">contents</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;write-button&#39;</span><span class="p">,</span> <span class="n">n_clicks</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
+    <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_configbar"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_configbar">[docs]</a><span class="k">def</span> <span class="nf">get_configbar</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="c1"># type: (Dict) -&gt; html.Div</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Get a row of elements used for configuring Shekels.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config (dict): Configuration to be displayed.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Div: Div with buttons and JSON editor.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">expander</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;col expander&#39;</span><span class="p">)</span>
+    <span class="n">spacer</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;col spacer&#39;</span><span class="p">)</span>
+
+    <span class="n">upload</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Upload</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;upload&#39;</span><span class="p">,</span>
+        <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;upload&#39;</span><span class="p">)]</span>
+    <span class="p">)</span>
+    <span class="n">write</span> <span class="o">=</span> <span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;write&#39;</span><span class="p">)</span>
+
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+            <span class="n">className</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">,</span>
+            <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">expander</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">upload</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">write</span><span class="p">],</span>
+        <span class="p">),</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;row-spacer&#39;</span><span class="p">),</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;config-content&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">get_key_value_card</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;config-card&#39;</span><span class="p">)</span>
+        <span class="p">])</span>
+    <span class="p">]</span>
+    <span class="n">configbar</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;configbar&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;menubar&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="n">rows</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">configbar</span></div>
+
+
+<span class="c1"># ELEMENTS----------------------------------------------------------------------</span>
+<div class="viewcode-block" id="get_button"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_button">[docs]</a><span class="k">def</span> <span class="nf">get_button</span><span class="p">(</span><span class="n">title</span><span class="p">):</span>
+    <span class="c1"># type: (str) -&gt; html.Button</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Get a html button with a given title.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        title (str): Title of button.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: If title is not a string.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Button: Button element.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1"> is not a string.&#39;</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1">-button&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">title</span><span class="p">],</span> <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_key_value_card"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_key_value_card">[docs]</a><span class="k">def</span> <span class="nf">get_key_value_card</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;key-value-card&#39;</span><span class="p">):</span>
+    <span class="c1"># type: (Dict, Optional[str], str) -&gt; html.Div</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Creates a key-value card using the keys and values from the given data.</span>
+<span class="sd">    One key-value pair per row.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (dict): Dictionary to be represented.</span>
+<span class="sd">        header (str, optional): Name of header. Default: None.</span>
+<span class="sd">        id_ (str): Name of id property. Default: &quot;key-value-card&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Div: Card with key-value child elements.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">blob_etl</span><span class="o">.</span><span class="n">BlobETL</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>\
+        <span class="o">.</span><span class="n">set</span><span class="p">(</span>
+            <span class="n">predicate</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&lt;list_\d&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span>
+            <span class="n">key_setter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;&lt;list_|&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>\
+        <span class="o">.</span><span class="n">to_flat_dict</span><span class="p">()</span>
+
+    <span class="n">children</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: List[Any]</span>
+    <span class="k">if</span> <span class="n">header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s1">-header&#39;</span><span class="p">,</span>
+            <span class="n">className</span><span class="o">=</span><span class="s1">&#39;key-value-card-header&#39;</span><span class="p">,</span>
+            <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">header</span><span class="p">)]</span>
+        <span class="p">)</span>
+        <span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">())):</span>
+        <span class="n">even</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="n">klass</span> <span class="o">=</span> <span class="s1">&#39;odd&#39;</span>
+        <span class="k">if</span> <span class="n">even</span><span class="p">:</span>
+            <span class="n">klass</span> <span class="o">=</span> <span class="s1">&#39;even&#39;</span>
+
+        <span class="n">key</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">-key&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;key-value-card-key&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)]</span>
+        <span class="p">)</span>
+        <span class="n">sep</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;key-value-card-separator&#39;</span><span class="p">)</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">-value&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;key-value-card-value&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span>
+        <span class="p">)</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s1">-row&#39;</span><span class="p">,</span>
+            <span class="n">className</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;key-value-card-row </span><span class="si">{</span><span class="n">klass</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">key</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">val</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="n">children</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">className</span> <span class="o">+=</span> <span class="s1">&#39; last&#39;</span>
+
+    <span class="n">card</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;key-value-card&#39;</span><span class="p">,</span>
+        <span class="n">children</span><span class="o">=</span><span class="n">children</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">card</span></div>
+
+
+<div class="viewcode-block" id="get_datatable"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_datatable">[docs]</a><span class="k">def</span> <span class="nf">get_datatable</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">color_scheme</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">COLOR_SCHEME</span><span class="p">):</span>
+    <span class="c1"># type: (List[Dict], Dict[str, str]) -&gt; dash_table.DataTable</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Gets a Dash DataTable element using given data.</span>
+<span class="sd">    Assumes dict element has all columns of table as keys.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (list[dict]): List of dicts.</span>
+<span class="sd">        color_scheme (dict, optional): Color scheme dictionary.</span>
+<span class="sd">            Default: COLOR_SCHEME.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataTable: Table of data.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">cs</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">COLOR_SCHEME</span><span class="p">)</span>
+    <span class="n">cs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">color_scheme</span><span class="p">)</span>
+
+    <span class="n">cols</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: Any</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">}</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">dash_table</span><span class="o">.</span><span class="n">DataTable</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+        <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;datatable&#39;</span><span class="p">,</span>
+        <span class="n">fixed_rows</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">headers</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="n">sort_action</span><span class="o">=</span><span class="s1">&#39;native&#39;</span><span class="p">,</span>
+        <span class="n">sort_mode</span><span class="o">=</span><span class="s1">&#39;multi&#39;</span><span class="p">,</span>
+        <span class="n">cell_selectable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">css</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s1">&#39;selector&#39;</span><span class="p">:</span> <span class="s1">&#39;.dash-cell div.dash-cell-value&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;rule&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;&#39;display: inline;</span>
+<span class="s1">                           white-space: inherit;</span>
+<span class="s1">                           overflow: inherit;</span>
+<span class="s1">                           text-overflow: inherit;&#39;&#39;&#39;</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="n">style_data</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;whiteSpace&#39;</span><span class="p">:</span> <span class="s1">&#39;normal&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">style_data_conditional</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s1">&#39;if&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;row_index&#39;</span><span class="p">:</span> <span class="s1">&#39;odd&#39;</span><span class="p">},</span>
+                <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">cs</span><span class="p">[</span><span class="s1">&#39;light1&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;background&#39;</span><span class="p">:</span> <span class="n">cs</span><span class="p">[</span><span class="s1">&#39;grey1&#39;</span><span class="p">],</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s1">&#39;if&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;row_index&#39;</span><span class="p">:</span> <span class="s1">&#39;even&#39;</span><span class="p">},</span>
+                <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">cs</span><span class="p">[</span><span class="s1">&#39;light1&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;background&#39;</span><span class="p">:</span> <span class="n">cs</span><span class="p">[</span><span class="s1">&#39;bg&#39;</span><span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="n">style_table</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;zIndex&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;maxWidth&#39;</span><span class="p">:</span> <span class="s1">&#39;99.5vw&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;maxHeight&#39;</span><span class="p">:</span> <span class="s1">&#39;95vh&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;overflowX&#39;</span><span class="p">:</span> <span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;overflowY&#39;</span><span class="p">:</span> <span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;padding&#39;</span><span class="p">:</span> <span class="s1">&#39;0px 4px 0px 4px&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;borderWidth&#39;</span><span class="p">:</span> <span class="s1">&#39;0px 1px 0px 1px&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;borderColor&#39;</span><span class="p">:</span> <span class="n">cs</span><span class="p">[</span><span class="s1">&#39;grey1&#39;</span><span class="p">],</span>
+        <span class="p">},</span>
+        <span class="n">style_header</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">cs</span><span class="p">[</span><span class="s1">&#39;light2&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;background&#39;</span><span class="p">:</span> <span class="n">cs</span><span class="p">[</span><span class="s1">&#39;grey1&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;fontWeight&#39;</span><span class="p">:</span> <span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">style_filter</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">cs</span><span class="p">[</span><span class="s1">&#39;green2&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;background&#39;</span><span class="p">:</span> <span class="n">cs</span><span class="p">[</span><span class="s1">&#39;bg&#39;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="n">style_cell</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;textAlign&#39;</span><span class="p">:</span> <span class="s1">&#39;left&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;minWidth&#39;</span><span class="p">:</span> <span class="s1">&#39;75px&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;maxWidth&#39;</span><span class="p">:</span> <span class="s1">&#39;300px&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;borderColor&#39;</span><span class="p">:</span> <span class="n">cs</span><span class="p">[</span><span class="s1">&#39;grey1&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;border&#39;</span><span class="p">:</span> <span class="s1">&#39;0px&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="s1">&#39;25px&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;padding&#39;</span><span class="p">:</span> <span class="s1">&#39;3px 0px 3px 10px&#39;</span>
+        <span class="p">}</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_plots"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_plots">[docs]</a><span class="k">def</span> <span class="nf">get_plots</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">plots</span><span class="p">):</span>
+    <span class="c1"># type: (List[dict], List[dict]) -&gt; List[dcc.Graph]</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Gets a Dash plots using given dicts.</span>
+<span class="sd">    Assumes dict element has all columns of table as keys.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (list[dict]): List of dicts defining data.</span>
+<span class="sd">        plots (list[dict]): List of dicts defining plots.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        EnforceError: If data is not a list of dicts.</span>
+<span class="sd">        EnforceError: If plots is not a list of dicts.</span>
+<span class="sd">        DataError: If invalid plot found in plots.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[dcc.Graph]: Plots.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Data must be a list of dictionaries. Given value: </span><span class="si">{a}</span><span class="s1">.&#39;</span>
+    <span class="n">Enforce</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;instance of&#39;</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="n">Enforce</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s1">&#39;instance of&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Plots must be a list of dictionaries. Given value: </span><span class="si">{a}</span><span class="s1">.&#39;</span>
+    <span class="n">Enforce</span><span class="p">(</span><span class="n">plots</span><span class="p">,</span> <span class="s1">&#39;instance of&#39;</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">plots</span><span class="p">:</span>
+        <span class="n">Enforce</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s1">&#39;instance of&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+
+    <span class="n">data_</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;date&#39;</span> <span class="ow">in</span> <span class="n">data_</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">data_</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">DatetimeIndex</span><span class="p">(</span><span class="n">data_</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
+
+    <span class="n">elems</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">plots</span><span class="p">):</span>
+        <span class="n">plot</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">PlotItem</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">plot</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="n">plot</span> <span class="o">=</span> <span class="n">plot</span><span class="o">.</span><span class="n">to_primitive</span><span class="p">()</span>
+        <span class="n">min_width</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">plot</span><span class="p">[</span><span class="s1">&#39;min_width&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;%&#39;</span>
+
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">sdt</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(</span>
+            <span class="n">data_</span><span class="p">,</span>
+            <span class="n">filters</span><span class="o">=</span><span class="n">plot</span><span class="p">[</span><span class="s1">&#39;filters&#39;</span><span class="p">],</span>
+            <span class="n">group</span><span class="o">=</span><span class="n">plot</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">],</span>
+            <span class="n">pivot</span><span class="o">=</span><span class="n">plot</span><span class="p">[</span><span class="s1">&#39;pivot&#39;</span><span class="p">],</span>
+            <span class="o">**</span><span class="n">plot</span><span class="p">[</span><span class="s1">&#39;figure&#39;</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;plot-</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">02d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="n">className</span><span class="o">=</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span>
+            <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span>
+            <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;min-width&#39;</span><span class="p">:</span> <span class="n">min_width</span><span class="p">},</span>
+        <span class="p">)</span>
+        <span class="n">elems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">elems</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Alex Braun &lt;TheNewFlesh@github.com&gt;.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

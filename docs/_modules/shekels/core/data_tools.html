@@ -1,0 +1,748 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>shekels.core.data_tools &mdash; shekels  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> shekels
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../enforce.html">enforce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">shekels</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>shekels.core.data_tools</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for shekels.core.data_tools</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
+<span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dt</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">lunchbox.enforce</span> <span class="kn">import</span> <span class="n">Enforce</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">DatetimeIndex</span>
+<span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">DataError</span>
+<span class="kn">import</span> <span class="nn">cufflinks</span> <span class="k">as</span> <span class="nn">cf</span>  <span class="c1"># noqa: F401</span>
+<span class="kn">import</span> <span class="nn">lunchbox.tools</span> <span class="k">as</span> <span class="nn">lbt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">rolling_pin.blob_etl</span> <span class="k">as</span> <span class="nn">rpblob</span>
+<span class="kn">import</span> <span class="nn">webcolors</span>
+
+<span class="kn">from</span> <span class="nn">shekels.core.config</span> <span class="kn">import</span> <span class="n">ConformAction</span>
+<span class="kn">import</span> <span class="nn">shekels.core.config</span> <span class="k">as</span> <span class="nn">cfg</span>
+<span class="kn">import</span> <span class="nn">shekels.enforce.enforce_tools</span> <span class="k">as</span> <span class="nn">eft</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+
+
+<span class="n">COLOR_COERCION_LUT</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;#00CC96&#39;</span><span class="p">:</span> <span class="s1">&#39;#5F95DE&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#0D0887&#39;</span><span class="p">:</span> <span class="s1">&#39;#444459&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#19D3F3&#39;</span><span class="p">:</span> <span class="s1">&#39;#5F95DE&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#242424&#39;</span><span class="p">:</span> <span class="s1">&#39;#242424&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#276419&#39;</span><span class="p">:</span> <span class="s1">&#39;#343434&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#2A3F5F&#39;</span><span class="p">:</span> <span class="s1">&#39;#444459&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#343434&#39;</span><span class="p">:</span> <span class="s1">&#39;#343434&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#444444&#39;</span><span class="p">:</span> <span class="s1">&#39;#444444&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#46039F&#39;</span><span class="p">:</span> <span class="s1">&#39;#444459&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#4D9221&#39;</span><span class="p">:</span> <span class="s1">&#39;#444444&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#636EFA&#39;</span><span class="p">:</span> <span class="s1">&#39;#5F95DE&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#7201A8&#39;</span><span class="p">:</span> <span class="s1">&#39;#5D5D7A&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#7FBC41&#39;</span><span class="p">:</span> <span class="s1">&#39;#8BD155&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#8E0152&#39;</span><span class="p">:</span> <span class="s1">&#39;#444459&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#9C179E&#39;</span><span class="p">:</span> <span class="s1">&#39;#5D5D7A&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#A4A4A4&#39;</span><span class="p">:</span> <span class="s1">&#39;#A4A4A4&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#AB63FA&#39;</span><span class="p">:</span> <span class="s1">&#39;#AC92DE&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#B6E880&#39;</span><span class="p">:</span> <span class="s1">&#39;#A0D17B&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#B6ECF3&#39;</span><span class="p">:</span> <span class="s1">&#39;#B6ECF3&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#B8E186&#39;</span><span class="p">:</span> <span class="s1">&#39;#A0D17B&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#BD3786&#39;</span><span class="p">:</span> <span class="s1">&#39;#F77E70&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#C51B7D&#39;</span><span class="p">:</span> <span class="s1">&#39;#F77E70&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#C8D4E3&#39;</span><span class="p">:</span> <span class="s1">&#39;#B6ECF3&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#D8576B&#39;</span><span class="p">:</span> <span class="s1">&#39;#F77E70&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#DE77AE&#39;</span><span class="p">:</span> <span class="s1">&#39;#DE958E&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#DE958E&#39;</span><span class="p">:</span> <span class="s1">&#39;#DE958E&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#E5ECF6&#39;</span><span class="p">:</span> <span class="s1">&#39;#F4F4F4&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#E6F5D0&#39;</span><span class="p">:</span> <span class="s1">&#39;#E9EABE&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#EBF0F8&#39;</span><span class="p">:</span> <span class="s1">&#39;#F4F4F4&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#ED7953&#39;</span><span class="p">:</span> <span class="s1">&#39;#F77E70&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#EF553B&#39;</span><span class="p">:</span> <span class="s1">&#39;#F77E70&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#F0F921&#39;</span><span class="p">:</span> <span class="s1">&#39;#E8EA7E&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#F1B6DA&#39;</span><span class="p">:</span> <span class="s1">&#39;#C98FDE&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#F4F4F4&#39;</span><span class="p">:</span> <span class="s1">&#39;#F4F4F4&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#F7F7F7&#39;</span><span class="p">:</span> <span class="s1">&#39;#F4F4F4&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#FB9F3A&#39;</span><span class="p">:</span> <span class="s1">&#39;#EB9E58&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#FDCA26&#39;</span><span class="p">:</span> <span class="s1">&#39;#EB9E58&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#FDE0EF&#39;</span><span class="p">:</span> <span class="s1">&#39;#F4F4F4&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#FECB52&#39;</span><span class="p">:</span> <span class="s1">&#39;#EB9E58&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#FF6692&#39;</span><span class="p">:</span> <span class="s1">&#39;#F77E70&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#FF97FF&#39;</span><span class="p">:</span> <span class="s1">&#39;#C98FDE&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;#FFA15A&#39;</span><span class="p">:</span> <span class="s1">&#39;#EB9E58&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="conform"><a class="viewcode-back" href="../../../core.html#shekels.core.data_tools.conform">[docs]</a><span class="k">def</span> <span class="nf">conform</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">actions</span><span class="o">=</span><span class="p">[],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="c1"># type: (DataFrame, List[dict], List[str]) -&gt; DataFrame</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Conform given mint transaction data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (DataFrame): Mint transactions DataFrame.</span>
+<span class="sd">        actions (list[dict], optional): List of conform actions. Default: [].</span>
+<span class="sd">        columns (list[str], optional): List of columns. Default: [].</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        DataError: If invalid conform action given.</span>
+<span class="sd">        ValueError: If source column not found in data columns.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame: Conformed DataFrame.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">:</span>
+        <span class="n">ConformAction</span><span class="p">(</span><span class="n">action</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+
+    <span class="n">data</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">lbt</span><span class="o">.</span><span class="n">to_snakecase</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">lut</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">account_name</span><span class="o">=</span><span class="s1">&#39;account&#39;</span><span class="p">,</span>
+        <span class="n">transaction_type</span><span class="o">=</span><span class="s1">&#39;type&#39;</span>
+    <span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">lut</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">DatetimeIndex</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">amount</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">amount</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">category</span> \
+        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;&amp;&#39;</span><span class="p">,</span> <span class="s1">&#39;and&#39;</span><span class="p">,</span> <span class="n">lbt</span><span class="o">.</span><span class="n">to_snakecase</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">account</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">lbt</span><span class="o">.</span><span class="n">to_snakecase</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">:</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">action</span><span class="p">[</span><span class="s1">&#39;source_column&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">source</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Source column: </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s1"> not found in columns: &#39;</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;Columns include: </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="si">}</span><span class="s1">.&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">target</span> <span class="o">=</span> <span class="n">action</span><span class="p">[</span><span class="s1">&#39;target_column&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">target</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">regex</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">action</span><span class="p">[</span><span class="s1">&#39;mapping&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">action</span><span class="p">[</span><span class="s1">&#39;action&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;overwrite&#39;</span><span class="p">:</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">source</span><span class="p">]</span> \
+                    <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+            <span class="k">elif</span> <span class="n">action</span><span class="p">[</span><span class="s1">&#39;action&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;substitute&#39;</span><span class="p">:</span>
+                <span class="n">data</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">source</span><span class="p">]</span> \
+                    <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">columns</span> <span class="o">!=</span> <span class="p">[]:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">columns</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="filter_data"><a class="viewcode-back" href="../../../core.html#shekels.core.data_tools.filter_data">[docs]</a><span class="k">def</span> <span class="nf">filter_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">comparator</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="c1"># type: (DataFrame, str, str, Any) -&gt; DataFrame</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Filters given data via comparator(column value, value).</span>
+
+<span class="sd">    Legal comparators:</span>
+
+<span class="sd">        * == ``lambda a, b: a == b``</span>
+<span class="sd">        * != ``lambda a, b: a != b``</span>
+<span class="sd">        *  &gt; ``lambda a, b: a &gt; b``</span>
+<span class="sd">        * &gt;= ``lambda a, b: a &gt;= b``</span>
+<span class="sd">        *  &lt; ``lambda a, b: a &lt; b``</span>
+<span class="sd">        * =&lt; ``lambda a, b: a &lt;= b``</span>
+<span class="sd">        *  ~ ``lambda a, b: bool(re.search(a, b, flags=re.I))``</span>
+<span class="sd">        * !~ ``lambda a, b: not bool(re.search(a, b, flags=re.I))``</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (DataFrame): DataFrame to be filtered.</span>
+<span class="sd">        column (str): Column name.</span>
+<span class="sd">        comparator (str): String representation of comparator.</span>
+<span class="sd">        value (object): Value to be compared.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        EnforceError: If data is not a DataFrame.</span>
+<span class="sd">        EnforceError: If column is not a string.</span>
+<span class="sd">        EnforceError: If column not in data columns.</span>
+<span class="sd">        EnforceError: If illegal comparator given.</span>
+<span class="sd">        EnforceError: If comparator is ~ or !~ and value is not a string.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame: Filtered data.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">Enforce</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;instance of&#39;</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">)</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Column must be a str. </span><span class="si">{a}</span><span class="s1"> is not str.&#39;</span>
+    <span class="n">Enforce</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="s1">&#39;instance of&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+    <span class="n">eft</span><span class="o">.</span><span class="n">enforce_columns_in_dataframe</span><span class="p">([</span><span class="n">column</span><span class="p">],</span> <span class="n">data</span><span class="p">)</span>
+
+    <span class="n">lut</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;==&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">,</span>
+        <span class="s1">&#39;!=&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">!=</span> <span class="n">b</span><span class="p">,</span>
+        <span class="s1">&#39;&gt;&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">,</span>
+        <span class="s1">&#39;&gt;=&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">&gt;=</span> <span class="n">b</span><span class="p">,</span>
+        <span class="s1">&#39;&lt;&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">,</span>
+        <span class="s1">&#39;&lt;=&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">,</span>
+        <span class="s1">&#39;~&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)),</span>
+        <span class="s1">&#39;!~&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)),</span>
+    <span class="p">}</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Illegal comparator. </span><span class="si">{a}</span><span class="s1"> not in [==, !=, &gt;, &gt;=, &lt;, &lt;=, ~, !~].&#39;</span>
+    <span class="n">Enforce</span><span class="p">(</span><span class="n">comparator</span><span class="p">,</span> <span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="n">lut</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">comparator</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;~&#39;</span><span class="p">,</span> <span class="s1">&#39;!~&#39;</span><span class="p">]:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Value must be string if comparator is ~ or !~. </span><span class="si">{a}</span><span class="s1"> is not str.&#39;</span>
+        <span class="n">Enforce</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;instance of&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+
+    <span class="n">op</span> <span class="o">=</span> <span class="n">lut</span><span class="p">[</span><span class="n">comparator</span><span class="p">]</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">op</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="group_data"><a class="viewcode-back" href="../../../core.html#shekels.core.data_tools.group_data">[docs]</a><span class="k">def</span> <span class="nf">group_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">datetime_column</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">):</span>
+    <span class="c1"># type: (DataFrame, Union[str, List[str]], str, str) -&gt; DataFrame</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Groups given data by given columns according to given metric.</span>
+<span class="sd">    If a legal time interval is given in the columns, then an additional special</span>
+<span class="sd">    column of that same name is added to the data for grouping.</span>
+
+<span class="sd">    Legal metrics:</span>
+
+<span class="sd">        *   max ``lambda x: x.max()``</span>
+<span class="sd">        *  mean ``lambda x: x.mean()``</span>
+<span class="sd">        *   min ``lambda x: x.min()``</span>
+<span class="sd">        *   std ``lambda x: x.std()``</span>
+<span class="sd">        *   sum ``lambda x: x.sum()``</span>
+<span class="sd">        *   var ``lambda x: x.var()``</span>
+<span class="sd">        * count ``lambda x: x.count()``</span>
+
+<span class="sd">    Legal time intervals:</span>
+
+<span class="sd">        * year</span>
+<span class="sd">        * quarter</span>
+<span class="sd">        * month</span>
+<span class="sd">        * two_week</span>
+<span class="sd">        * week</span>
+<span class="sd">        * day</span>
+<span class="sd">        * hour</span>
+<span class="sd">        * half_hour</span>
+<span class="sd">        * quarter_hour</span>
+<span class="sd">        * minute</span>
+<span class="sd">        * second</span>
+<span class="sd">        * microsecond</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (DataFrame): DataFrame to be grouped.</span>
+<span class="sd">        columns (str or list[str]): Columns to group data by.</span>
+<span class="sd">        metric (str): String representation of metric.</span>
+<span class="sd">        datetime_column (str, optinal): Datetime column for time grouping.</span>
+<span class="sd">            Default: date.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        EnforceError: If data is not a DataFrame.</span>
+<span class="sd">        EnforceError: If columns not in data columns.</span>
+<span class="sd">        EnforceError: If illegal metric given.</span>
+<span class="sd">        EnforceError: If time interval in columns and datetime_column not in</span>
+<span class="sd">            columns.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame: Grouped data.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># luts</span>
+    <span class="n">met_lut</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
+        <span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+        <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
+        <span class="s1">&#39;std&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span>
+        <span class="s1">&#39;sum&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
+        <span class="s1">&#39;var&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">var</span><span class="p">(),</span>
+        <span class="s1">&#39;count&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
+    <span class="p">}</span>
+
+    <span class="n">time_lut</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="s1">&#39;quarter&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">month</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">-</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">1</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;month&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="s1">&#39;two_week&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">day</span> <span class="o">/</span> <span class="mi">14</span><span class="p">)</span> <span class="o">*</span> <span class="mi">14</span> <span class="o">-</span> <span class="mi">13</span><span class="p">),</span> <span class="mi">28</span><span class="p">)</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;week&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">min</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">month</span> <span class="o">/</span> <span class="mi">7</span><span class="p">)</span> <span class="o">*</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">28</span><span class="p">]))</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;day&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">day</span><span class="p">),</span>
+        <span class="s1">&#39;hour&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">hour</span><span class="p">),</span>
+        <span class="s1">&#39;half_hour&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">minute</span> <span class="o">/</span> <span class="mi">30</span><span class="p">)</span> <span class="o">*</span> <span class="mi">30</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;quarter_hour&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">minute</span> <span class="o">/</span> <span class="mi">15</span><span class="p">)</span> <span class="o">*</span> <span class="mi">15</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;minute&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">minute</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;second&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">second</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;microsecond&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">microsecond</span>
+        <span class="p">),</span>
+    <span class="p">}</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+
+    <span class="c1"># enforcements</span>
+    <span class="n">Enforce</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;instance of&#39;</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">)</span>
+    <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns</span>  <span class="c1"># type: Any</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">columns_</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">columns_</span> <span class="o">=</span> <span class="p">[</span><span class="n">columns_</span><span class="p">]</span>
+
+    <span class="n">cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">time_lut</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">columns_</span><span class="p">))</span>
+    <span class="n">eft</span><span class="o">.</span><span class="n">enforce_columns_in_dataframe</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+    <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{a}</span><span class="s1"> is not a legal metric. Legal metrics: </span><span class="si">{b}</span><span class="s1">.&#39;</span>
+    <span class="n">Enforce</span><span class="p">(</span><span class="n">metric</span><span class="p">,</span> <span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">met_lut</span><span class="o">.</span><span class="n">keys</span><span class="p">())),</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="c1"># time column</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">columns_</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">):</span>
+        <span class="n">eft</span><span class="o">.</span><span class="n">enforce_columns_in_dataframe</span><span class="p">([</span><span class="n">datetime_column</span><span class="p">],</span> <span class="n">data</span><span class="p">)</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Datetime column of type </span><span class="si">{a}</span><span class="s1">, it must be of type </span><span class="si">{b}</span><span class="s1">.&#39;</span>
+        <span class="n">Enforce</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">datetime_column</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="s1">&#39;==&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span>
+        <span class="p">)</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns_</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">time_lut</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">op</span> <span class="o">=</span> <span class="n">time_lut</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">datetime_column</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+    <span class="n">agg</span> <span class="o">=</span> <span class="n">met_lut</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">agg</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">columns_</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="pivot_data"><a class="viewcode-back" href="../../../core.html#shekels.core.data_tools.pivot_data">[docs]</a><span class="k">def</span> <span class="nf">pivot_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[],</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># type: (DataFrame, List[str], List[str], Optional[str]) -&gt; DataFrame</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Pivots a given dataframe via a list of columns.</span>
+
+<span class="sd">    Legal time columns:</span>
+
+<span class="sd">        * date</span>
+<span class="sd">        * year</span>
+<span class="sd">        * quarter</span>
+<span class="sd">        * month</span>
+<span class="sd">        * two_week</span>
+<span class="sd">        * week</span>
+<span class="sd">        * day</span>
+<span class="sd">        * hour</span>
+<span class="sd">        * half_hour</span>
+<span class="sd">        * quarter_hour</span>
+<span class="sd">        * minute</span>
+<span class="sd">        * second</span>
+<span class="sd">        * microsecond</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (DataFrame): DataFrame to be pivoted.</span>
+<span class="sd">        columns (list[str]): Columns whose unique values become separate traces</span>
+<span class="sd">            within a plot.</span>
+<span class="sd">        values (list[str], optional): Columns whose values become the values</span>
+<span class="sd">            within each trace of a plot. Default: [].</span>
+<span class="sd">        index (str, optional): Column whose values become the y axis values of a</span>
+<span class="sd">            plot. Default: None.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        EnforceError: If data is not a DataFrame.</span>
+<span class="sd">        EnforceError: If data is of zero length.</span>
+<span class="sd">        EnforceError: If columns not in data columns.</span>
+<span class="sd">        EnforceError: If values not in data columns.</span>
+<span class="sd">        EnforceError: If index not in data columns or legal time columns.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame: Pivoted data.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">time_cols</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;quarter&#39;</span><span class="p">,</span> <span class="s1">&#39;month&#39;</span><span class="p">,</span> <span class="s1">&#39;two_week&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">,</span> <span class="s1">&#39;day&#39;</span><span class="p">,</span> <span class="s1">&#39;hour&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;half_hour&#39;</span><span class="p">,</span> <span class="s1">&#39;quarter_hour&#39;</span><span class="p">,</span> <span class="s1">&#39;minute&#39;</span><span class="p">,</span> <span class="s1">&#39;second&#39;</span><span class="p">,</span> <span class="s1">&#39;microsecond&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="n">Enforce</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;instance of&#39;</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">)</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;DataFrame must be at least 1 in length. Given length: </span><span class="si">{a}</span><span class="s1">.&#39;</span>
+    <span class="n">Enforce</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+    <span class="n">eft</span><span class="o">.</span><span class="n">enforce_columns_in_dataframe</span><span class="p">(</span><span class="n">columns</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+    <span class="n">eft</span><span class="o">.</span><span class="n">enforce_columns_in_dataframe</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{a}</span><span class="s1"> is not in legal column names: </span><span class="si">{b}</span><span class="s1">.&#39;</span>
+        <span class="n">Enforce</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="n">time_cols</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+
+    <span class="n">vals</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">index</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+        <span class="n">vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">time_cols</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> \
+            <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">dt</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">microseconds</span><span class="o">=</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">999999</span><span class="p">)))</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">vals</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">values</span><span class="p">]</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="get_figure"><a class="viewcode-back" href="../../../core.html#shekels.core.data_tools.get_figure">[docs]</a><span class="k">def</span> <span class="nf">get_figure</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">,</span>             <span class="c1"># type: DataFrame</span>
+    <span class="n">filters</span><span class="o">=</span><span class="p">[],</span>       <span class="c1"># type: List[dict]</span>
+    <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>       <span class="c1"># type: Optional[dict]</span>
+    <span class="n">pivot</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>       <span class="c1"># type: Optional[dict]</span>
+    <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;bar&#39;</span><span class="p">,</span>       <span class="c1"># type: str</span>
+    <span class="n">color_scheme</span><span class="o">=</span><span class="p">{},</span>  <span class="c1"># type: Dict[str, str]</span>
+    <span class="n">x_axis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>      <span class="c1"># type: Optional[str]</span>
+    <span class="n">y_axis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>      <span class="c1"># type: Optional[str]</span>
+    <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>       <span class="c1"># type: Optional[str]</span>
+    <span class="n">x_title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>     <span class="c1"># type: Optional[str]</span>
+    <span class="n">y_title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>     <span class="c1"># type: Optional[str]</span>
+    <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>          <span class="c1"># type: int</span>
+<span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Generates a plotly figure dictionary from given data and manipulations.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (DataFrame): Data.</span>
+<span class="sd">        filters (list[dict], optional): List of filters for data. Default: [].</span>
+<span class="sd">        group (dict, optional): Grouping operation. Default: None.</span>
+<span class="sd">        pivot (dict, optional): Pivot operation. Default: None.</span>
+<span class="sd">        kind (str, optional): Kind of plot. Default: bar.</span>
+<span class="sd">        color_scheme (dict[str, str], optional): Color scheme. Default: {}.</span>
+<span class="sd">        x_axis (str): Column to use as x axis: Default: None.</span>
+<span class="sd">        y_axis (str): Column to use as y axis: Default: None.</span>
+<span class="sd">        title (str, optional): Title of plot. Default: None.</span>
+<span class="sd">        x_title (str, optional): Title of x axis. Default: None.</span>
+<span class="sd">        y_title (str, optional): Title of y axis. Default: None.</span>
+<span class="sd">        bins (int, optional): Number of bins if histogram. Default: 50.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        DataError: If any filter in filters is invalid.</span>
+<span class="sd">        DataError: If group is invalid.</span>
+<span class="sd">        DataError: If pivot is invalid.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Plotly Figure as dictionary.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># filter</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">filters</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">FilterAction</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">DataError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DataError</span><span class="p">({</span><span class="s1">&#39;Invalid filter&#39;</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">to_primitive</span><span class="p">()})</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">to_primitive</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">filter_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;column&#39;</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;comparator&#39;</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+
+    <span class="c1"># group</span>
+    <span class="k">if</span> <span class="n">group</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">grp</span> <span class="o">=</span> <span class="n">group</span>  <span class="c1"># type: Any</span>
+        <span class="n">grp</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">GroupAction</span><span class="p">(</span><span class="n">grp</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">grp</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">DataError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DataError</span><span class="p">({</span><span class="s1">&#39;Invalid group&#39;</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">to_primitive</span><span class="p">()})</span>
+        <span class="n">grp</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">to_primitive</span><span class="p">()</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">group_data</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span>
+            <span class="n">grp</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">],</span>
+            <span class="n">grp</span><span class="p">[</span><span class="s1">&#39;metric&#39;</span><span class="p">],</span>
+            <span class="n">datetime_column</span><span class="o">=</span><span class="n">grp</span><span class="p">[</span><span class="s1">&#39;datetime_column&#39;</span><span class="p">],</span>
+        <span class="p">)</span>
+
+    <span class="c1"># pivot</span>
+    <span class="k">if</span> <span class="n">pivot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pvt</span> <span class="o">=</span> <span class="n">pivot</span>  <span class="c1"># type: Any</span>
+        <span class="n">pvt</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">PivotAction</span><span class="p">(</span><span class="n">pvt</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">pvt</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">DataError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DataError</span><span class="p">({</span><span class="s1">&#39;Invalid pivot&#39;</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">to_primitive</span><span class="p">()})</span>
+        <span class="n">pvt</span> <span class="o">=</span> <span class="n">pvt</span><span class="o">.</span><span class="n">to_primitive</span><span class="p">()</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pivot_data</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">pvt</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">],</span> <span class="n">values</span><span class="o">=</span><span class="n">pvt</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">pvt</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="c1"># create figure</span>
+    <span class="n">figure</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">iplot</span><span class="p">(</span>
+        <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">asFigure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">theme</span><span class="o">=</span><span class="s1">&#39;henanigans&#39;</span><span class="p">,</span> <span class="n">colorscale</span><span class="o">=</span><span class="s1">&#39;henanigans&#39;</span><span class="p">,</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">x_axis</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_axis</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">xTitle</span><span class="o">=</span><span class="n">x_title</span><span class="p">,</span> <span class="n">yTitle</span><span class="o">=</span><span class="n">y_title</span><span class="p">,</span>
+        <span class="n">bins</span><span class="o">=</span><span class="n">bins</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>  <span class="c1"># type: dict</span>
+    <span class="k">if</span> <span class="n">color_scheme</span> <span class="o">!=</span> <span class="p">{}:</span>
+        <span class="n">figure</span> <span class="o">=</span> <span class="n">conform_figure</span><span class="p">(</span><span class="n">figure</span><span class="p">,</span> <span class="n">color_scheme</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">figure</span></div>
+
+
+<div class="viewcode-block" id="parse_rgba"><a class="viewcode-back" href="../../../core.html#shekels.core.data_tools.parse_rgba">[docs]</a><span class="k">def</span> <span class="nf">parse_rgba</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Parses rgb and rgba strings into tuples of numbers.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt;parse_rgba(&#39;rgb(255, 0, 0)&#39;)</span>
+<span class="sd">        (255, 0, 0)</span>
+<span class="sd">        &gt;&gt;&gt;parse_rgba(&#39;rgba(255, 0, 0, 0.5)&#39;)</span>
+<span class="sd">        (255, 0, 0, 0.5)</span>
+<span class="sd">        &gt;&gt;&gt;parse_rgba(&#39;foo&#39;) is None</span>
+<span class="sd">        True</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        string (str): String to be parsed.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: (red, green, blue) or (red, green, blue, alpha)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;rgba?\((\d+, \d+, \d+(, \d+\.?\d*)?)\)&#39;</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="o">+</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="conform_figure"><a class="viewcode-back" href="../../../core.html#shekels.core.data_tools.conform_figure">[docs]</a><span class="k">def</span> <span class="nf">conform_figure</span><span class="p">(</span><span class="n">figure</span><span class="p">,</span> <span class="n">color_scheme</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Conforms given figure to use given color scheme.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        figure (dict): Plotly figure.</span>
+<span class="sd">        color_scheme (dict): Color scheme dictionary.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Conformed figure.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># create hex to hex lut</span>
+    <span class="n">lut</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">COLOR_SCHEME</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">color_scheme</span><span class="p">:</span>
+            <span class="n">lut</span><span class="p">[</span><span class="n">val</span><span class="p">]</span> <span class="o">=</span> <span class="n">color_scheme</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="c1"># rgba? to hex --&gt; coerce to standard colors --&gt; coerce with color_scheme</span>
+    <span class="n">figure</span> <span class="o">=</span> <span class="n">rpblob</span><span class="o">.</span><span class="n">BlobETL</span><span class="p">(</span><span class="n">figure</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">set</span><span class="p">(</span>
+            <span class="n">predicate</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;rgb&#39;</span> <span class="ow">in</span> <span class="n">v</span><span class="p">,</span>
+            <span class="n">value_setter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">webcolors</span><span class="o">.</span><span class="n">rgb_to_hex</span><span class="p">(</span><span class="n">parse_rgba</span><span class="p">(</span><span class="n">v</span><span class="p">)[:</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span> \
+        <span class="o">.</span><span class="n">set</span><span class="p">(</span>
+            <span class="n">predicate</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span>
+            <span class="n">value_setter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">COLOR_COERCION_LUT</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span> \
+        <span class="o">.</span><span class="n">set</span><span class="p">(</span>
+            <span class="n">predicate</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span>
+            <span class="n">value_setter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">lut</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span> \
+        <span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">figure</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Alex Braun &lt;TheNewFlesh@github.com&gt;.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
