@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for python/shekels/core/data_tools.py: 97%</title>
+    <title>Coverage for python/shekels/core/data_tools.py: 100%</title>
     <link rel="icon" sizes="32x32" href="favicon_32.png">
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
@@ -18,13 +18,13 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>python/shekels/core/data_tools.py</b> :
-            <span class="pc_cov">97%</span>
+            <span class="pc_cov">100%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
             154 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">150 run</button>
-            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">4 missing</button>
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">154 run</button>
+            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">0 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
     </div>
@@ -155,13 +155,13 @@
     <p id="t101" class="run"><span class="n"><a href="#t101">101</a></span><span class="t">    <span class="key">for</span> <span class="nam">action</span> <span class="key">in</span> <span class="nam">actions</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t102" class="run"><span class="n"><a href="#t102">102</a></span><span class="t">        <span class="nam">source</span> <span class="op">=</span> <span class="nam">action</span><span class="op">[</span><span class="str">'source_column'</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p id="t103" class="run"><span class="n"><a href="#t103">103</a></span><span class="t">        <span class="key">if</span> <span class="nam">source</span> <span class="key">not</span> <span class="key">in</span> <span class="nam">data</span><span class="op">.</span><span class="nam">columns</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t104" class="mis show_mis"><span class="n"><a href="#t104">104</a></span><span class="t">            <span class="nam">msg</span> <span class="op">=</span> <span class="str">f'Source column: {source} not found in columns: '</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t105" class="mis show_mis"><span class="n"><a href="#t105">105</a></span><span class="t">            <span class="nam">msg</span> <span class="op">+=</span> <span class="str">f'Columns include: {data.columns}.'</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t106" class="mis show_mis"><span class="n"><a href="#t106">106</a></span><span class="t">            <span class="key">raise</span> <span class="nam">ValueError</span><span class="op">(</span><span class="nam">msg</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t104" class="run"><span class="n"><a href="#t104">104</a></span><span class="t">            <span class="nam">msg</span> <span class="op">=</span> <span class="str">f'Source column {source} not found in columns. '</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t105" class="run"><span class="n"><a href="#t105">105</a></span><span class="t">            <span class="nam">msg</span> <span class="op">+=</span> <span class="str">f'Legal columns include: {data.columns.tolist()}.'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t106" class="run"><span class="n"><a href="#t106">106</a></span><span class="t">            <span class="key">raise</span> <span class="nam">ValueError</span><span class="op">(</span><span class="nam">msg</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t107" class="pln"><span class="n"><a href="#t107">107</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t108" class="run"><span class="n"><a href="#t108">108</a></span><span class="t">        <span class="nam">target</span> <span class="op">=</span> <span class="nam">action</span><span class="op">[</span><span class="str">'target_column'</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p id="t109" class="run"><span class="n"><a href="#t109">109</a></span><span class="t">        <span class="key">if</span> <span class="nam">target</span> <span class="key">not</span> <span class="key">in</span> <span class="nam">data</span><span class="op">.</span><span class="nam">columns</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t110" class="mis show_mis"><span class="n"><a href="#t110">110</a></span><span class="t">            <span class="nam">data</span><span class="op">[</span><span class="nam">target</span><span class="op">]</span> <span class="op">=</span> <span class="key">None</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t110" class="run"><span class="n"><a href="#t110">110</a></span><span class="t">            <span class="nam">data</span><span class="op">[</span><span class="nam">target</span><span class="op">]</span> <span class="op">=</span> <span class="key">None</span>&nbsp;</span><span class="r"></span></p>
     <p id="t111" class="pln"><span class="n"><a href="#t111">111</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t112" class="run"><span class="n"><a href="#t112">112</a></span><span class="t">        <span class="key">for</span> <span class="nam">regex</span><span class="op">,</span> <span class="nam">val</span> <span class="key">in</span> <span class="nam">action</span><span class="op">[</span><span class="str">'mapping'</span><span class="op">]</span><span class="op">.</span><span class="nam">items</span><span class="op">(</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t113" class="run"><span class="n"><a href="#t113">113</a></span><span class="t">            <span class="key">if</span> <span class="nam">action</span><span class="op">[</span><span class="str">'action'</span><span class="op">]</span> <span class="op">==</span> <span class="str">'overwrite'</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -593,7 +593,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.4</a>,
-            created at 2021-02-24 16:58 +0000
+            created at 2021-02-24 17:59 +0000
         </p>
     </div>
 </div>

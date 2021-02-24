@@ -267,8 +267,8 @@
     <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">:</span>
         <span class="n">source</span> <span class="o">=</span> <span class="n">action</span><span class="p">[</span><span class="s1">&#39;source_column&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">source</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Source column: </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s1"> not found in columns: &#39;</span>
-            <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;Columns include: </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="si">}</span><span class="s1">.&#39;</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Source column </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s1"> not found in columns. &#39;</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;Legal columns include: </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span><span class="si">}</span><span class="s1">.&#39;</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
         <span class="n">target</span> <span class="o">=</span> <span class="n">action</span><span class="p">[</span><span class="s1">&#39;target_column&#39;</span><span class="p">]</span>
