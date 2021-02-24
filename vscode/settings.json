@@ -1,0 +1,22 @@
+{
+  "python.venvPath": "/Applications/anaconda/envs",
+  "python.pythonPath": "/usr/local/bin/python3",
+  "python.condaPath": "/Applications/anaconda/envs/shekels/bin/python",
+  "python.linting.pylintEnabled": true,
+  "python.linting.enabled": true,
+  "python.formatting.provider": "autopep8",
+  "python.linting.flake8Args": ["--config=docker/flake8.ini"],
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/package-lock.json": true,
+    "**/bower_components": true,
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/.ipynb_checkpoints": true
+  }
+}

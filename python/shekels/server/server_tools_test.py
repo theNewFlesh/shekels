@@ -1,0 +1,32 @@
+import re
+import unittest
+
+import shekels.server.server_tools as svt
+# ------------------------------------------------------------------------------
+
+
+class ServerToolsTests(unittest.TestCase):
+    def test_error_to_response(self):
+        error = TypeError('foo')
+        result = svt.error_to_response(error)
+        self.assertEqual(result.mimetype, 'application/json')
+        self.assertEqual(result.json['error'], 'TypeError')
+        self.assertEqual(result.json['args'], ['foo'])
+        self.assertEqual(result.json['message'], 'TypeError(\n    foo\n)')
+        self.assertEqual(result.json['code'], 500)
+
+    def test_parse_json_file_content(self):
+        content = '''data:application/json;base64,\
+ewogICAgInJvb3RfZGlyZWN0b3J5IjogIi90bXAvYmFnZWxoYXQiLAogICAgImhpZGVib3VuZF9kaXJ\
+lY3RvcnkiOiAiL3RtcC9zaWxseWNhdHMvaGlkZWJvdW5kIiwKICAgICJzcGVjaWZpY2F0aW9uX2ZpbG\
+VzIjogWwogICAgICAgICIvcm9vdC9oaWRlYm91bmQvcHl0aG9uL2hpZGVib3VuZC9hd2Vzb21lX3NwZ\
+WNpZmljYXRpb25zLnB5IgogICAgXSwKICAgICJpbmNsdWRlX3JlZ2V4IjogIiIsCiAgICAiZXhjbHVk\
+ZV9yZWdleCI6ICJcXC5EU19TdG9yZXx5b3VyLW1vbSIsCiAgICAid3JpdGVfbW9kZSI6ICJjb3B5Igp\
+9Cg=='''
+        svt.parse_json_file_content(content)
+
+        expected = 'File header is not JSON. Header: '
+        expected += 'data:application/text;base64.'
+        content = re.sub('json', 'text', content)
+        with self.assertRaisesRegexp(ValueError, expected):
+            svt.parse_json_file_content(content)

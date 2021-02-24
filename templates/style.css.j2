@@ -1,0 +1,707 @@
+*,
+*:focus,
+*:visited {
+    outline: none !important;
+    border: 0px solid {{ COLOR_SCHEME['bg'] }};
+    -webkit-box-shadow: 0 0px 0px rgb(0,0,0,0) !important;
+    -moz-box-shadow: 0 0px 0px rgb(0,0,0,0) !important;
+    box-shadow: 0 0px 0px rgb(0,0,0,0) !important;
+    border-radius: 0px;
+}
+
+body {
+    background: {{ COLOR_SCHEME['bg'] }};
+    margin: 0px;
+    padding: 0px;
+}
+
+/* Logo */
+#tabs #logo,
+#tabs #logo .tab:hover {
+    width: 130px;
+    background: linear-gradient(
+        100deg,
+        {{ COLOR_SCHEME['bg'] }} 35%,
+        {{ COLOR_SCHEME['green2'] }} 35%
+    ) !important;
+    border: 0px !important;
+    font-size: large !important;
+    font-style: italic !important;
+    font-family: sans-serif !important;
+    font-weight: bold !important;
+}
+
+#tabs #logo span {
+    background: linear-gradient(
+        100deg,
+        {{ COLOR_SCHEME['green2'] }} 15%,
+        {{ COLOR_SCHEME['bg'] }} 15%
+    ) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+/* Dummy elements */
+.dummy {
+    display: none !important;
+}
+
+/* Tabs */
+#tabs {
+    background: {{ COLOR_SCHEME['bg'] }};
+}
+
+#tabs .tab {
+    color: {{ COLOR_SCHEME['light1'] }};
+    background: {{ COLOR_SCHEME['bg'] }};
+    border-right: 2px solid {{ COLOR_SCHEME['grey1'] }} !important;
+}
+
+#tabs .tab:hover {
+    background: {{ COLOR_SCHEME['grey2'] }} !important;
+    color: {{ COLOR_SCHEME['green2'] }} !important;
+}
+
+#tabs .tab--selected {
+    background: {{ COLOR_SCHEME['grey1'] }} !important;
+    color: {{ COLOR_SCHEME['green2'] }} !important;
+}
+
+#tabs .tab--selected:hover {
+    background: {{ COLOR_SCHEME['grey1'] }} !important;
+    color: {{ COLOR_SCHEME['green2'] }} !important;
+}
+
+/*  Scrollbar */
+.scrollbar {
+    display: none;
+}
+
+/* Text Input */
+input {
+    caret-color: {{ COLOR_SCHEME['green2'] }};
+}
+
+/* Button */
+button {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    color: {{ COLOR_SCHEME['green2'] }};
+    font-family: {{ FONT_FAMILY }};
+    font-size: medium !important;
+}
+
+button:hover {
+    background: {{ COLOR_SCHEME['grey2'] }};
+    color: {{ COLOR_SCHEME['green2'] }};
+}
+
+button:active {
+    background: {{ COLOR_SCHEME['green2'] }};
+    color: {{ COLOR_SCHEME['grey2'] }};
+}
+
+#init-button {
+    color: {{ COLOR_SCHEME['orange2'] }};
+}
+
+#update-button {
+    color: {{ COLOR_SCHEME['cyan2'] }};
+}
+
+#create-button {
+    color: {{ COLOR_SCHEME['green2'] }};
+}
+
+#export-button {
+    color: {{ COLOR_SCHEME['blue2'] }};
+}
+
+#delete-button {
+    color: {{ COLOR_SCHEME['red2'] }};
+}
+
+#upload-button {
+    height: 27px !important;
+}
+
+#write-button {
+    color: {{ COLOR_SCHEME['red2'] }};
+}
+
+/* Tabs */
+.tabs {
+    z-index: 1;
+    height: 27px;
+    width: 100%;
+    padding: 0px;
+    position: fixed;
+}
+
+/* Menubar */
+#searchbar,
+#configbar {
+    font-size: 13px;
+}
+
+.spacer {
+    width: 4px;
+}
+
+.expander {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    flex-grow: 1;
+}
+
+.query {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    color: {{ COLOR_SCHEME['green2'] }};
+    flex-grow: 10;
+    font-size: 15px;
+    padding-left: 10px;
+}
+
+.menubar .row {
+    display: flex;
+    min-height: 27px;
+}
+
+#configbar .row {
+    height: 27px;
+}
+
+.menubar .row-spacer {
+    background: {{ COLOR_SCHEME['bg'] }};
+    height: 4px;
+}
+
+.menubar {
+    z-index: 1;
+    top: 27px;
+    position: fixed;
+    background: {{ COLOR_SCHEME['bg'] }};
+    color: {{ COLOR_SCHEME['green2'] }};
+    border-width: 4px 0px 4px 0px;
+    border-color: {{ COLOR_SCHEME['bg'] }};
+    font-family: {{ FONT_FAMILY }};
+    text-align: left;
+    width: 100vw;
+}
+
+/* Content */
+.content {
+    z-index: 0;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    background: {{ COLOR_SCHEME['bg'] }};
+    color: {{ COLOR_SCHEME['green2'] }};
+    font-family: {{ FONT_FAMILY }};
+    text-align: center;
+    padding-top: 56px;
+    overflow-x: hidden;
+}
+
+#lower-content {
+    z-index: 0;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+#layout {
+    background: {{ COLOR_SCHEME['bg'] }};
+    color: {{ COLOR_SCHEME['green2'] }};
+    font-family: {{ FONT_FAMILY }};
+    text-align: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Key Value Card */
+.key-value-card {
+    background: {{ COLOR_SCHEME['bg'] }};
+    font-size: 20px;
+    font-family: {{ FONT_FAMILY }};
+}
+
+.key-value-card-row {
+    min-height: 32px;
+    padding-left: 10px;
+    padding-right: 10px;
+    flex-grow: 1;
+    display: flex;
+    border-color: {{ COLOR_SCHEME['green2'] }};
+    border-left-width: 2px;
+    border-right-width: 2px;
+}
+
+.key-value-card-row.last {
+    border-bottom-width: 2px;
+}
+
+.key-value-card-header {
+    background: {{ COLOR_SCHEME['green2'] }};
+    color: {{ COLOR_SCHEME['bg'] }};
+    padding-left: 15px;
+    font-weight: bold;
+}
+
+.key-value-card-row.odd {
+    background: {{ COLOR_SCHEME['grey1'] }};
+}
+
+.key-value-card-separator {
+    min-width: 10px;
+    max-width: 10px;
+}
+
+.key-value-card-key {
+    color: {{ COLOR_SCHEME['light1'] }};
+    font-style: italic;
+    min-width: 350px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 2px;
+    text-align: right;
+    border-color: {{ COLOR_SCHEME['green2'] }};
+    border-right-width: 2px;
+}
+
+.key-value-card-value {
+    color: {{ COLOR_SCHEME['green2'] }};
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 2px;
+    flex-grow: 1000;
+    word-wrap: break-word;
+}
+
+/* Error Card */
+#error .key-value-card-row {
+    border-color: {{ COLOR_SCHEME['red2'] }};
+}
+
+#error .key-value-card-header {
+    background: {{ COLOR_SCHEME['red2'] }};
+}
+
+#error .key-value-card-key {
+    color: {{ COLOR_SCHEME['light1'] }};
+    border-color: {{ COLOR_SCHEME['red2'] }};
+}
+
+#error .key-value-card-value {
+    color: {{ COLOR_SCHEME['red2'] }};
+}
+
+/* Plot */
+#plots-content {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: stretch;
+    background: {{ COLOR_SCHEME['grey1'] }};
+}
+
+.plot {
+    flex-grow: 1;
+    flex-basis: 33%;
+    padding-right: 4px;
+    padding-bottom: 4px;
+}
+
+.column-header--sort {
+    color: {{ COLOR_SCHEME['green2'] }} !important;
+    padding-right: 4px;
+}
+
+/* RangeSlider */
+#rangeslider-container {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    flex-grow: 3;
+    min-width: 200px;
+}
+
+#rangeslider-row {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 2px;
+    padding-right: 2px;
+    font-size: 11px;
+}
+
+.rangeslider-span {
+    color: {{ COLOR_SCHEME['light1'] }};
+}
+
+.rangeslider-span-handle {
+    color: {{ COLOR_SCHEME['green2'] }};
+}
+
+#rangeslider {
+    padding-left: 6px;
+    padding-right: 8px;
+}
+
+#rangeslider .rc-slider-handle {
+    background: {{ COLOR_SCHEME['green2'] }};
+    border: 0px;
+    height: 10px;
+    width: 10px;
+    margin-top: -3.5px;
+    margin-left: -3.5px;
+}
+
+#rangeslider .rc-slider-dot {
+    display: none;
+}
+
+#rangeslider .rc-slider-track {
+    background: {{ COLOR_SCHEME['light1'] }};
+}
+
+#rangeslider .rc-slider-rail {
+    background: {{ COLOR_SCHEME['grey2'] }};
+}
+
+/* DatePicker */
+.DateInput_input,
+.DateRangePickerInput {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    font-size: 13px;
+    height: 27px;
+    border-bottom-width: 0px;
+}
+
+.DateInput_input__focused {
+    background: {{ COLOR_SCHEME['grey2'] }};
+    border: 0px;
+}
+
+.DateRangePickerInput__withBorder {
+    border: 0px;
+}
+
+.DateRangePickerInput_arrow {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.DateRangePickerInput_arrow_svg {
+    fill: {{ COLOR_SCHEME['grey2'] }};
+}
+
+.DateInput {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    width: 75px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.DateInput:first-child {
+    padding-right: 0px;
+}
+
+.DateInput:last-child {
+    padding-right: 4px;
+}
+
+.DateInput:hover,
+.DateInput:active,
+.DateInput:focus,
+.DateInput:focus-within {
+    background: {{ COLOR_SCHEME['grey2'] }};
+}
+
+#startDate,
+#endDate {
+    color: {{ COLOR_SCHEME['light1'] }};
+    padding: 0px 0px 0px 0px;
+}
+
+#startDate:hover,
+#startDate:focus,
+#startDate:active,
+#endDate:hover,
+#endDate:focus,
+#endDate:active {
+    background: {{ COLOR_SCHEME['grey2'] }};
+    color: {{ COLOR_SCHEME['green2'] }};
+    height: 27px;
+}
+
+/* Calendar */
+.DayPicker_focusRegion,
+.CalendarMonthGrid,
+.CalendarMonth,
+.CalendarMonth_table {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    color: {{ COLOR_SCHEME['light1'] }};
+}
+
+.CalendarDay {
+    background: {{ COLOR_SCHEME['bg'] }};
+    color: {{ COLOR_SCHEME['light1'] }};
+    border-color: {{ COLOR_SCHEME['grey1'] }};
+}
+
+.CalendarDay__default:hover {
+    background: {{ COLOR_SCHEME['grey2'] }};
+    color: {{ COLOR_SCHEME['green2'] }};
+    border: 0px;
+}
+
+.CalendarDay__selected,
+.CalendarDay__selected_span {
+    background: {{ COLOR_SCHEME['green2'] }};
+    color: {{ COLOR_SCHEME['grey2'] }};
+    border-color: {{ COLOR_SCHEME['grey1'] }};
+}
+
+.CalendarDay__selected:hover {
+    background: {{ COLOR_SCHEME['grey2'] }};
+    color: {{ COLOR_SCHEME['green2'] }};
+}
+
+.DayPicker {
+    background: {{ COLOR_SCHEME['grey1'] }};
+}
+
+.DayPickerNavigation_button {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    border: 0px;
+    border-radius: 0px;
+}
+
+.DayPickerNavigation_button:hover {
+    background: {{ COLOR_SCHEME['grey2'] }};
+    border: 0px;
+    border-radius: 0px;
+}
+
+.DayPickerNavigation_svg__horizontal {
+    fill: {{ COLOR_SCHEME['light1'] }};
+}
+
+.DayPickerNavigation_svg__horizontal:hover {
+    fill: {{ COLOR_SCHEME['green2'] }};
+}
+
+.DayPickerKeyboardShortcuts_buttonReset:before {
+    border-right-color: {{ COLOR_SCHEME['light1'] }};
+}
+
+#datepicker .DayPickerKeyboardShortcuts_show__bottomRight:hover::before {
+    border-right-color: {{ COLOR_SCHEME['green2'] }};
+}
+
+.DayPickerKeyboardShortcuts_showSpan {
+    color: {{ COLOR_SCHEME['grey1'] }};
+}
+
+.CalendarMonth_caption strong {
+    color: {{ COLOR_SCHEME['light1'] }};
+    font-family: {{ FONT_FAMILY }};
+}
+
+.DayPicker_weekHeader_li small {
+    color: {{ COLOR_SCHEME['light1'] }};
+    font-family: {{ FONT_FAMILY }};
+}
+
+.DateInput_fangShape {
+    fill: {{ COLOR_SCHEME['green2'] }};
+    border: 0px;
+}
+
+#datepicker button {
+    background: {{ COLOR_SCHEME['grey1'] }};
+}
+
+/* Dropdown */
+.Select-clear-zone {
+    display: none !important;
+}
+
+.Select-menu,
+#dropdown > div > div.Select-menu-outer {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    color: {{ COLOR_SCHEME['light1'] }};
+    border: 0px;
+    outline: none;
+    width: 110px;
+}
+
+#dropdown .Select-control .Select-value .Select-value-label {
+    color: {{ COLOR_SCHEME['light1'] }};
+}
+
+#dropdown .Select-value,
+#dropdown .Select-input,
+#dropdown .Select-control,
+#dropdown .Select-placeholder {
+    height: 26px !important;
+    line-height: 26px !important;
+}
+
+.Select-input > input {
+    padding: 0px 0px 0px 0px !important;
+}
+
+#react-select-2--value > div.Select-value {
+    border-color: {{ COLOR_SCHEME['green2'] }};
+}
+
+.Select-value-label,
+.Select-value-icon {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    color: {{ COLOR_SCHEME['green2'] }};
+}
+
+#dropdown .Select {
+    font-size: medium !important;
+}
+
+#dropdown .Select-value-icon {
+    border-right: 1px solid {{ COLOR_SCHEME['green2'] }};
+}
+
+#dropdown .Select-value-icon:hover {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    color: {{ COLOR_SCHEME['red2'] }};
+}
+
+#react-select-2--value > div.Select-placeholder {
+    color: {{ COLOR_SCHEME['light1'] }};
+}
+
+#react-select-2--list {
+    color: {{ COLOR_SCHEME['light1'] }};
+}
+
+#dropdown .VirtualizedSelectOption,
+#dropdown .VirtualizedSelectFocusedOption {
+    font-weight: normal !important;
+}
+
+#dropdown .VirtualizedSelectFocusedOption {
+    background: {{ COLOR_SCHEME['grey2'] }};
+    color: {{ COLOR_SCHEME['green2'] }};
+}
+
+/* ScrollBar */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    display: none;
+}
+
+::-webkit-scrollbar-track {
+  background: {{ COLOR_SCHEME['dark2'] }};
+}
+
+::-webkit-scrollbar-thumb {
+  background: {{ COLOR_SCHEME['grey2'] }};
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: {{ COLOR_SCHEME['green2'] }};
+}
+
+/* DataTable */
+#table-content {
+    width: 100%;
+}
+
+.dash-cell div.dash-cell-value {
+    display: inline;
+    white-space: inherit;
+    overflow: inherit;
+    text-overflow: inherit;
+}
+
+#datatable .dash-spreadsheet {
+    max-height: unset;
+}
+
+#datatable .row.row-0 {
+    min-height: 0px !important;
+}
+
+#datatable .dash-cell.focused {
+    background: {{ COLOR_SCHEME['grey2'] }} !important;
+    color: {{ COLOR_SCHEME['green2'] }} !important;
+    border: 0px solid {{ COLOR_SCHEME['bg'] }} !important;
+}
+
+#datatable .dash-header {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    border-bottom: 2px solid {{ COLOR_SCHEME['green1'] }} !important;
+}
+
+#datatable .dash-filter input {
+    color: {{ COLOR_SCHEME['green2'] }};
+    padding: 0px 5px 0px 5px;
+    border-left: 1px solid {{ COLOR_SCHEME['grey1'] }};
+    border-right: 1px solid {{ COLOR_SCHEME['grey1'] }};
+}
+
+#datatable .sort {
+    color: {{ COLOR_SCHEME['green2'] }};
+    transform: translateY(-6px);
+}
+
+.previous-page {
+    border-right: 3px solid {{ COLOR_SCHEME['bg'] }};
+}
+
+#datatable .dash-delete-cell {
+    color: {{ COLOR_SCHEME['green2'] }} !important;
+}
+
+#datatable .dash-delete-cell:hover {
+    color: {{ COLOR_SCHEME['red2'] }} !important;
+}
+
+#datatable .dash-spreadsheet-container .dash-spreadsheet-inner table {
+    border-collapse: collapse;
+    font-family: monospace;
+    --accent: transparent  !important;
+    --border: transparent !important;
+    --text-color: transparent !important;
+    --hover: transparent !important;
+    --background-color-ellipses: transparent !important;
+    --faded-text: transparent !important;
+    --faded-text-header: transparent !important;
+    --selected-background: transparent !important;
+    --faded-dropdown: transparent !important;
+    --muted: transparent !important;
+}
+
+/* Config */
+.config-row {
+    display: flex;
+    height: 27px;
+    width: 100%;
+    padding-bottom: 2px;
+}
+
+.config-key {
+    background: {{ COLOR_SCHEME['grey2'] }};
+    color: {{ COLOR_SCHEME['light1'] }};
+    padding: 4px 8px 4px 8px;
+    min-width: 200px;
+    text-align: right;
+    border-right: 2px solid {{ COLOR_SCHEME['bg'] }};
+}
+
+.config-value {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    color: {{ COLOR_SCHEME['green2'] }};
+    flex-grow: 10;
+    font-size: 15px;
+    padding-left: 10px;
+}
