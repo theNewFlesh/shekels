@@ -259,7 +259,7 @@ def on_get_tab(tab, store):
     elif tab == 'docs':
         return dcc.Location(
             id='docs',
-            href='https://thenewflesh.github.io/shekels'
+            href='https://thenewflesh.github.io/shekels/'
         )
 
 
