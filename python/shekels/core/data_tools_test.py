@@ -117,12 +117,40 @@ class DataToolsTests(unittest.TestCase):
         self.assertEqual(result.loc[1, 'amount'], 0.0)
         self.assertEqual(result.loc[2, 'amount'], 11.11)
 
+    def test_conform_actions_target(self):
+        data = self.get_data()
+        actions = [{
+            'action': 'overwrite',
+            'source_column': 'description',
+            'target_column': 'new_col',
+            'mapping': {
+                'kiwi': 123,
+            }
+        }]
+        result = sdt.conform(data, actions=actions)
+        self.assertEqual(result.loc[0, 'description'], 'Kiwi')
+        self.assertEqual(result.loc[0, 'new_col'], 123)
+
     def test_conform_actions_errors(self):
         data = self.get_data()
         ow, sub, _ = self.get_conform_actions()
         bad = deepcopy(sub)
         bad['mapping'] = {'a': ['b']}
         with self.assertRaises(DataError):
+            sdt.conform(data, actions=[ow, sub, bad])
+
+        # bad source column
+        cols = [
+            'date', 'description', 'original_description', 'amount', 'type',
+            'category', 'account', 'labels', 'notes'
+        ]
+        cols = "'" + "', '".join(cols) + "'"
+        cols = cols.lower()
+        expected = 'Source column bagel not found in columns. '
+        expected += f"Legal columns include: \\[{cols}\\]\\."
+        bad = deepcopy(sub)
+        bad['source_column'] = 'bagel'
+        with self.assertRaisesRegexp(ValueError, expected):
             sdt.conform(data, actions=[ow, sub, bad])
 
     # FILTER-DATA---------------------------------------------------------------

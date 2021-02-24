@@ -101,8 +101,8 @@ def conform(data, actions=[], columns=[]):
     for action in actions:
         source = action['source_column']
         if source not in data.columns:
-            msg = f'Source column: {source} not found in columns: '
-            msg += f'Columns include: {data.columns}.'
+            msg = f'Source column {source} not found in columns. '
+            msg += f'Legal columns include: {data.columns.tolist()}.'
             raise ValueError(msg)
 
         target = action['target_column']
