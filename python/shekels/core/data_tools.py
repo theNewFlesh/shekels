@@ -466,6 +466,9 @@ def get_figure(
         x=x_axis, y=y_axis, title=title, xTitle=x_title, yTitle=y_title,
         bins=bins
     ).to_dict()  # type: dict
+    figure['layout']['title']['font']['color'] = '#F4F4F4'
+    figure['layout']['xaxis']['title']['font']['color'] = '#F4F4F4'
+    figure['layout']['yaxis']['title']['font']['color'] = '#F4F4F4'
     if color_scheme != {}:
         figure = conform_figure(figure, color_scheme)
     return figure
