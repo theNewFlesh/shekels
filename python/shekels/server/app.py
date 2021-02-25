@@ -2,8 +2,6 @@ from typing import Any, Dict, List, Tuple, Union
 
 from copy import copy
 from pathlib import Path
-import dash_table
-
 import json
 import os
 
@@ -12,8 +10,10 @@ from dash.exceptions import PreventUpdate
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+import dash_table
 import flasgger as swg
 import flask
+import jsoncomment as jsonc
 
 import shekels.core.config as cfg
 import shekels.server.api as api
@@ -313,11 +313,11 @@ if __name__ == '__main__':
     if debug:
         CONFIG_PATH = '/root/shekels/resources/config.json'
         with open(CONFIG_PATH) as f:
-            temp = json.load(f)
+            temp = jsonc.JsonComment().load(f)
     else:
         CONFIG_PATH = '/mnt/storage/config.json'
         with open(CONFIG_PATH) as f:
-            temp = json.load(f)
+            temp = jsonc.JsonComment().load(f)
 
     temp = cfg.Config(temp)
     temp.validate()

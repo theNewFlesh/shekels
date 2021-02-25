@@ -2,8 +2,8 @@ from typing import List, Union
 
 from copy import deepcopy
 from pathlib import Path
-import json
 
+import jsoncomment as jsonc
 import numpy as np
 import pandas as pd
 import pandasql
@@ -31,7 +31,7 @@ class Database:
             Database: Database instance.
         '''
         with open(filepath) as f:
-            config = json.load(f)
+            config = jsonc.JsonComment().load(f)
         return Database(config)
 
     def __init__(self, config):
