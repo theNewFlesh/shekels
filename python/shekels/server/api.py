@@ -14,7 +14,7 @@ import shekels.server.server_tools as svt
 
 
 '''
-shekels service API.
+Shekels REST API.
 '''
 
 
