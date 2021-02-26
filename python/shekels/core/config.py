@@ -148,6 +148,22 @@ def is_plot_kind(item):
         raise ValidationError(msg)
 
 
+def is_bar_mode(item):
+    '''
+    Ensures mode is a legal bar mode.
+
+    Args:
+        item (str): Mode.
+
+    Raises:
+        ValidationError: If mode is not a legal bar mode.
+    '''
+    modes = ['stack', 'group', 'overlay']
+    if item not in modes:
+        msg = f'{item} is not a legal bar mode. Legal bar modes: {modes}.'
+        raise ValidationError(msg)
+
+
 def is_percentage(number):
     '''
     Ensures number is between 0 and 100.
@@ -274,6 +290,7 @@ class FigureItem(Model):
         x_title (str): Title of plot x axis. Default: None.
         y_title (str): Title of plot y axis. Default: None.
         bins (int): Number of bins if histogram. Default: 50.
+        bar_mode (str): How bars in bar graph are presented. Default: stack.
     '''
     kind = sty.StringType(default='bar', validators=[is_plot_kind])
     color_scheme = sty.DictType(
@@ -285,6 +302,7 @@ class FigureItem(Model):
     x_title = sty.StringType(default=None)
     y_title = sty.StringType(default=None)
     bins = sty.IntType(default=50)
+    bar_mode = sty.StringType(validators=[is_bar_mode], default='stack')
 
 
 class PlotItem(Model):

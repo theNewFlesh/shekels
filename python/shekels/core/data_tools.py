@@ -376,18 +376,19 @@ def pivot_data(data, columns, values=[], index=None):
 
 
 def get_figure(
-    data,             # type: DataFrame
-    filters=[],       # type: List[dict]
-    group=None,       # type: Optional[dict]
-    pivot=None,       # type: Optional[dict]
-    kind='bar',       # type: str
-    color_scheme={},  # type: Dict[str, str]
-    x_axis=None,      # type: Optional[str]
-    y_axis=None,      # type: Optional[str]
-    title=None,       # type: Optional[str]
-    x_title=None,     # type: Optional[str]
-    y_title=None,     # type: Optional[str]
-    bins=50,          # type: int
+    data,              # type: DataFrame
+    filters=[],        # type: List[dict]
+    group=None,        # type: Optional[dict]
+    pivot=None,        # type: Optional[dict]
+    kind='bar',        # type: str
+    color_scheme={},   # type: Dict[str, str]
+    x_axis=None,       # type: Optional[str]
+    y_axis=None,       # type: Optional[str]
+    title=None,        # type: Optional[str]
+    x_title=None,      # type: Optional[str]
+    y_title=None,      # type: Optional[str]
+    bins=50,           # type: int
+    bar_mode='stack',  # type: str
 ):
     '''
     Generates a plotly figure dictionary from given data and manipulations.
@@ -405,6 +406,8 @@ def get_figure(
         x_title (str, optional): Title of x axis. Default: None.
         y_title (str, optional): Title of y axis. Default: None.
         bins (int, optional): Number of bins if histogram. Default: 50.
+        bar_mode (str, optional): How bars in bar graph are presented.
+            Default: stack.
 
     Raises:
         DataError: If any filter in filters is invalid.
@@ -464,7 +467,7 @@ def get_figure(
     figure = data.iplot(
         kind=kind, asFigure=True, theme='henanigans', colorscale='henanigans',
         x=x_axis, y=y_axis, title=title, xTitle=x_title, yTitle=y_title,
-        bins=bins
+        barmode=bar_mode, bins=bins
     ).to_dict()  # type: dict
     figure['layout']['title']['font']['color'] = '#F4F4F4'
     figure['layout']['xaxis']['title']['font']['color'] = '#F4F4F4'

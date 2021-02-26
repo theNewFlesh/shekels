@@ -71,6 +71,16 @@ class ConfigValidatorTests(unittest.TestCase):
             cfg.is_plot_kind('foo')
         self.assertIn(expected, str(e.value))
 
+    def test_is_bar_mode(self):
+        vals = ['stack', 'group', 'overlay']
+        for val in vals:
+            cfg.is_bar_mode(val)
+
+        expected = f'foo is not a legal bar mode. Legal bar modes: {vals}.'
+        with pytest.raises(ValidationError) as e:
+            cfg.is_bar_mode('foo')
+        self.assertIn(expected, str(e.value))
+
     def test_is_percentage(self):
         cfg.is_percentage(0)
         cfg.is_percentage(51.3)
