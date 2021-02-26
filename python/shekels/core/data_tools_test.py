@@ -6,7 +6,6 @@ import unittest
 from lunchbox.enforce import EnforceError
 from pandas import DataFrame, Series
 from schematics.exceptions import DataError
-import pandas as pd
 
 import shekels.core.data_tools as sdt
 import shekels.enforce.enforce_tools as eft
