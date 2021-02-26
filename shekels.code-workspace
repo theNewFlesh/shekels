@@ -19,7 +19,6 @@
     "python.testing.pytestArgs": [
       "--cov=/root/shekels/python",
       "--cov-config=/root/shekels/docker/pytest.ini",
-      "--cov-report=html:/root/shekels/docs/htmlcov"
     ],
     "files.exclude": {
       "**/.classpath": true,
