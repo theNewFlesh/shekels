@@ -6,6 +6,7 @@ import unittest
 from lunchbox.enforce import EnforceError
 from pandas import DataFrame, Series
 from schematics.exceptions import DataError
+import pandas as pd
 
 import shekels.core.data_tools as sdt
 import shekels.enforce.enforce_tools as eft
@@ -297,7 +298,10 @@ class DataToolsTests(unittest.TestCase):
     def test_group_data(self):
         data = self.get_data_2()
         result = sdt.group_data(data, 'group', 'mean')
-        expected = data.groupby('group', as_index=False).mean()
+        grp = data.groupby('group', as_index=False)
+        expected = grp.mean()
+        expected['name'] = grp.first()['name']
+        expected['date'] = grp.first()['date']
         eft.enforce_dataframes_are_equal(result, expected)
 
     def test_group_data_quarter(self):
@@ -313,6 +317,28 @@ class DataToolsTests(unittest.TestCase):
         result = sdt.group_data(data, 'quarter', 'count', datetime_column='date')
         result = result.quarter.astype(str).tolist()
         expected = ['2021-01-01', '2021-10-01']
+        self.assertEqual(result, expected)
+
+    def test_group_data_non_metric_columns(self):
+        data = DataFrame()
+        data['date'] = [
+            datetime(2021, 1, 1, 1, 1, 1, 1),
+            datetime(2021, 2, 1, 1, 1, 1, 1),
+            datetime(2021, 10, 1, 1, 1, 1, 1),
+            datetime(2021, 11, 1, 1, 1, 1, 1),
+            datetime(2021, 12, 1, 1, 1, 1, 1),
+        ]
+        data['name'] = ['a', 'a', 'a', 'b', 'b']
+
+        results = sdt.group_data(
+            data, ['quarter', 'name'], 'count', datetime_column='date'
+        )
+        result = results.quarter.astype(str).tolist()
+        expected = ['2021-01-01', '2021-10-01', '2021-10-01']
+        self.assertEqual(result, expected)
+
+        result = results.name.tolist()
+        expected = ['a', 'a', 'b']
         self.assertEqual(result, expected)
 
     def test_group_data_two_week(self):

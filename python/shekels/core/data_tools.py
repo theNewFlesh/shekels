@@ -302,8 +302,17 @@ def group_data(data, columns, metric, datetime_column='date'):
             op = time_lut[col]
             data[col] = data[datetime_column].apply(op)
     agg = met_lut[metric]
-    data = agg(data.groupby(columns_, as_index=False))
-    return data
+    cols = data.columns.tolist()
+    grp = data.groupby(columns_, as_index=False)
+    output = agg(grp)
+
+    # get first value for columns that cannot be computed by given metric
+    diff = set(cols).difference(output.columns.tolist())
+    if len(diff) > 0:
+        first = grp.first()
+        for col in diff:
+            output[col] = first[col]
+    return output
 
 
 def pivot_data(data, columns, values=[], index=None):
