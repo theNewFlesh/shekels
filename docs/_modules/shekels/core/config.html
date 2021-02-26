@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.0
+                0.8.2
               </div>
             
           
@@ -314,6 +314,22 @@
         <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="is_bar_mode"><a class="viewcode-back" href="../../../core.html#shekels.core.config.is_bar_mode">[docs]</a><span class="k">def</span> <span class="nf">is_bar_mode</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Ensures mode is a legal bar mode.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        item (str): Mode.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If mode is not a legal bar mode.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">modes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;stack&#39;</span><span class="p">,</span> <span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="s1">&#39;overlay&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">modes</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s1"> is not a legal bar mode. Legal bar modes: </span><span class="si">{</span><span class="n">modes</span><span class="si">}</span><span class="s1">.&#39;</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="is_percentage"><a class="viewcode-back" href="../../../core.html#shekels.core.config.is_percentage">[docs]</a><span class="k">def</span> <span class="nf">is_percentage</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Ensures number is between 0 and 100.</span>
@@ -440,6 +456,7 @@
 <span class="sd">        x_title (str): Title of plot x axis. Default: None.</span>
 <span class="sd">        y_title (str): Title of plot y axis. Default: None.</span>
 <span class="sd">        bins (int): Number of bins if histogram. Default: 50.</span>
+<span class="sd">        bar_mode (str): How bars in bar graph are presented. Default: stack.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">kind</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">is_plot_kind</span><span class="p">])</span>
     <span class="n">color_scheme</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">DictType</span><span class="p">(</span>
@@ -450,7 +467,8 @@
     <span class="n">title</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="n">x_title</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="n">y_title</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-    <span class="n">bins</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">IntType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span></div>
+    <span class="n">bins</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">IntType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">bar_mode</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">is_bar_mode</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;stack&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PlotItem"><a class="viewcode-back" href="../../../core.html#shekels.core.config.PlotItem">[docs]</a><span class="k">class</span> <span class="nc">PlotItem</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
