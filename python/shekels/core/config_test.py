@@ -266,9 +266,17 @@ class ConfigSchematicTests(unittest.TestCase):
         self.assertIsNone(result['x_title'])
         self.assertIsNone(result['y_title'])
         self.assertEqual(result['bins'], 50)
+        self.assertEqual(result['bar_mode'], 'stack')
 
+        # kind
         bad = dict(kind='foo')
         expected = 'foo is not a legal plot kind.'
+        with self.assertRaisesRegexp(DataError, expected):
+            cfg.FigureItem(bad).validate()
+
+        # bar mode
+        bad = dict(bar_mode='foo')
+        expected = 'foo is not a legal bar mode.'
         with self.assertRaisesRegexp(DataError, expected):
             cfg.FigureItem(bad).validate()
 
