@@ -122,7 +122,7 @@ def on_event(*inputs):
         if api.DATABASE is None:
             APP.server.test_client().post('/api/initialize', json=conf)
         APP.server.test_client().post('/api/update')
-        query = json.dumps({'query': api.CONFIG['default_query']})
+        query = json.dumps({'query': api.CONFIG['default_query']})  # type: ignore
         response = APP.server.test_client().post('/api/search', json=query).json
         store['/api/read'] = response
 
@@ -259,11 +259,11 @@ def on_get_tab(tab, store):
     store = store or {}
 
     if tab == 'plots':
-        query = store.get('query', api.CONFIG['default_query'])
+        query = store.get('query', api.CONFIG['default_query'])  # type: ignore
         return comp.get_plots_tab(query)
 
     elif tab == 'data':
-        query = store.get('query', api.CONFIG['default_query'])
+        query = store.get('query', api.CONFIG['default_query'])  # type: ignore
         return comp.get_data_tab(query)
 
     elif tab == 'config':
