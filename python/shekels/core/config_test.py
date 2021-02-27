@@ -357,6 +357,7 @@ class ConfigSchematicTests(unittest.TestCase):
             result = cfg.Config(result)
             self.assertEqual(result.columns, [])
             self.assertEqual(result.conform, [])
+            self.assertEqual(result.default_query, 'select * from data')
 
             # data_path bad ext
             bad = deepcopy(config)

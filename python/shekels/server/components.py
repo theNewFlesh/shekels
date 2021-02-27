@@ -182,7 +182,7 @@ def get_searchbar(query=None):
         Div: Div with query field and buttons.
     '''
     if query is None:
-        query = 'SELECT * FROM data'
+        query = 'select * from data'
 
     spacer = html.Div(className='col spacer')
     query = dcc.Input(

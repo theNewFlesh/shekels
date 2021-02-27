@@ -329,6 +329,8 @@ class Config(Model):
 
     Attributes:
         data_path (str): Path to CSV file.
+        columns (list[str]): Columns to be displayed in data.
+        default_query (str): Placeholder SQL query string.
         font_family (str): Font family.
         color_scheme (dict): Color scheme.
         conform (lit[dict]): List of conform actions.
@@ -336,6 +338,7 @@ class Config(Model):
     '''
     data_path = sty.StringType(required=True, validators=[is_csv])
     columns = sty.ListType(sty.StringType, default=[])
+    default_query = sty.StringType(default='select * from data')
     font_family = sty.StringType(default='sans-serif, "sans serif"')
     color_scheme = sty.DictType(
         sty.StringType(), validators=[is_color_scheme], default=COLOR_SCHEME
