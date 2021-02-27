@@ -91,7 +91,18 @@ def get_dash_app(server, storage_type='memory'):
             )
         ],
     )
-    content = html.Div(id='content', className='content')
+    content = dcc.Loading(
+        id="content",
+        className='content',
+        type="dot",
+        style={
+            'align-items': 'center',
+            'opacity': '50%',
+            'background': '#181818'
+        },
+        fullscreen=True,
+        color="#A0D17B"
+    )
 
     app = dash.Dash(
         __name__,
@@ -136,7 +147,9 @@ def get_plots_tab(query=None):
     '''
     # dummies must go first for element props behavior to work
     content = html.Div(id='lower-content', children=[
-        html.Div(id='plots-content', className='col', children=[])
+        html.Div(id='plots-content', className='col', children=[
+            dcc.Loading(id="progress-bar", type="circle")
+        ])
     ])
     return [*get_dummy_elements(), get_searchbar(query), content]
 
