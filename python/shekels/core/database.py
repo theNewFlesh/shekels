@@ -1,6 +1,7 @@
 from typing import List, Union
 
 from copy import deepcopy
+from functools import lru_cache
 from pathlib import Path
 
 import jsoncomment as jsonc
@@ -104,6 +105,7 @@ class Database:
         )
         return self
 
+    @lru_cache(maxsize=1)
     def read(self):
         # type: () -> List[dict]
         '''
@@ -120,6 +122,7 @@ class Database:
             raise RuntimeError(msg)
         return self._to_records(self._data)
 
+    @lru_cache()
     def search(self, query):
         # type: (str) -> List[dict]
         '''

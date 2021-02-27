@@ -1,3 +1,4 @@
+from functools import lru_cache
 from typing import Any, Dict, List, Tuple, Union
 
 from copy import copy
@@ -186,6 +187,21 @@ def on_datatable_update(store):
     return comp.get_datatable(data['response'])
 
 
+@lru_cache()
+def _get_plots(string):
+    '''
+    Convenience function for caching plots.
+
+    Args:
+        string (str): String representation of (data, plots).
+
+    Returns:
+        list[dcc.Graph]: Plots.
+    '''
+    data, plots = eval(string)
+    return comp.get_plots(data, plots)
+
+
 @APP.callback(
     Output('plots-content', 'children'),
     [Input('store', 'data')]
@@ -216,7 +232,7 @@ def on_plots_update(store):
 
     config = store.get('config', api.CONFIG)
     plots = config.get('plots', [])
-    return comp.get_plots(data['response'], plots)
+    return _get_plots(str((data['response'], plots)))
 
 
 @APP.callback(
