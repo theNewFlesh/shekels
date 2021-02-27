@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.2
+                0.8.3
               </div>
             
           
@@ -164,7 +164,8 @@
            <div itemprop="articleBody">
             
   <h1>Source code for shekels.server.app</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
@@ -287,7 +288,8 @@
         <span class="k">if</span> <span class="n">api</span><span class="o">.</span><span class="n">DATABASE</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span>
         <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/api/update&#39;</span><span class="p">)</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/api/read&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">api</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">[</span><span class="s1">&#39;default_query&#39;</span><span class="p">]})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/api/search&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
         <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/read&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span>
 
     <span class="k">elif</span> <span class="n">input_id</span> <span class="o">==</span> <span class="s1">&#39;search-button&#39;</span><span class="p">:</span>
@@ -352,6 +354,21 @@
     <span class="k">return</span> <span class="n">comp</span><span class="o">.</span><span class="n">get_datatable</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">])</span></div>
 
 
+<div class="viewcode-block" id="_get_plots"><a class="viewcode-back" href="../../../server.html#shekels.server.app._get_plots">[docs]</a><span class="nd">@lru_cache</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">_get_plots</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Convenience function for caching plots.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        string (str): String representation of (data, plots).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[dcc.Graph]: Plots.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">data</span><span class="p">,</span> <span class="n">plots</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">comp</span><span class="o">.</span><span class="n">get_plots</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">plots</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="on_plots_update"><a class="viewcode-back" href="../../../server.html#shekels.server.app.on_plots_update">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
     <span class="n">Output</span><span class="p">(</span><span class="s1">&#39;plots-content&#39;</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">),</span>
     <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)]</span>
@@ -382,7 +399,7 @@
 
     <span class="n">config</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">api</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">)</span>
     <span class="n">plots</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plots&#39;</span><span class="p">,</span> <span class="p">[])</span>
-    <span class="k">return</span> <span class="n">comp</span><span class="o">.</span><span class="n">get_plots</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">],</span> <span class="n">plots</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">_get_plots</span><span class="p">(</span><span class="nb">str</span><span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">],</span> <span class="n">plots</span><span class="p">)))</span></div>
 
 
 <div class="viewcode-block" id="on_get_tab"><a class="viewcode-back" href="../../../server.html#shekels.server.app.on_get_tab">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
@@ -408,11 +425,11 @@
     <span class="n">store</span> <span class="o">=</span> <span class="n">store</span> <span class="ow">or</span> <span class="p">{}</span>
 
     <span class="k">if</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;plots&#39;</span><span class="p">:</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="n">api</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">[</span><span class="s1">&#39;default_query&#39;</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">comp</span><span class="o">.</span><span class="n">get_plots_tab</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="n">api</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">[</span><span class="s1">&#39;default_query&#39;</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">comp</span><span class="o">.</span><span class="n">get_data_tab</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;config&#39;</span><span class="p">:</span>

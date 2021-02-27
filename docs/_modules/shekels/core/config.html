@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.2
+                0.8.3
               </div>
             
           
@@ -495,6 +495,8 @@
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        data_path (str): Path to CSV file.</span>
+<span class="sd">        columns (list[str]): Columns to be displayed in data.</span>
+<span class="sd">        default_query (str): Placeholder SQL query string.</span>
 <span class="sd">        font_family (str): Font family.</span>
 <span class="sd">        color_scheme (dict): Color scheme.</span>
 <span class="sd">        conform (lit[dict]): List of conform actions.</span>
@@ -502,6 +504,7 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">data_path</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">is_csv</span><span class="p">])</span>
     <span class="n">columns</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">ListType</span><span class="p">(</span><span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>
+    <span class="n">default_query</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;select * from data&#39;</span><span class="p">)</span>
     <span class="n">font_family</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;sans-serif, &quot;sans serif&quot;&#39;</span><span class="p">)</span>
     <span class="n">color_scheme</span> <span class="o">=</span> <span class="n">sty</span><span class="o">.</span><span class="n">DictType</span><span class="p">(</span>
         <span class="n">sty</span><span class="o">.</span><span class="n">StringType</span><span class="p">(),</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">is_color_scheme</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="n">COLOR_SCHEME</span>

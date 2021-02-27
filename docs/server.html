@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.8.2
+                0.8.3
               </div>
             
           
@@ -333,6 +333,23 @@
 </div>
 <div class="section" id="module-shekels.server.app">
 <span id="app"></span><h2>app<a class="headerlink" href="#module-shekels.server.app" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="shekels.server.app._get_plots">
+<code class="sig-prename descclassname"><span class="pre">shekels.server.app.</span></code><code class="sig-name descname"><span class="pre">_get_plots</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/server/app.html#_get_plots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.app._get_plots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function for caching plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>string</strong> (<em>str</em>) – String representation of (data, plots).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Plots.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[dcc.Graph]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt id="shekels.server.app.on_config_card_update">
 <code class="sig-prename descclassname"><span class="pre">shekels.server.app.</span></code><code class="sig-name descname"><span class="pre">on_config_card_update</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">flask.wrappers.Response</span><a class="reference internal" href="_modules/shekels/server/app.html#on_config_card_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.app.on_config_card_update" title="Permalink to this definition">¶</a></dt>

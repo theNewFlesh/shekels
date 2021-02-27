@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.2
+                0.8.3
               </div>
             
           
@@ -257,7 +257,18 @@
             <span class="p">)</span>
         <span class="p">],</span>
     <span class="p">)</span>
-    <span class="n">content</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;content&#39;</span><span class="p">)</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Loading</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;content&quot;</span><span class="p">,</span>
+        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;content&#39;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;dot&quot;</span><span class="p">,</span>
+        <span class="n">style</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;align-items&#39;</span><span class="p">:</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;opacity&#39;</span><span class="p">:</span> <span class="s1">&#39;50%&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;background&#39;</span><span class="p">:</span> <span class="s1">&#39;#181818&#39;</span>
+        <span class="p">},</span>
+        <span class="n">fullscreen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#A0D17B&quot;</span>
+    <span class="p">)</span>
 
     <span class="n">app</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">Dash</span><span class="p">(</span>
         <span class="vm">__name__</span><span class="p">,</span>
@@ -302,7 +313,9 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># dummies must go first for element props behavior to work</span>
     <span class="n">content</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;lower-content&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;plots-content&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;col&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[])</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;plots-content&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;col&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">dcc</span><span class="o">.</span><span class="n">Loading</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;progress-bar&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;circle&quot;</span><span class="p">)</span>
+        <span class="p">])</span>
     <span class="p">])</span>
     <span class="k">return</span> <span class="p">[</span><span class="o">*</span><span class="n">get_dummy_elements</span><span class="p">(),</span> <span class="n">get_searchbar</span><span class="p">(</span><span class="n">query</span><span class="p">),</span> <span class="n">content</span><span class="p">]</span></div>
 
@@ -335,7 +348,7 @@
 <span class="sd">        Div: Div with query field and buttons.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="n">query</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;SELECT * FROM data&#39;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;select * from data&#39;</span>
 
     <span class="n">spacer</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;col spacer&#39;</span><span class="p">)</span>
     <span class="n">query</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span>

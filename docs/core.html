@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.8.2
+                0.8.3
               </div>
             
           
@@ -195,6 +195,28 @@
 </dd></dl>
 
 <dl class="py attribute">
+<dt id="shekels.core.config.Config.columns">
+<code class="sig-name descname"><span class="pre">columns</span></code><a class="headerlink" href="#shekels.core.config.Config.columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Columns to be displayed in data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="shekels.core.config.Config.default_query">
+<code class="sig-name descname"><span class="pre">default_query</span></code><a class="headerlink" href="#shekels.core.config.Config.default_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Placeholder SQL query string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
 <dt id="shekels.core.config.Config.font_family">
 <code class="sig-name descname"><span class="pre">font_family</span></code><a class="headerlink" href="#shekels.core.config.Config.font_family" title="Permalink to this definition">¶</a></dt>
 <dd><p>Font family.</p>
@@ -249,28 +271,33 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.Config.columns">
-<code class="sig-name descname"><span class="pre">columns</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'columns'&gt;</span></em><a class="headerlink" href="#shekels.core.config.Config.columns" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt id="id1">
-<code class="sig-name descname"><span class="pre">conform</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(ModelType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'conform'&gt;</span></em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">columns</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'columns'&gt;</span></em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id2">
-<code class="sig-name descname"><span class="pre">data_path</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'data_path'&gt;</span></em><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">conform</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(ModelType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'conform'&gt;</span></em><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id3">
-<code class="sig-name descname"><span class="pre">font_family</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'font_family'&gt;</span></em><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">data_path</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'data_path'&gt;</span></em><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id4">
-<code class="sig-name descname"><span class="pre">plots</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(ModelType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'plots'&gt;</span></em><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">default_query</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'default_query'&gt;</span></em><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id5">
+<code class="sig-name descname"><span class="pre">font_family</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'font_family'&gt;</span></em><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id6">
+<code class="sig-name descname"><span class="pre">plots</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(ModelType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'plots'&gt;</span></em><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -331,23 +358,23 @@ value in target column.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id5">
-<code class="sig-name descname"><span class="pre">action</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">ConformAction</span> <span class="pre">as</span> <span class="pre">'action'&gt;</span></em><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="id6">
-<code class="sig-name descname"><span class="pre">mapping</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;DictType(UnionType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">ConformAction</span> <span class="pre">as</span> <span class="pre">'mapping'&gt;</span></em><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt id="id7">
-<code class="sig-name descname"><span class="pre">source_column</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">ConformAction</span> <span class="pre">as</span> <span class="pre">'source_column'&gt;</span></em><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">action</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">ConformAction</span> <span class="pre">as</span> <span class="pre">'action'&gt;</span></em><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id8">
-<code class="sig-name descname"><span class="pre">target_column</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">ConformAction</span> <span class="pre">as</span> <span class="pre">'target_column'&gt;</span></em><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">mapping</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;DictType(UnionType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">ConformAction</span> <span class="pre">as</span> <span class="pre">'mapping'&gt;</span></em><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id9">
+<code class="sig-name descname"><span class="pre">source_column</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">ConformAction</span> <span class="pre">as</span> <span class="pre">'source_column'&gt;</span></em><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id10">
+<code class="sig-name descname"><span class="pre">target_column</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">ConformAction</span> <span class="pre">as</span> <span class="pre">'target_column'&gt;</span></em><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -488,48 +515,48 @@ Default: {‘grey1’: ‘#181818’, ‘bg’: ‘#242424’}.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id9">
-<code class="sig-name descname"><span class="pre">bar_mode</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'bar_mode'&gt;</span></em><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="id10">
-<code class="sig-name descname"><span class="pre">bins</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;IntType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'bins'&gt;</span></em><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt id="id11">
-<code class="sig-name descname"><span class="pre">color_scheme</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;DictType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'color_scheme'&gt;</span></em><a class="headerlink" href="#id11" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">bar_mode</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'bar_mode'&gt;</span></em><a class="headerlink" href="#id11" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id12">
-<code class="sig-name descname"><span class="pre">kind</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'kind'&gt;</span></em><a class="headerlink" href="#id12" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">bins</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;IntType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'bins'&gt;</span></em><a class="headerlink" href="#id12" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id13">
-<code class="sig-name descname"><span class="pre">title</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'title'&gt;</span></em><a class="headerlink" href="#id13" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">color_scheme</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;DictType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'color_scheme'&gt;</span></em><a class="headerlink" href="#id13" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id14">
-<code class="sig-name descname"><span class="pre">x_axis</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'x_axis'&gt;</span></em><a class="headerlink" href="#id14" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">kind</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'kind'&gt;</span></em><a class="headerlink" href="#id14" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id15">
-<code class="sig-name descname"><span class="pre">x_title</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'x_title'&gt;</span></em><a class="headerlink" href="#id15" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">title</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'title'&gt;</span></em><a class="headerlink" href="#id15" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id16">
-<code class="sig-name descname"><span class="pre">y_axis</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'y_axis'&gt;</span></em><a class="headerlink" href="#id16" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">x_axis</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'x_axis'&gt;</span></em><a class="headerlink" href="#id16" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id17">
-<code class="sig-name descname"><span class="pre">y_title</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'y_title'&gt;</span></em><a class="headerlink" href="#id17" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">x_title</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'x_title'&gt;</span></em><a class="headerlink" href="#id17" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id18">
+<code class="sig-name descname"><span class="pre">y_axis</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'y_axis'&gt;</span></em><a class="headerlink" href="#id18" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id19">
+<code class="sig-name descname"><span class="pre">y_title</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'y_title'&gt;</span></em><a class="headerlink" href="#id19" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -578,18 +605,18 @@ Default: {‘grey1’: ‘#181818’, ‘bg’: ‘#242424’}.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id18">
-<code class="sig-name descname"><span class="pre">column</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FilterAction</span> <span class="pre">as</span> <span class="pre">'column'&gt;</span></em><a class="headerlink" href="#id18" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="id19">
-<code class="sig-name descname"><span class="pre">comparator</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FilterAction</span> <span class="pre">as</span> <span class="pre">'comparator'&gt;</span></em><a class="headerlink" href="#id19" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt id="id20">
-<code class="sig-name descname"><span class="pre">value</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;BaseType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FilterAction</span> <span class="pre">as</span> <span class="pre">'value'&gt;</span></em><a class="headerlink" href="#id20" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">column</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FilterAction</span> <span class="pre">as</span> <span class="pre">'column'&gt;</span></em><a class="headerlink" href="#id20" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id21">
+<code class="sig-name descname"><span class="pre">comparator</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FilterAction</span> <span class="pre">as</span> <span class="pre">'comparator'&gt;</span></em><a class="headerlink" href="#id21" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id22">
+<code class="sig-name descname"><span class="pre">value</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;BaseType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FilterAction</span> <span class="pre">as</span> <span class="pre">'value'&gt;</span></em><a class="headerlink" href="#id22" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -639,18 +666,18 @@ Default: date.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id21">
-<code class="sig-name descname"><span class="pre">columns</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GroupAction</span> <span class="pre">as</span> <span class="pre">'columns'&gt;</span></em><a class="headerlink" href="#id21" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="id22">
-<code class="sig-name descname"><span class="pre">datetime_column</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GroupAction</span> <span class="pre">as</span> <span class="pre">'datetime_column'&gt;</span></em><a class="headerlink" href="#id22" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt id="id23">
-<code class="sig-name descname"><span class="pre">metric</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GroupAction</span> <span class="pre">as</span> <span class="pre">'metric'&gt;</span></em><a class="headerlink" href="#id23" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">columns</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GroupAction</span> <span class="pre">as</span> <span class="pre">'columns'&gt;</span></em><a class="headerlink" href="#id23" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id24">
+<code class="sig-name descname"><span class="pre">datetime_column</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GroupAction</span> <span class="pre">as</span> <span class="pre">'datetime_column'&gt;</span></em><a class="headerlink" href="#id24" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id25">
+<code class="sig-name descname"><span class="pre">metric</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GroupAction</span> <span class="pre">as</span> <span class="pre">'metric'&gt;</span></em><a class="headerlink" href="#id25" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -702,18 +729,18 @@ plot. Default: None.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id24">
-<code class="sig-name descname"><span class="pre">columns</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PivotAction</span> <span class="pre">as</span> <span class="pre">'columns'&gt;</span></em><a class="headerlink" href="#id24" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="id25">
-<code class="sig-name descname"><span class="pre">index</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PivotAction</span> <span class="pre">as</span> <span class="pre">'index'&gt;</span></em><a class="headerlink" href="#id25" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt id="id26">
-<code class="sig-name descname"><span class="pre">values</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PivotAction</span> <span class="pre">as</span> <span class="pre">'values'&gt;</span></em><a class="headerlink" href="#id26" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">columns</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PivotAction</span> <span class="pre">as</span> <span class="pre">'columns'&gt;</span></em><a class="headerlink" href="#id26" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id27">
+<code class="sig-name descname"><span class="pre">index</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PivotAction</span> <span class="pre">as</span> <span class="pre">'index'&gt;</span></em><a class="headerlink" href="#id27" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id28">
+<code class="sig-name descname"><span class="pre">values</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PivotAction</span> <span class="pre">as</span> <span class="pre">'values'&gt;</span></em><a class="headerlink" href="#id28" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -784,28 +811,28 @@ plot. Default: None.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id27">
-<code class="sig-name descname"><span class="pre">figure</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ModelType(FigureItem)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PlotItem</span> <span class="pre">as</span> <span class="pre">'figure'&gt;</span></em><a class="headerlink" href="#id27" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="id28">
-<code class="sig-name descname"><span class="pre">filters</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(ModelType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PlotItem</span> <span class="pre">as</span> <span class="pre">'filters'&gt;</span></em><a class="headerlink" href="#id28" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt id="id29">
-<code class="sig-name descname"><span class="pre">group</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ModelType(GroupAction)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PlotItem</span> <span class="pre">as</span> <span class="pre">'group'&gt;</span></em><a class="headerlink" href="#id29" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">figure</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ModelType(FigureItem)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PlotItem</span> <span class="pre">as</span> <span class="pre">'figure'&gt;</span></em><a class="headerlink" href="#id29" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id30">
-<code class="sig-name descname"><span class="pre">min_width</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;FloatType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PlotItem</span> <span class="pre">as</span> <span class="pre">'min_width'&gt;</span></em><a class="headerlink" href="#id30" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">filters</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(ModelType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PlotItem</span> <span class="pre">as</span> <span class="pre">'filters'&gt;</span></em><a class="headerlink" href="#id30" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id31">
-<code class="sig-name descname"><span class="pre">pivot</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ModelType(PivotAction)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PlotItem</span> <span class="pre">as</span> <span class="pre">'pivot'&gt;</span></em><a class="headerlink" href="#id31" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">group</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ModelType(GroupAction)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PlotItem</span> <span class="pre">as</span> <span class="pre">'group'&gt;</span></em><a class="headerlink" href="#id31" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id32">
+<code class="sig-name descname"><span class="pre">min_width</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;FloatType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PlotItem</span> <span class="pre">as</span> <span class="pre">'min_width'&gt;</span></em><a class="headerlink" href="#id32" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id33">
+<code class="sig-name descname"><span class="pre">pivot</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ModelType(PivotAction)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PlotItem</span> <span class="pre">as</span> <span class="pre">'pivot'&gt;</span></em><a class="headerlink" href="#id33" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
