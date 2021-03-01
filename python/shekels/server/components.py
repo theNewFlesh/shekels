@@ -351,8 +351,8 @@ def get_key_value_card(data, header=None, id_='key-value-card'):
     return card
 
 
-def get_datatable(data, color_scheme=cfg.COLOR_SCHEME):
-    # type: (List[Dict], Dict[str, str]) -> dash_table.DataTable
+def get_datatable(data, color_scheme=cfg.COLOR_SCHEME, editable=False):
+    # type: (List[Dict], Dict[str, str], bool) -> dash_table.DataTable
     '''
     Gets a Dash DataTable element using given data.
     Assumes dict element has all columns of table as keys.
@@ -361,6 +361,7 @@ def get_datatable(data, color_scheme=cfg.COLOR_SCHEME):
         data (list[dict]): List of dicts.
         color_scheme (dict, optional): Color scheme dictionary.
             Default: COLOR_SCHEME.
+        editable (bool, optional): Whether table is editable. Default: False.
 
     Returns:
         DataTable: Table of data.
@@ -380,7 +381,8 @@ def get_datatable(data, color_scheme=cfg.COLOR_SCHEME):
         fixed_rows=dict(headers=True),
         sort_action='native',
         sort_mode='multi',
-        cell_selectable=False,
+        cell_selectable=editable,
+        editable=editable,
         css=[
             {
                 'selector': '.dash-cell div.dash-cell-value',
@@ -395,31 +397,17 @@ def get_datatable(data, color_scheme=cfg.COLOR_SCHEME):
             'height': 'auto',
             'width': 'auto',
         },
-        style_data_conditional=[
-            {
-                'if': {'row_index': 'odd'},
-                'color': cs['light1'],
-                'background': cs['grey1'],
-            },
-            {
-                'if': {'row_index': 'even'},
-                'color': cs['light1'],
-                'background': cs['bg']
-            }
-        ],
         style_table={
             'zIndex': '0',
-            'maxWidth': '99.5vw',
+            'maxWidth': '100%',
             'maxHeight': '95vh',
             'overflowX': 'auto',
             'overflowY': 'auto',
-            'padding': '0px 4px 0px 4px',
-            'borderWidth': '0px 1px 0px 1px',
             'borderColor': cs['grey1'],
         },
         style_header={
             'color': cs['light2'],
-            'background': cs['grey1'],
+            'background': cs['bg'],
             'fontWeight': 'bold',
         },
         style_filter={

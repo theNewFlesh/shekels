@@ -615,6 +615,29 @@ button:active {
     width: 100%;
 }
 
+td.dash-cell {
+    color: {{ COLOR_SCHEME['light2'] }};
+    border-width: 0px !important;
+}
+
+#datatable td.dash-cell.cell--selected,
+#datatable td.dash-cell.cell--selected.focused {
+    background: {{ COLOR_SCHEME['green2'] }} !important;
+}
+
+.input-active {
+    color: {{ COLOR_SCHEME['dark2'] }} !important;
+    text-align: left !important;
+}
+
+tr:nth-child(even) td.dash-cell {
+    background: {{ COLOR_SCHEME['bg'] }} !important;
+}
+
+tr:nth-child(odd) td.dash-cell {
+    background: {{ COLOR_SCHEME['grey1'] }} !important;
+}
+
 .dash-cell div.dash-cell-value {
     display: inline;
     white-space: inherit;
