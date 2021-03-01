@@ -10,7 +10,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_table
 import flask
-import rolling_pin.blob_etl as blob_etl
+import rolling_pin.blob_etl as rpb
 
 import shekels.core.config as cfg
 import shekels.core.data_tools as sdt
@@ -306,7 +306,7 @@ def get_key_value_card(data, header=None, id_='key-value-card'):
     Returns:
         Div: Card with key-value child elements.
     '''
-    data = blob_etl.BlobETL(data)\
+    data = rpb.BlobETL(data)\
         .set(
             predicate=lambda k, v: re.search(r'<list_\d', k),
             key_setter=lambda k, v: re.sub('<list_|>', '', k))\
