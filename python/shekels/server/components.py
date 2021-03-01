@@ -383,46 +383,6 @@ def get_datatable(data, color_scheme=cfg.COLOR_SCHEME, editable=False):
         sort_mode='multi',
         cell_selectable=editable,
         editable=editable,
-        css=[
-            {
-                'selector': '.dash-cell div.dash-cell-value',
-                'rule': '''display: inline;
-                           white-space: inherit;
-                           overflow: inherit;
-                           text-overflow: inherit;'''
-            }
-        ],
-        style_data={
-            'whiteSpace': 'normal',
-            'height': 'auto',
-            'width': 'auto',
-        },
-        style_table={
-            'zIndex': '0',
-            'maxWidth': '100%',
-            'maxHeight': '95vh',
-            'overflowX': 'auto',
-            'overflowY': 'auto',
-            'borderColor': cs['grey1'],
-        },
-        style_header={
-            'color': cs['light2'],
-            'background': cs['bg'],
-            'fontWeight': 'bold',
-        },
-        style_filter={
-            'color': cs['green2'],
-            'background': cs['bg']
-        },
-        style_cell={
-            'textAlign': 'left',
-            'minWidth': '75px',
-            'maxWidth': '300px',
-            'borderColor': cs['grey1'],
-            'border': '0px',
-            'height': '25px',
-            'padding': '3px 0px 3px 10px'
-        }
     )
 
 

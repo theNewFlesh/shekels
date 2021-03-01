@@ -615,9 +615,55 @@ button:active {
     width: 100%;
 }
 
-td.dash-cell {
+#datatable .dash-spreadsheet {
+    max-height: unset;
+}
+
+/* header */
+#datatable .row.row-0 {
+    min-height: 0px !important;
+}
+
+#datatable .dash-header {
     color: {{ COLOR_SCHEME['light2'] }};
-    border-width: 0px !important;
+    background: {{ COLOR_SCHEME['bg'] }};
+    font-weight: bold;
+    border: 0px !important;
+    text-align: left;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    border-bottom: 2px solid {{ COLOR_SCHEME['green1'] }} !important;
+}
+
+/* body */
+#datatable .dt-table-container__row-1 {
+    z-index: 0;
+    max-width: 100%;
+    max-height: 95vh;
+    overflow-x: auto;
+    overflow-y: auto;
+    border-color: {{ COLOR_SCHEME['grey1'] }};
+}
+
+tr:nth-child(even) td.dash-cell {
+    background: {{ COLOR_SCHEME['bg'] }} !important;
+}
+
+tr:nth-child(odd) td.dash-cell {
+    background: {{ COLOR_SCHEME['grey1'] }} !important;
+}
+
+/* cell */
+#datatable td.dash-cell {
+    color: {{ COLOR_SCHEME['light2'] }};
+    height: auto;
+    width: auto;
+    min-width: 75px;
+    max-width: 300px;
+    border: 0px !important;
+    padding: 3px 0px 3px 10px;
+    text-align: left;
+    white-space: normal;
 }
 
 #datatable td.dash-cell.cell--selected,
@@ -630,14 +676,6 @@ td.dash-cell {
     text-align: left !important;
 }
 
-tr:nth-child(even) td.dash-cell {
-    background: {{ COLOR_SCHEME['bg'] }} !important;
-}
-
-tr:nth-child(odd) td.dash-cell {
-    background: {{ COLOR_SCHEME['grey1'] }} !important;
-}
-
 .dash-cell div.dash-cell-value {
     display: inline;
     white-space: inherit;
@@ -645,24 +683,10 @@ tr:nth-child(odd) td.dash-cell {
     text-overflow: inherit;
 }
 
-#datatable .dash-spreadsheet {
-    max-height: unset;
-}
-
-#datatable .row.row-0 {
-    min-height: 0px !important;
-}
-
 #datatable .dash-cell.focused {
     background: {{ COLOR_SCHEME['grey2'] }} !important;
     color: {{ COLOR_SCHEME['green2'] }} !important;
     border: 0px solid {{ COLOR_SCHEME['bg'] }} !important;
-}
-
-#datatable .dash-header {
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-    border-bottom: 2px solid {{ COLOR_SCHEME['green1'] }} !important;
 }
 
 #datatable .dash-filter input {
