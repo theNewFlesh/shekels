@@ -84,6 +84,8 @@ body {
 
 /* Text Input */
 input {
+    color: {{ COLOR_SCHEME['green2'] }} !important;
+    background: {{ COLOR_SCHEME['grey1'] }} !important;
     caret-color: {{ COLOR_SCHEME['green2'] }};
 }
 
@@ -682,12 +684,12 @@ tr:nth-child(odd) td.dash-cell {
     background: {{ COLOR_SCHEME['green2'] }} !important;
 }
 
-.input-active {
+#datatable .input-active {
     color: {{ COLOR_SCHEME['dark2'] }} !important;
     text-align: left !important;
 }
 
-.dash-cell div.dash-cell-value {
+#datatable .dash-cell div.dash-cell-value {
     display: inline;
     white-space: inherit;
     overflow: inherit;
@@ -712,7 +714,7 @@ tr:nth-child(odd) td.dash-cell {
     transform: translateY(-6px);
 }
 
-.previous-page {
+#datatable .previous-page {
     border-right: 3px solid {{ COLOR_SCHEME['bg'] }};
 }
 
@@ -737,6 +739,27 @@ tr:nth-child(odd) td.dash-cell {
     --selected-background: transparent !important;
     --faded-dropdown: transparent !important;
     --muted: transparent !important;
+}
+
+/* paginator */
+#datatable .page-number {
+    color: {{ COLOR_SCHEME['light1'] }};
+}
+
+#datatable input {
+    color: {{ COLOR_SCHEME['green2'] }};
+    background: {{ COLOR_SCHEME['grey1'] }};
+    border: 0px !important;
+}
+
+#datatable .previous-next-container button {
+    color: {{ COLOR_SCHEME['light2'] }};
+    background: {{ COLOR_SCHEME['grey1'] }};
+}
+
+#datatable .previous-next-container button:hover {
+    color: {{ COLOR_SCHEME['green2'] }};
+    background: {{ COLOR_SCHEME['grey2'] }};
 }
 
 /* Config */
