@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.3
+                0.8.4
               </div>
             
           
@@ -300,6 +300,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            DataFrame: Formatted data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># TODO: add regex search capability</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">pandasql</span><span class="o">.</span><span class="n">sqldf</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">})</span>
         <span class="c1"># pandasql coerces Timestamps to strings</span>
         <span class="n">output</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>

@@ -188,16 +188,17 @@
     <p id="t134" class="pln"><span class="n"><a href="#t134">134</a></span><span class="t"><span class="str">        Returns:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t135" class="pln"><span class="n"><a href="#t135">135</a></span><span class="t"><span class="str">            DataFrame: Formatted data.</span>&nbsp;</span><span class="r"></span></p>
     <p id="t136" class="pln"><span class="n"><a href="#t136">136</a></span><span class="t"><span class="str">        '''</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t137" class="run"><span class="n"><a href="#t137">137</a></span><span class="t">        <span class="nam">output</span> <span class="op">=</span> <span class="nam">pandasql</span><span class="op">.</span><span class="nam">sqldf</span><span class="op">(</span><span class="nam">query</span><span class="op">,</span> <span class="op">{</span><span class="str">'data'</span><span class="op">:</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_data</span><span class="op">}</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t138" class="pln"><span class="n"><a href="#t138">138</a></span><span class="t">        <span class="com"># pandasql coerces Timestamps to strings</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t139" class="run"><span class="n"><a href="#t139">139</a></span><span class="t">        <span class="nam">output</span><span class="op">.</span><span class="nam">date</span> <span class="op">=</span> <span class="nam">pd</span><span class="op">.</span><span class="nam">DatetimeIndex</span><span class="op">(</span><span class="nam">output</span><span class="op">.</span><span class="nam">date</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t140" class="run"><span class="n"><a href="#t140">140</a></span><span class="t">        <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_to_records</span><span class="op">(</span><span class="nam">output</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t137" class="pln"><span class="n"><a href="#t137">137</a></span><span class="t">        <span class="com"># TODO: add regex search capability</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t138" class="run"><span class="n"><a href="#t138">138</a></span><span class="t">        <span class="nam">output</span> <span class="op">=</span> <span class="nam">pandasql</span><span class="op">.</span><span class="nam">sqldf</span><span class="op">(</span><span class="nam">query</span><span class="op">,</span> <span class="op">{</span><span class="str">'data'</span><span class="op">:</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_data</span><span class="op">}</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t139" class="pln"><span class="n"><a href="#t139">139</a></span><span class="t">        <span class="com"># pandasql coerces Timestamps to strings</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t140" class="run"><span class="n"><a href="#t140">140</a></span><span class="t">        <span class="nam">output</span><span class="op">.</span><span class="nam">date</span> <span class="op">=</span> <span class="nam">pd</span><span class="op">.</span><span class="nam">DatetimeIndex</span><span class="op">(</span><span class="nam">output</span><span class="op">.</span><span class="nam">date</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t141" class="run"><span class="n"><a href="#t141">141</a></span><span class="t">        <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_to_records</span><span class="op">(</span><span class="nam">output</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.4</a>,
-            created at 2021-02-27 07:18 +0000
+            created at 2021-03-02 08:58 +0000
         </p>
     </div>
 </div>
