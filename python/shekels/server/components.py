@@ -209,9 +209,7 @@ def get_configbar(config):
             children=[expander, spacer, upload, spacer, write],
         ),
         html.Div(className='row-spacer'),
-        html.Div(id='config-content', children=[
-            get_key_value_card(config, header='config', id_='config-card')
-        ])
+        html.Div(id='config-content', children=[get_key_value_table(config)])
     ]
     configbar = html.Div(id='configbar', className='menubar', children=rows)
     return configbar
@@ -295,6 +293,43 @@ def get_key_value_card(data, header=None, id_='key-value-card'):
         children=children
     )
     return card
+
+
+def get_key_value_table(data, color_scheme=cfg.COLOR_SCHEME, editable=True):
+    '''
+    Gets a Dash DataTable element representing given dictionary.
+
+    Args:
+        data (dict): Dictionary.
+        color_scheme (dict, optional): Color scheme dictionary.
+            Default: COLOR_SCHEME.
+        editable (bool, optional): Whether table is editable. Default: False.
+
+    Returns:
+        DataTable: Table of data.w
+    '''
+    cs = copy(cfg.COLOR_SCHEME)
+    cs.update(color_scheme)
+
+    data = rpb.BlobETL(data).to_flat_dict()
+    data = [dict(key=k, value=v) for k, v in sorted(data.items())]
+
+    cols = []  # type: Any
+    if len(data) > 0:
+        cols = data[0].keys()
+    cols = [{'name': x, 'id': x} for x in cols]
+
+    table = dash_table.DataTable(
+        data=data,
+        columns=cols,
+        id='key-value-table',
+        sort_action='native',
+        sort_mode='multi',
+        cell_selectable=editable,
+        editable=editable,
+    )
+    header = html.Div(id='key-value-table-header', children='config')
+    return html.Div(id='key-value-table-container', children=[header, table])
 
 
 def get_datatable(data, color_scheme=cfg.COLOR_SCHEME, editable=False):

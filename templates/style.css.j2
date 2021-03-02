@@ -87,6 +87,8 @@ input {
     color: {{ COLOR_SCHEME['green2'] }} !important;
     background: {{ COLOR_SCHEME['grey1'] }} !important;
     caret-color: {{ COLOR_SCHEME['green2'] }};
+    /* -webkit-appearance: none; */
+    /* -webkit-text-fill-color: {{ COLOR_SCHEME['green2'] }} !important; */
 }
 
 /* Button */
@@ -159,9 +161,9 @@ button:active {
     flex-grow: 1;
 }
 
-.query {
-    background: {{ COLOR_SCHEME['grey1'] }};
-    color: {{ COLOR_SCHEME['green2'] }};
+#query {
+    color: {{ COLOR_SCHEME['green2'] }} !important;
+    background: {{ COLOR_SCHEME['grey1'] }} !important;
     flex-grow: 10;
     font-size: 15px;
     padding-left: 10px;
@@ -629,16 +631,19 @@ button:active {
     z-index: 0;
 }
 
-#datatable .dash-spreadsheet {
+#datatable .dash-spreadsheet,
+#key-value-table .dash-spreadsheet {
     max-height: unset;
 }
 
 /* header */
-#datatable .row.row-0 {
+#datatable .row.row-0,
+#key-value-table .row.row-0 {
     min-height: 0px !important;
 }
 
-#datatable .dash-header {
+#datatable .dash-header,
+#key-value-table .dash-header {
     color: {{ COLOR_SCHEME['light2'] }};
     background: {{ COLOR_SCHEME['bg'] }};
     font-weight: bold;
@@ -650,84 +655,99 @@ button:active {
 }
 
 /* body */
-#datatable .dt-table-container__row-1 {
+#datatable .dt-table-container__row-1,
+#key-value-table .dt-table-container__row-1 {
     z-index: 0;
     max-width: 100%;
-    max-height: 95vh;
+    max-height: 90vh;
     overflow-x: auto;
     overflow-y: auto;
     border-color: {{ COLOR_SCHEME['grey1'] }};
 }
 
-tr:nth-child(even) td.dash-cell {
+#datatable tr:nth-child(even) td.dash-cell,
+#key-value-table tr:nth-child(even) td.dash-cell {
     background: {{ COLOR_SCHEME['bg'] }} !important;
 }
 
-tr:nth-child(odd) td.dash-cell {
+#datatable tr:nth-child(odd) td.dash-cell,
+#key-value-table tr:nth-child(odd) td.dash-cell {
     background: {{ COLOR_SCHEME['grey1'] }} !important;
 }
 
 /* cell */
-#datatable td.dash-cell {
+#datatable td.dash-cell,
+#key-value-table td.dash-cell {
     color: {{ COLOR_SCHEME['light2'] }};
     height: auto;
     width: auto;
     min-width: 75px;
     max-width: 300px;
     border: 0px !important;
-    padding: 3px 0px 3px 10px;
+    padding: 3px 10px 3px 10px;
     text-align: left;
     white-space: normal;
 }
 
-#datatable td.dash-cell.cell--selected,
-#datatable td.dash-cell.cell--selected.focused {
-    background: {{ COLOR_SCHEME['green2'] }} !important;
+#datatable td.dash-cell.cell--selecte,
+#key-value-table td.dash-cell.cell--selected,
+#datatable td.dash-cell.cell--selected.focused,
+#key-value-table td.dash-cell.cell--selected.focused {
+    background: {{ COLOR_SCHEME['grey2'] }} !important;
 }
 
-#datatable .input-active {
-    color: {{ COLOR_SCHEME['dark2'] }} !important;
+#datatable .input-active,
+#key-value-table .input-active {
+    color: {{ COLOR_SCHEME['green2'] }} !important;
     text-align: left !important;
 }
 
-#datatable .dash-cell div.dash-cell-value {
+#datatable .dash-cell div.dash-cell-value,
+#key-value-table .dash-cell div.dash-cell-value {
     display: inline;
     white-space: inherit;
     overflow: inherit;
     text-overflow: inherit;
 }
 
-#datatable .dash-cell.focused {
+#datatable .dash-cell.focused,
+#key-value-table .dash-cell.focused {
     background: {{ COLOR_SCHEME['grey2'] }} !important;
     color: {{ COLOR_SCHEME['green2'] }} !important;
     border: 0px solid {{ COLOR_SCHEME['bg'] }} !important;
 }
 
-#datatable .dash-filter input {
+#datatable .dash-filter input,
+#key-value-table .dash-filter input {
     color: {{ COLOR_SCHEME['green2'] }};
     padding: 0px 5px 0px 5px;
     border-left: 1px solid {{ COLOR_SCHEME['grey1'] }};
     border-right: 1px solid {{ COLOR_SCHEME['grey1'] }};
 }
 
-#datatable .sort {
+#datatable .sort,
+#key-value-table .sort {
     color: {{ COLOR_SCHEME['green2'] }};
     transform: translateY(-6px);
 }
 
-#datatable .previous-page {
+#datatable .previous-page,
+#key-value-table .previous-page {
     border-right: 3px solid {{ COLOR_SCHEME['bg'] }};
 }
 
-#datatable .dash-delete-cell {
+#datatable .dash-delete-cell,
+#key-value-table .dash-delete-cell {
     color: {{ COLOR_SCHEME['green2'] }} !important;
 }
 
-#datatable .dash-delete-cell:hover {
+#datatable .dash-delete-cell:hover,
+#key-value-table .dash-delete-cell:hover {
     color: {{ COLOR_SCHEME['red2'] }} !important;
 }
 
-#datatable .dash-spreadsheet-container .dash-spreadsheet-inner table {
+#datatable .dash-spreadsheet-container .dash-spreadsheet-inner table,
+#key-value-table .dash-spreadsheet-container .dash-spreadsheet-inner table {
     border-collapse: collapse;
     font-family: monospace;
     --accent: transparent  !important;
@@ -743,26 +763,60 @@ tr:nth-child(odd) td.dash-cell {
 }
 
 /* paginator */
-#datatable .page-number {
+#datatable .page-number,
+#key-value-table .page-number {
     color: {{ COLOR_SCHEME['light1'] }};
 }
 
-#datatable input {
-    color: {{ COLOR_SCHEME['bg'] }} !important;
-    background: {{ COLOR_SCHEME['green2'] }} !important;
+#datatable input,
+#key-value-table input {
+    color: {{ COLOR_SCHEME['green2'] }} !important;
+    background: {{ COLOR_SCHEME['grey2'] }} !important;
     border: 0px !important;
-    -webkit-text-fill-color: {{ COLOR_SCHEME['bg'] }} !important;
+    -webkit-text-fill-color: {{ COLOR_SCHEME['green2'] }} !important;
     font-weight: bold;
 }
 
-#datatable .previous-next-container button {
+#datatable .previous-next-container button,
+#key-value-table .previous-next-container button {
     color: {{ COLOR_SCHEME['light2'] }};
     background: {{ COLOR_SCHEME['grey1'] }};
 }
 
-#datatable .previous-next-container button:hover {
+#datatable .previous-next-container button:hover,
+#key-value-table .previous-next-container button:hover {
     color: {{ COLOR_SCHEME['green2'] }};
     background: {{ COLOR_SCHEME['grey2'] }};
+}
+
+/* Key value table */
+#key-value-table-container {
+    border-left: 2px solid {{ COLOR_SCHEME['green2'] }};
+    border-right: 2px solid {{ COLOR_SCHEME['green2'] }};
+    border-bottom: 2px solid {{ COLOR_SCHEME['green2'] }};
+}
+
+#key-value-table tr:first-child {
+    display: none;
+}
+
+#key-value-table-header {
+    color: {{ COLOR_SCHEME['dark1'] }};
+    background: {{ COLOR_SCHEME['green2'] }};
+    font-size: 14pt;
+    font-weight: bold;
+    padding: 3px 4px 3px 4px;
+    text-align: center;
+}
+
+#key-value-table td.dash-cell:first-child {
+    color: {{ COLOR_SCHEME['light1'] }};
+    border-right: 2px solid {{ COLOR_SCHEME['green2'] }} !important;
+}
+
+#key-value-table td.dash-cell:first-child,
+#key-value-table td.dash-cell:first-child .input-active {
+    text-align: right !important;
 }
 
 /* Config */
