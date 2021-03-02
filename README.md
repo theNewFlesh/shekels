@@ -3,8 +3,7 @@ Shekels is a local service which consumes a transactions CSV file downloaded
 from mint.intuit.com. It conforms this data into a database, and displays it as
 a searchable table and dashboard of configurable plots in web frontend.
 
-See `documentation <https://thenewflesh.github.io/shekels/>`__ for
-details.
+See [documentation](https://thenewflesh.github.io/shekels/) for details.
 
 # Installation
 ### Python
