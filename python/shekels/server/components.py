@@ -33,15 +33,6 @@ def get_dash_app(server, storage_type='memory'):
 
     store = dcc.Store(id='store', storage_type=storage_type)
 
-    tab_style = {
-        'padding': '4px',
-        'border': '0px',
-        'min-width': '200px',
-    }
-    tab_selected_style = {
-        'padding': '4px',
-        'border': '0px',
-    }
     tabs = dcc.Tabs(
         id='tabs',
         className='tabs',
@@ -52,57 +43,20 @@ def get_dash_app(server, storage_type='memory'):
                 className='tab',
                 label='$HEKELS',
                 value='',
-                disabled_style=tab_style,
-                disabled=True,
+                disabled=True
             ),
-            dcc.Tab(
-                className='tab',
-                label='plots',
-                value='plots',
-                style=tab_style,
-                selected_style=tab_selected_style,
-            ),
-            dcc.Tab(
-                className='tab',
-                label='data',
-                value='data',
-                style=tab_style,
-                selected_style=tab_selected_style,
-            ),
-            dcc.Tab(
-                className='tab',
-                label='config',
-                value='config',
-                style=tab_style,
-                selected_style=tab_selected_style,
-            ),
-            dcc.Tab(
-                className='tab',
-                label='api',
-                value='api',
-                style=tab_style,
-                selected_style=tab_selected_style,
-            ),
-            dcc.Tab(
-                className='tab',
-                label='docs',
-                value='docs',
-                style=tab_style,
-                selected_style=tab_selected_style,
-            )
+            dcc.Tab(className='tab', label='plots', value='plots'),
+            dcc.Tab(className='tab', label='data', value='data'),
+            dcc.Tab(className='tab', label='config', value='config'),
+            dcc.Tab(className='tab', label='api', value='api'),
+            dcc.Tab(className='tab', label='docs', value='docs')
         ],
     )
     content = dcc.Loading(
         id="content",
         className='content',
         type="dot",
-        style={
-            'align-items': 'center',
-            'opacity': '50%',
-            'background': '#181818'
-        },
         fullscreen=True,
-        color="#A0D17B"
     )
 
     app = dash.Dash(
@@ -202,15 +156,7 @@ def get_searchbar(query=None):
 
     row = html.Div(
         className='row',
-        children=[
-            query,
-            spacer,
-            search,
-            spacer,
-            init,
-            spacer,
-            update,
-        ],
+        children=[query, spacer, search, spacer, init, spacer, update],
     )
     searchbar = html.Div(
         id='searchbar', className='menubar', children=[row]
