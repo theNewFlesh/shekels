@@ -527,9 +527,9 @@ def get_state_command():
         str: Command
     '''
     cmd = 'export IMAGE_EXISTS=`docker images {repo} | grep -v REPOSITORY`; '
-    cmd += 'export CONTAINER_EXISTS=`docker ps -f name={repo}'
+    cmd += 'export CONTAINER_EXISTS=`docker ps -a -f name={repo}'
     cmd += ' | grep -v CONTAINER`; '
-    cmd += 'export RUNNING=`docker ps -f name={repo} -f status=running '
+    cmd += 'export RUNNING=`docker ps -a -f name={repo} -f status=running '
     cmd += '| grep -v CONTAINER`; '
     cmd += 'export CONTAINER_STATE; export IMAGE_STATE; '
     cmd += 'if [ -z "$IMAGE_EXISTS" ]; then'
