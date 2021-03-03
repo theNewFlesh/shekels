@@ -60,7 +60,8 @@ def get_dash_app(server, storage_type='memory'):
     )
 
     app = dash.Dash(
-        __name__,
+        name='$hekels',
+        title='$hekels',
         server=server,
         external_stylesheets=['http://0.0.0.0:5014/static/style.css'],
     )
