@@ -542,7 +542,7 @@ def get_state_command():
     cmd += 'else'
     cmd += '    export CONTAINER_STATE="{green}running{clear}"; '
     cmd += 'fi; '
-    cmd += 'echo "{cyan}{repo}{clear}  -  '
+    cmd += 'echo "service: {cyan}{repo}{clear}  -  '
     cmd += 'image: $IMAGE_STATE  -  container: $CONTAINER_STATE"'
     cmd = cmd.format(
         repo=REPO,
