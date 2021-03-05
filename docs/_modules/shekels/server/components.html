@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.4
+                0.8.5
               </div>
             
           
@@ -226,9 +226,10 @@
     <span class="p">)</span>
 
     <span class="n">app</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">Dash</span><span class="p">(</span>
-        <span class="vm">__name__</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;$hekels&#39;</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="s1">&#39;$hekels&#39;</span><span class="p">,</span>
         <span class="n">server</span><span class="o">=</span><span class="n">server</span><span class="p">,</span>
-        <span class="n">external_stylesheets</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;http://0.0.0.0:5014/static/style.css&#39;</span><span class="p">],</span>
+        <span class="n">external_stylesheets</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;/static/style.css&#39;</span><span class="p">],</span>
     <span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;layout&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">store</span><span class="p">,</span> <span class="n">tabs</span><span class="p">,</span> <span class="n">content</span><span class="p">])</span>
     <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;suppress_callback_exceptions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>

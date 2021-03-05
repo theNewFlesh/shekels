@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.4
+                0.8.5
               </div>
             
           
@@ -198,7 +198,6 @@
 <span class="n">swg</span><span class="o">.</span><span class="n">Swagger</span><span class="p">(</span><span class="n">APP</span><span class="p">)</span>
 <span class="n">APP</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">API</span><span class="p">)</span>
 <span class="n">APP</span> <span class="o">=</span> <span class="n">comp</span><span class="o">.</span><span class="n">get_dash_app</span><span class="p">(</span><span class="n">APP</span><span class="p">)</span>
-<span class="n">APP</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;$hekels&#39;</span>
 <span class="n">CONFIG_PATH</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Union[str, Path, None]</span>
 <span class="n">QUERY_COUNTER</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -283,11 +282,15 @@
             <span class="n">store</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs_</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">]</span>
 
     <span class="k">elif</span> <span class="n">input_id</span> <span class="o">==</span> <span class="s1">&#39;init-button&#39;</span><span class="p">:</span>
-        <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
+        <span class="k">if</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/read&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span>
 
     <span class="k">elif</span> <span class="n">input_id</span> <span class="o">==</span> <span class="s1">&#39;update-button&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">api</span><span class="o">.</span><span class="n">DATABASE</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
+            <span class="k">if</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/read&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span>
         <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/api/update&#39;</span><span class="p">)</span>
         <span class="n">query</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">api</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">[</span><span class="s1">&#39;default_query&#39;</span><span class="p">]})</span>  <span class="c1"># type: ignore</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/api/search&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
