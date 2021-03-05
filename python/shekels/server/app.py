@@ -32,7 +32,6 @@ APP = flask.Flask('$hekels')  # type: Union[flask.Flask, dash.Dash]
 swg.Swagger(APP)
 APP.register_blueprint(api.API)
 APP = comp.get_dash_app(APP)
-APP.title = '$hekels'
 CONFIG_PATH = None  # type: Union[str, Path, None]
 QUERY_COUNTER = 0
 
