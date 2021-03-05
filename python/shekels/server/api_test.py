@@ -134,7 +134,7 @@ class ApiTests(unittest.TestCase):
         config = json.dumps(config)
         result = self.client.post('/api/initialize', json=config)
         result = result.json['message']
-        expected = '/foo/bar.csv is not a valid CSV file.'
+        expected = '/foo/bar.csv is not a valid CSV(.|\n)*file.'
         self.assertRegex(result, expected)
 
     # READ----------------------------------------------------------------------
