@@ -340,7 +340,7 @@ if __name__ == '__main__':
         with open(CONFIG_PATH) as f:
             temp = jsonc.JsonComment().load(f)
 
-    # temp = cfg.Config(temp)
-    # temp.validate()
-    api.CONFIG = temp#.to_primitive()
+    temp = cfg.Config(temp)
+    temp.validate()
+    api.CONFIG = temp.to_primitive()
     APP.run_server(debug=debug, host='0.0.0.0', port=5014)
