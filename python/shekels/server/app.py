@@ -116,11 +116,15 @@ def on_event(*inputs):
             store['query'] = inputs_['query']
 
     elif input_id == 'init-button':
-        APP.server.test_client().post('/api/initialize', json=conf)
+        response = APP.server.test_client().post('/api/initialize', json=conf).json
+        if 'error' in response.keys():
+            store['/api/read'] = response
 
     elif input_id == 'update-button':
         if api.DATABASE is None:
-            APP.server.test_client().post('/api/initialize', json=conf)
+            response = APP.server.test_client().post('/api/initialize', json=conf).json
+            if 'error' in response.keys():
+                store['/api/read'] = response
         APP.server.test_client().post('/api/update')
         query = json.dumps({'query': api.CONFIG['default_query']})  # type: ignore
         response = APP.server.test_client().post('/api/search', json=query).json
@@ -336,7 +340,7 @@ if __name__ == '__main__':
         with open(CONFIG_PATH) as f:
             temp = jsonc.JsonComment().load(f)
 
-    temp = cfg.Config(temp)
-    temp.validate()
-    api.CONFIG = temp.to_primitive()
+    # temp = cfg.Config(temp)
+    # temp.validate()
+    api.CONFIG = temp#.to_primitive()
     APP.run_server(debug=debug, host='0.0.0.0', port=5014)
