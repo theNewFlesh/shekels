@@ -565,10 +565,11 @@ def get_start_command(info):
     Returns:
         str: Fully resolved docker-compose up command.
     '''
-    cmd = 'export STATE=`{cid}`; '
+    cmd = 'export STATE=`docker ps -a -f name={repo} -f status=running '
+    cmd += '| grep -v CONTAINER`; '
     cmd += 'if [ -z "$STATE" ]; then {compose} up --detach; cd $CWD; fi'
     cmd = cmd.format(
-        cid=get_container_id_command(),
+        repo=REPO,
         compose=get_docker_compose_command(info)
     )
     return cmd
