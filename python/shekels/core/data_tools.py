@@ -549,3 +549,35 @@ def conform_figure(figure, color_scheme):
             value_setter=lambda k, v: lut.get(v, v)) \
         .to_dict()
     return figure
+
+
+# SQL-PARSING-------------------------------------------------------------------
+def get_sql_grammar():
+    '''
+    Creates a grammar for parsing SQL queries.
+
+    Returns:
+       MatchFirst: SQL parser.
+    '''
+    select = pp.Regex('select', flags=re.I) \
+        .setParseAction(lambda s, l, t: 'select') \
+        .setResultsName('operator')
+    from_ = pp.Suppress(pp.Regex('from', flags=re.I))
+    table = (from_ + pp.Regex('[a-z]+', flags=re.I)) \
+        .setParseAction(lambda s, l, t: t[0]) \
+        .setResultsName('table')
+    regex = pp.Regex('~|regex').setParseAction(lambda s, l, t: '~')
+    not_regex = pp.Regex('!~|not regex').setParseAction(lambda s, l, t: '!~')
+    any_op = pp.Regex('[^ ]*')
+    operator = pp.Or([not_regex, regex, any_op]).setResultsName('operator')
+    quote = pp.Suppress(pp.Optional("'"))
+    value = (quote + pp.Regex('[^\']+', flags=re.I) + quote) \
+        .setResultsName('value') \
+        .setParseAction(lambda s, l, t: t[0])
+    columns = pp.delimitedList(pp.Regex('[^, ]*'), delim=pp.Regex(', *')) \
+        .setResultsName('display_columns')
+    column = pp.Regex('[a-z]+', flags=re.I).setResultsName('column')
+    conditional = column + operator + value
+    head = select + columns + table
+    grammar = head | conditional
+    return grammar

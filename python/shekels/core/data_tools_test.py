@@ -633,3 +633,66 @@ class DataToolsTests(unittest.TestCase):
 
         result = temp['data'][0]['line']['color']
         self.assertEqual(result, expected2)
+
+    # SQL-PARSING---------------------------------------------------------------
+    def test_get_sql_grammar_select(self):
+        grammar = sdt.get_sql_grammar()
+
+        result = grammar.parseString('select * from data').asDict()
+        self.assertEqual(result, dict(
+            operator='select', display_columns=['*'], table='data'
+        ))
+
+        result = grammar.parseString('select foo,bar from foobar').asDict()
+        self.assertEqual(result, dict(
+            operator='select', display_columns=['foo', 'bar'], table='foobar'
+        ))
+
+        result = grammar.parseString('select foo, bar from foobar').asDict()
+        self.assertEqual(result, dict(
+            operator='select', display_columns=['foo', 'bar'], table='foobar'
+        ))
+
+    def test_get_sql_grammar_conditional(self):
+        grammar = sdt.get_sql_grammar()
+
+        result = grammar.parseString("foo != bar").asDict()
+        self.assertEqual(result, dict(
+            column='foo', operator='!=', value='bar'
+        ))
+
+        result = grammar.parseString("foo is 'bar'").asDict()
+        self.assertEqual(result, dict(
+            column='foo', operator='is', value='bar'
+        ))
+
+        result = grammar.parseString("foo like 'bar'").asDict()
+        self.assertEqual(result, dict(
+            column='foo', operator='like', value='bar'
+        ))
+
+    def test_get_sql_grammar_regex(self):
+        grammar = sdt.get_sql_grammar()
+
+        result = grammar.parseString("foo ~ bar").asDict()
+        self.assertEqual(result, dict(
+            column='foo', operator='~', value='bar'
+        ))
+
+        result = grammar.parseString("foo regex bar").asDict()
+        self.assertEqual(result, dict(
+            column='foo', operator='~', value='bar'
+        ))
+
+    def test_get_sql_grammar_not_regex(self):
+        grammar = sdt.get_sql_grammar()
+
+        result = grammar.parseString("foo !~ bar").asDict()
+        self.assertEqual(result, dict(
+            column='foo', operator='!~', value='bar'
+        ))
+
+        result = grammar.parseString("foo not regex bar").asDict()
+        self.assertEqual(result, dict(
+            column='foo', operator='!~', value='bar'
+        ))
