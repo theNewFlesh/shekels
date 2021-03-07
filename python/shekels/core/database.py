@@ -134,8 +134,7 @@ class Database:
         Returns:
             DataFrame: Formatted data.
         '''
-        # TODO: add regex search capability
-        output = pandasql.sqldf(query, {'data': self._data})
+        output = sdt.query_data(self._data, query)
         # pandasql coerces Timestamps to strings
         output.date = pd.DatetimeIndex(output.date)
         return self._to_records(output)
