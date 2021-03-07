@@ -7,7 +7,6 @@ from pathlib import Path
 import jsoncomment as jsonc
 import numpy as np
 import pandas as pd
-import pandasql
 
 from shekels.core.config import Config
 import shekels.core.data_tools as sdt
