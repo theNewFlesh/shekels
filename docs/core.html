@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.8.5
+                0.8.6
               </div>
             
           
@@ -1226,6 +1226,20 @@ Default: stack.</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt id="shekels.core.data_tools.get_sql_grammar">
+<code class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></code><code class="sig-name descname"><span class="pre">get_sql_grammar</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#get_sql_grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.get_sql_grammar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a grammar for parsing SQL queries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>SQL parser.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>MatchFirst</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="shekels.core.data_tools.group_data">
 <code class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></code><code class="sig-name descname"><span class="pre">group_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime_column</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'date'</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#group_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.group_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Groups given data by given columns according to given metric.
@@ -1360,6 +1374,33 @@ plot. Default: None.</p></li>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="shekels.core.data_tools.query_data">
+<code class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></code><code class="sig-name descname"><span class="pre">query_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#query_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.query_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses SQL + regex query and applies it to given data.</p>
+<p>Regex operators:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>~, regex - Match regular expression</p></li>
+<li><p>!~, not regex - Do not match regular expression</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame to be queried.</p></li>
+<li><p><strong>query</strong> (<em>str</em>) – SQL query that may include regex operators.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Data filtered by query.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame</p>
 </dd>
 </dl>
 </dd></dl>

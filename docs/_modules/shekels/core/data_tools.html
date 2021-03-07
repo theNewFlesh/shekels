@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.2
+                0.8.5
               </div>
             
           
@@ -177,6 +177,8 @@
 <span class="kn">import</span> <span class="nn">cufflinks</span> <span class="k">as</span> <span class="nn">cf</span>  <span class="c1"># noqa: F401</span>
 <span class="kn">import</span> <span class="nn">lunchbox.tools</span> <span class="k">as</span> <span class="nn">lbt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandasql</span>
+<span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
 <span class="kn">import</span> <span class="nn">rolling_pin.blob_etl</span> <span class="k">as</span> <span class="nn">rpblob</span>
 <span class="kn">import</span> <span class="nn">webcolors</span>
 
@@ -715,6 +717,104 @@
             <span class="n">value_setter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">lut</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span> \
         <span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">figure</span></div>
+
+
+<span class="c1"># SQL-PARSING-------------------------------------------------------------------</span>
+<div class="viewcode-block" id="get_sql_grammar"><a class="viewcode-back" href="../../../core.html#shekels.core.data_tools.get_sql_grammar">[docs]</a><span class="k">def</span> <span class="nf">get_sql_grammar</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Creates a grammar for parsing SQL queries.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">       MatchFirst: SQL parser.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">select</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;select&#39;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="s1">&#39;select&#39;</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;operator&#39;</span><span class="p">)</span>
+    <span class="n">from_</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;from&#39;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">))</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="p">(</span><span class="n">from_</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;[a-z]+&#39;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">))</span> \
+        <span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> \
+        <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;table&#39;</span><span class="p">)</span>
+    <span class="n">regex</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;~|regex&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="s1">&#39;~&#39;</span><span class="p">)</span>
+    <span class="n">not_regex</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;!~|not regex&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="s1">&#39;!~&#39;</span><span class="p">)</span>
+    <span class="n">any_op</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;[^ ]*&#39;</span><span class="p">)</span>
+    <span class="n">operator</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Or</span><span class="p">([</span><span class="n">not_regex</span><span class="p">,</span> <span class="n">regex</span><span class="p">,</span> <span class="n">any_op</span><span class="p">])</span><span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;operator&#39;</span><span class="p">)</span>
+    <span class="n">quote</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">))</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">quote</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;[^</span><span class="se">\&#39;</span><span class="s1">]+&#39;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span> <span class="o">+</span> <span class="n">quote</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">delimitedList</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;[^, ]*&#39;</span><span class="p">),</span> <span class="n">delim</span><span class="o">=</span><span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;, *&#39;</span><span class="p">))</span> \
+        <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;display_columns&#39;</span><span class="p">)</span>
+    <span class="n">column</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;[a-z]+&#39;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span><span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;column&#39;</span><span class="p">)</span>
+    <span class="n">conditional</span> <span class="o">=</span> <span class="n">column</span> <span class="o">+</span> <span class="n">operator</span> <span class="o">+</span> <span class="n">value</span>
+    <span class="n">head</span> <span class="o">=</span> <span class="n">select</span> <span class="o">+</span> <span class="n">columns</span> <span class="o">+</span> <span class="n">table</span>
+    <span class="n">grammar</span> <span class="o">=</span> <span class="n">head</span> <span class="o">|</span> <span class="n">conditional</span>
+    <span class="k">return</span> <span class="n">grammar</span></div>
+
+
+<div class="viewcode-block" id="query_data"><a class="viewcode-back" href="../../../core.html#shekels.core.data_tools.query_data">[docs]</a><span class="k">def</span> <span class="nf">query_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Parses SQL + regex query and applies it to given data.</span>
+
+<span class="sd">    Regex operators:</span>
+
+<span class="sd">        * ~, regex - Match regular expression</span>
+<span class="sd">        * !~, not regex - Do not match regular expression</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (DataFrame): DataFrame to be queried.</span>
+<span class="sd">        query (str): SQL query that may include regex operators.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame: Data filtered by query.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># split queries by where/and/or</span>
+    <span class="n">queries</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; where | and | or &#39;</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+
+    <span class="c1"># detect whether any sub query has a regex operator</span>
+    <span class="n">has_regex</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">queries</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39; regex | ~ | !~ &#39;</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">):</span>
+            <span class="n">has_regex</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">break</span>
+
+    <span class="c1"># if no regex operator is found just submit query to pandasql</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">has_regex</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pandasql</span><span class="o">.</span><span class="n">sqldf</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">grammar</span> <span class="o">=</span> <span class="n">get_sql_grammar</span><span class="p">()</span>
+
+        <span class="c1"># move select statement to end</span>
+        <span class="k">if</span> <span class="s1">&#39;select&#39;</span> <span class="ow">in</span> <span class="n">queries</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">queries</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">queries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">queries</span><span class="p">:</span>
+            <span class="c1"># get column, operator and value</span>
+            <span class="n">parse</span> <span class="o">=</span> <span class="n">grammar</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">asDict</span><span class="p">()</span>
+            <span class="n">op</span> <span class="o">=</span> <span class="n">parse</span><span class="p">[</span><span class="s1">&#39;operator&#39;</span><span class="p">]</span>
+
+            <span class="c1"># initial select statement</span>
+            <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;select&#39;</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">pandasql</span><span class="o">.</span><span class="n">sqldf</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>
+
+            <span class="c1"># regex match</span>
+            <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;~&#39;</span><span class="p">:</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">parse</span><span class="p">[</span><span class="s1">&#39;column&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">parse</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">],</span> <span class="n">case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+            <span class="c1"># regex not match</span>
+            <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;!~&#39;</span><span class="p">:</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">parse</span><span class="p">[</span><span class="s1">&#39;column&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">parse</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">],</span> <span class="n">case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="o">~</span><span class="n">mask</span><span class="p">]</span>
+
+            <span class="c1"># ther SQL query</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">pandasql</span><span class="o">.</span><span class="n">sqldf</span><span class="p">(</span><span class="s1">&#39;select * from data where &#39;</span> <span class="o">+</span> <span class="n">q</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">break</span>
+    <span class="k">return</span> <span class="n">data</span></div>
 </pre></div>
 
            </div>
