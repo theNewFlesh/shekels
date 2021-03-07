@@ -6,6 +6,7 @@ import unittest
 from lunchbox.enforce import EnforceError
 from pandas import DataFrame, Series
 from schematics.exceptions import DataError
+import pandasql
 
 import shekels.core.data_tools as sdt
 import shekels.enforce.enforce_tools as eft
@@ -696,3 +697,76 @@ class DataToolsTests(unittest.TestCase):
         self.assertEqual(result, dict(
             column='foo', operator='!~', value='bar'
         ))
+
+    def test_query_data_sqldf(self):
+        data = self.get_data()
+        query = 'select * from data where '
+        query += 'Amount > 78 and '
+        query += "Category like '%food%'"
+        result = sdt.query_data(data, query)
+        expected = pandasql.sqldf(query, dict(data=data))
+        eft.enforce_dataframes_are_equal(result, expected)
+
+    def test_query_data_regex(self):
+        data = self.get_data()
+        expected = data.loc[:1, ['Description', 'Amount']]
+
+        # regex
+        query = 'select Description,Amount from data where '
+        query += 'Amount > 34 and '
+        query += "Category regex food|fancy"
+        result = sdt.query_data(data, query)
+        eft.enforce_dataframes_are_equal(result, expected)
+
+        # regex + ''
+        query = 'select Description,Amount from data where '
+        query += 'Amount > 34 and '
+        query += "Category regex 'food|fancy'"
+        result = sdt.query_data(data, query)
+        eft.enforce_dataframes_are_equal(result, expected)
+
+        # ~
+        query = 'select Description,Amount from data where '
+        query += 'Amount > 34 and '
+        query += "Category ~ food|fancy"
+        result = sdt.query_data(data, query)
+        eft.enforce_dataframes_are_equal(result, expected)
+
+        # ~ + ''
+        query = 'select Description,Amount from data where '
+        query += 'Amount > 34 and '
+        query += "Category ~ 'food|fancy'"
+        result = sdt.query_data(data, query)
+        eft.enforce_dataframes_are_equal(result, expected)
+
+    def test_query_data_not_regex(self):
+        data = self.get_data()
+        expected = data.loc[:0, ['Description', 'Amount']]
+
+        # not regex
+        query = 'select Description,Amount from data where '
+        query += 'Amount > 34 and '
+        query += "Category not regex ignore|fancy"
+        result = sdt.query_data(data, query)
+        eft.enforce_dataframes_are_equal(result, expected)
+
+        # not regex + ''
+        query = 'select Description,Amount from data where '
+        query += 'Amount > 34 and '
+        query += "Category not regex 'ignore|fancy'"
+        result = sdt.query_data(data, query)
+        eft.enforce_dataframes_are_equal(result, expected)
+
+        # !~
+        query = 'select Description,Amount from data where '
+        query += 'Amount > 34 and '
+        query += "Category !~ ignore|fancy"
+        result = sdt.query_data(data, query)
+        eft.enforce_dataframes_are_equal(result, expected)
+
+        # !~ + ''
+        query = 'select Description,Amount from data where '
+        query += 'Amount > 34 and '
+        query += "Category !~ 'ignore|fancy'"
+        result = sdt.query_data(data, query)
+        eft.enforce_dataframes_are_equal(result, expected)

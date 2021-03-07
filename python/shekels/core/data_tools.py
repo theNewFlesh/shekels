@@ -11,6 +11,8 @@ from schematics.exceptions import DataError
 import cufflinks as cf  # noqa: F401
 import lunchbox.tools as lbt
 import numpy as np
+import pandasql
+import pyparsing as pp
 import rolling_pin.blob_etl as rpblob
 import webcolors
 
@@ -581,3 +583,69 @@ def get_sql_grammar():
     head = select + columns + table
     grammar = head | conditional
     return grammar
+
+
+def query_data(data, query):
+    '''
+    Parses SQL + regex query and applies it to given data.
+
+    Regex operators:
+
+        * ~, regex - Match regular expression
+        * !~, not regex - Do not match regular expression
+
+    Args:
+        data (DataFrame): DataFrame to be queried.
+        query (str): SQL query that may include regex operators.
+
+    Returns:
+        DataFrame: Data filtered by query.
+    '''
+    # split queries by where/and/or
+    queries = re.split(' where | and | or ', query, flags=re.I)
+
+    # detect whether any sub query has a regex operator
+    has_regex = False
+    for q in queries:
+        if re.search(' regex | ~ | !~ ', q, flags=re.I):
+            has_regex = True
+            break
+
+    # if no regex operator is found just submit query to pandasql
+    if not has_regex:
+        data = pandasql.sqldf(query, {'data': data})
+
+    else:
+        grammar = get_sql_grammar()
+
+        # move select statement to end
+        if 'select' in queries[0]:
+            q = queries.pop(0)
+            queries.append(q)
+
+        for q in queries:
+            # get column, operator and value
+            parse = grammar.parseString(q).asDict()
+            op = parse['operator']
+
+            # initial select statement
+            if op == 'select':
+                data = pandasql.sqldf(q, {'data': data})
+
+            # regex match
+            elif op == '~':
+                mask = data[parse['column']].str.match(parse['value'], case=False)
+                data = data[mask]
+
+            # regex not match
+            elif op == '!~':
+                mask = data[parse['column']].str.match(parse['value'], case=False)
+                data = data[~mask]
+
+            # ther SQL query
+            else:
+                data = pandasql.sqldf('select * from data where ' + q, {'data': data})
+
+            if len(data) == 0:
+                break
+    return data
