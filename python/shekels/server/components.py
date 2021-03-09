@@ -328,6 +328,7 @@ def get_key_value_table(data, color_scheme=cfg.COLOR_SCHEME, editable=True):
         sort_mode='multi',
         cell_selectable=editable,
         editable=editable,
+        page_action='none',
     )
     header = html.Div(id='key-value-table-header', children='config')
     return html.Div(id='key-value-table-container', children=[header, table])
