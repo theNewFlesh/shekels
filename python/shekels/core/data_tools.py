@@ -634,12 +634,18 @@ def query_data(data, query):
 
             # regex match
             elif op == '~':
-                mask = data[parse['column']].str.match(parse['value'], case=False)
+                mask = data[parse['column']] \
+                    .astype(str) \
+                    .apply(lambda x: re.search(parse['value'], x, flags=re.I)) \
+                    .astype(bool)
                 data = data[mask]
 
             # regex not match
             elif op == '!~':
-                mask = data[parse['column']].str.match(parse['value'], case=False)
+                mask = data[parse['column']] \
+                    .astype(str) \
+                    .apply(lambda x: re.search(parse['value'], x, flags=re.I)) \
+                    .astype(bool)
                 data = data[~mask]
 
             # ther SQL query
