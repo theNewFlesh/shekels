@@ -111,24 +111,12 @@ class ComponentsTests(unittest.TestCase):
         configbar = comp.get_configbar({'foo': 'bar'})
         self.assertEqual(configbar.id, 'configbar')
 
-        row_spacer = configbar.children[1]
-        self.assertEqual(row_spacer.className, 'row-spacer')
+        row = configbar.children[0].children
 
-        card = configbar.children[2]
-        self.assertEqual(card.id, 'config-content')
-
-        buttons = configbar.children[0].children
-
-        button = buttons[0]
-        self.assertEqual(button.className, 'col expander')
-
-        button = buttons[2]
-        self.assertEqual(button.id, 'upload')
-        self.assertEqual(button.children[0].id, 'upload-button')
-
-        button = buttons[4]
-        self.assertEqual(button.id, 'write-button')
-        self.assertEqual(button.children[0], 'write')
+        self.assertEqual(row[0].id, 'query')
+        self.assertEqual(row[2].id, 'search-button')
+        self.assertEqual(row[4].id, 'init-button')
+        self.assertEqual(row[6].id, 'upload')
 
     def test_get_plots_tab(self):
         tab = comp.get_plots_tab()
@@ -142,7 +130,8 @@ class ComponentsTests(unittest.TestCase):
 
     def test_get_config_tab(self):
         tab = comp.get_config_tab({'foo': 'bar'})
-        self.assertEqual(tab[-1].id, 'configbar')
+        self.assertEqual(tab[-1].id, 'lower-content')
+        self.assertEqual(tab[-1].children[0].id, 'config-content')
 
     def test_get_datatable(self):
         data = [

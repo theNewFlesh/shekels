@@ -122,7 +122,12 @@ def get_config_tab(config):
         list: List of elements for config tab.
     '''
     # dummies must go first for element props behavior to work
-    return [*get_dummy_elements(), get_configbar(config)]
+    content = html.Div(id='lower-content', children=[
+        html.Div(id='config-content', className='col', children=[
+            get_key_value_table(config)
+        ])
+    ])
+    return [*get_dummy_elements(), get_configbar(config), content]
 
 
 # MENUBARS----------------------------------------------------------------------
@@ -177,6 +182,7 @@ def get_dummy_elements():
     return [
         dcc.Input(className='dummy', id='query', value=None),
         html.Div(className='dummy', id='search-button', n_clicks=None),
+        html.Div(className='dummy', id='search-button', n_clicks=None),
         html.Div(className='dummy', id='init-button', n_clicks=None),
         html.Div(className='dummy', id='update-button', n_clicks=None),
         dcc.Upload(className='dummy', id='upload', contents=None),
@@ -184,35 +190,43 @@ def get_dummy_elements():
     ]
 
 
-def get_configbar(config):
-    # type: (Dict) -> html.Div
+def get_configbar(config, query=None):
+    # type: (Dict, Optional[str]) -> html.Div
     '''
     Get a row of elements used for configuring Shekels.
 
     Args:
         config (dict): Configuration to be displayed.
+        query (str, optional): Query string. Default: None.
 
     Returns:
         Div: Div with buttons and JSON editor.
     '''
-    expander = html.Div(className='col expander')
-    spacer = html.Div(className='col spacer')
+    if query is None:
+        query = 'select * from data'
 
+    spacer = html.Div(className='col spacer')
+    query = dcc.Input(
+        id='query',
+        className='col query',
+        value=query,
+        placeholder='SQL query that uses "FROM data"',
+        type='text',
+        autoFocus=True,
+        debounce=True
+    )
+
+    search = get_button('search')
+    init = get_button('init')
     upload = dcc.Upload(
         id='upload',
         children=[get_button('upload')]
     )
-    write = get_button('write')
-
-    rows = [
-        html.Div(
+    row = html.Div(
             className='row',
-            children=[expander, spacer, upload, spacer, write],
-        ),
-        html.Div(className='row-spacer'),
-        html.Div(id='config-content', children=[get_key_value_table(config)])
-    ]
-    configbar = html.Div(id='configbar', className='menubar', children=rows)
+        children=[query, spacer, search, spacer, init, spacer, upload],
+    )
+    configbar = html.Div(id='configbar', className='menubar', children=[row])
     return configbar
 
 
