@@ -632,7 +632,7 @@ def query_data(data, query):
             if op == 'select':
                 data = pandasql.sqldf(q, {'data': data})
 
-            # regex match
+            # regex search
             elif op == '~':
                 mask = data[parse['column']] \
                     .astype(str) \
@@ -640,7 +640,7 @@ def query_data(data, query):
                     .astype(bool)
                 data = data[mask]
 
-            # regex not match
+            # regex not search
             elif op == '!~':
                 mask = data[parse['column']] \
                     .astype(str) \
