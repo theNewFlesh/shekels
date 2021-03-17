@@ -223,7 +223,7 @@ def get_configbar(config, query=None):
         children=[get_button('upload')]
     )
     row = html.Div(
-            className='row',
+        className='row',
         children=[query, spacer, search, spacer, init, spacer, upload],
     )
     configbar = html.Div(id='configbar', className='menubar', children=[row])
