@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.4
+                0.8.7
               </div>
             
           
@@ -173,7 +173,6 @@
 <span class="kn">import</span> <span class="nn">jsoncomment</span> <span class="k">as</span> <span class="nn">jsonc</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">pandasql</span>
 
 <span class="kn">from</span> <span class="nn">shekels.core.config</span> <span class="kn">import</span> <span class="n">Config</span>
 <span class="kn">import</span> <span class="nn">shekels.core.data_tools</span> <span class="k">as</span> <span class="nn">sdt</span>
@@ -201,7 +200,7 @@
             <span class="n">config</span> <span class="o">=</span> <span class="n">jsonc</span><span class="o">.</span><span class="n">JsonComment</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Database</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+<div class="viewcode-block" id="Database.__init__"><a class="viewcode-back" href="../../../core.html#shekels.core.database.Database.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
         <span class="c1"># type: (dict) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Constructs a Database instance.</span>
@@ -212,7 +211,7 @@
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">to_primitive</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Union[None, pd.DataFrame]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Union[None, pd.DataFrame]</span></div>
 
 <div class="viewcode-block" id="Database._to_records"><a class="viewcode-back" href="../../../core.html#shekels.core.database.Database._to_records">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_to_records</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
@@ -300,8 +299,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            DataFrame: Formatted data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="c1"># TODO: add regex search capability</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">pandasql</span><span class="o">.</span><span class="n">sqldf</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">})</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">sdt</span><span class="o">.</span><span class="n">query_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
         <span class="c1"># pandasql coerces Timestamps to strings</span>
         <span class="n">output</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_records</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div></div>
