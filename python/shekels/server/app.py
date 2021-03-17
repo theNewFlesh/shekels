@@ -1,7 +1,6 @@
 from typing import Any, Dict, List, Tuple, Union
 
 from copy import copy
-from functools import lru_cache
 from pathlib import Path
 import json
 import os
@@ -33,7 +32,6 @@ swg.Swagger(APP)
 APP.register_blueprint(api.API)
 APP = comp.get_dash_app(APP)
 CONFIG_PATH = None  # type: Union[str, Path, None]
-QUERY_COUNTER = 0
 
 
 @APP.server.route('/static/<stylesheet>')
@@ -59,6 +57,28 @@ def serve_stylesheet(stylesheet):
     )
     content = svt.render_template('style.css.j2', params)
     return flask.Response(content, mimetype='text/css')
+
+
+# TOOLS-------------------------------------------------------------------------
+def update_store(store, endpoint, data=None):
+    client = APP.server.test_client()
+    response = None
+    try:
+        if data is not None:
+            response = client.post(endpoint, json=json.dumps(data)).json
+        else:
+            response = client.post(endpoint).json
+    except Exception as error:
+        response = svt.error_to_response(error)
+    store[endpoint] = response
+
+
+def store_key_is_valid(store, key):
+    if key not in store:
+        raise PreventUpdate
+    if 'error' in store[key]:
+        return False
+    return True
 
 
 # EVENTS------------------------------------------------------------------------
@@ -89,7 +109,6 @@ def on_event(*inputs):
     '''
     store = inputs[-1] or {}  # type: Any
     config = store.get('config', api.CONFIG)  # type: Dict
-    conf = json.dumps(config)
 
     input_ = dash.callback_context.triggered[0]
     element = input_['prop_id'].split('.')[0]
@@ -97,57 +116,48 @@ def on_event(*inputs):
 
     if element == 'query':
         # needed to block input which is called twice on page load
-        global QUERY_COUNTER
-        if QUERY_COUNTER < 2:
-            QUERY_COUNTER += 1
+        key = '/api/search/query/count'
+        count = store.get(key, 0)
+        if count < 2:
+            count += 1
+            store[key] = count
         else:
-            query = json.dumps({'query': value})
-            response = APP.server.test_client().post('/api/search', json=query).json
-            store['/api/read'] = response
-            store['query'] = value
+            update_store(store, '/api/search', data={'query': value})
+            store['/api/search/query'] = value
 
     elif element == 'init-button':
-        response = APP.server.test_client().post('/api/initialize', json=conf).json
-        if 'error' in response.keys():
-            store['/api/read'] = response
+        update_store(store, '/api/initialize', data=config)
 
     elif element == 'update-button':
         if api.DATABASE is None:
-            response = APP.server.test_client().post('/api/initialize', json=conf).json
-            if 'error' in response.keys():
-                store['/api/read'] = response
-        APP.server.test_client().post('/api/update')
-        query = json.dumps({'query': api.CONFIG['default_query']})  # type: ignore
-        response = APP.server.test_client().post('/api/search', json=query).json
-        store['/api/read'] = response
+            update_store(store, '/api/initialize', data=config)
+        update_store(store, '/api/update')
+        update_store(
+            store, '/api/search', data={'query': config['default_query']}
+        )
 
     elif element == 'search-button':
-        query = json.dumps({'query': value})
-        response = APP.server.test_client().post('/api/search', json=query).json
-        store['/api/read'] = response
-        store['query'] = value
+        update_store(store, '/api/search', data={'query': value})
+        store['/api/search/query'] = value
 
     elif element == 'upload':
-        temp = 'invalid'  # type: Any
         try:
-            temp = svt.parse_json_file_content(value)
-            cfg.Config(temp).validate()
-            store['config'] = temp
-            store['config_error'] = None
+            config = svt.parse_json_file_content(value)
+            config = cfg.Config(config)
+            config.validate()
+            store['/config'] = config.to_primitive()
         except Exception as error:
-            response = svt.error_to_response(error)
-            store['config'] = temp
-            store['config_error'] = svt.error_to_response(error).json
+            store['/config'] = svt.error_to_response(error).json
 
     elif element == 'write-button':
         try:
-            config = store['config']
-            cfg.Config(config).validate()
+            config = store['/config']
+            config = cfg.Config(config)
+            config.validate()
             with open(CONFIG_PATH, 'w') as f:  # type: ignore
-                json.dump(config, f, indent=4, sort_keys=True)
-            store['config_error'] = None
+                json.dump(config.to_primitive(), f, indent=4, sort_keys=True)
         except Exception as error:
-            store['config_error'] = svt.error_to_response(error).json
+            store['/config'] = svt.error_to_response(error).json
 
     return store
 
@@ -167,30 +177,11 @@ def on_datatable_update(store):
     Returns:
         DataTable: Dash DataTable.
     '''
-    if store in [{}, None]:
-        raise PreventUpdate
-    data = store.get('/api/read', None)
-    if data is None:
-        raise PreventUpdate
-
-    if 'error' in data.keys():
-        return comp.get_key_value_card(data, header='error', id_='error')
-    return comp.get_datatable(data['response'])
-
-
-@lru_cache()
-def _get_plots(string):
-    '''
-    Convenience function for caching plots.
-
-    Args:
-        string (str): String representation of (data, plots).
-
-    Returns:
-        list[dcc.Graph]: Plots.
-    '''
-    data, plots = eval(string)
-    return comp.get_plots(data, plots)
+    if not store_key_is_valid(store, '/api/search'):
+        return comp.get_key_value_card(
+            store['/api/search'], header='error', id_='error'
+        )
+    return comp.get_datatable(store['/api/search']['response'])
 
 
 @APP.callback(
@@ -208,18 +199,12 @@ def on_plots_update(store):
     Returns:
         list[dcc.Graph]: Plots.
     '''
-    if store in [{}, None]:
-        raise PreventUpdate
-    data = store.get('/api/read', None)
-    if data is None:
-        raise PreventUpdate
-
-    if 'error' in data.keys():
-        return comp.get_key_value_card(data, header='error', id_='error')
-
-    config = store.get('config', api.CONFIG)
-    plots = config.get('plots', [])
-    return _get_plots(str((data['response'], plots)))
+    if not store_key_is_valid(store, '/api/search'):
+        return comp.get_key_value_card(
+            store['/api/search'], header='error', id_='error'
+        )
+    plots = store.get('config', api.CONFIG).get('plots', [])
+    return comp.get_plots(store['/api/search']['response'], plots)
 
 
 @APP.callback(
@@ -280,26 +265,9 @@ def on_config_card_update(timestamp, store):
     Returns:
         flask.Response: Response.
     '''
-    if store in [{}, None]:
-        raise PreventUpdate
-
-    config = store.get('config', None)
-    if config is None:
-        raise PreventUpdate
-
-    if config == 'invalid':
-        config = {}
-
-    error = store.get('config_error', None)
-
-    output = comp.get_key_value_card(config, 'config', 'config-card')
-    if error is not None:
-        output = [
-            output,
-            html.Div(className='row-spacer'),
-            comp.get_key_value_card(error, 'error', 'error')
-        ]
-    return output
+    if not store_key_is_valid(store, '/config'):
+        return comp.get_key_value_card(store['/config'], 'error', 'error')
+    return comp.get_key_value_card(store['/config'], 'config', 'config-card')
 # ------------------------------------------------------------------------------
 
 
