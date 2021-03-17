@@ -60,6 +60,17 @@ def serve_stylesheet(stylesheet):
 
 # TOOLS-------------------------------------------------------------------------
 def update_store(store, endpoint, data=None):
+    # type (dict, str, Optional(dict)) -> None
+    '''
+    Updates store with data from given endpoint.
+    Calls app client endpoint.
+    Captures errors and passes them into store key.
+
+    Args:
+        store (dict): Dash store.
+        endpoint (str): API endpoint.
+        data (dict, optional): Data to be provided to endpoint request.
+    '''
     client = APP.server.test_client()
     response = None
     try:
@@ -73,6 +84,20 @@ def update_store(store, endpoint, data=None):
 
 
 def store_key_is_valid(store, key):
+    # type: (dict, str) -> bool
+    '''
+    Determines if given key is in store and does not have an error.
+
+    Args:
+        store (dict): Dash store.
+        key (str): Store key.
+
+    Raises:
+        PreventUpdate: If key is not in store.
+
+    Returns:
+        bool: True if key exists and does not have an error.
+    '''
     if key not in store:
         raise PreventUpdate
     if 'error' in store[key]:
