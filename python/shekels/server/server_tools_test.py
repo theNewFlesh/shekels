@@ -62,6 +62,10 @@ ZV9yZWdleCI6ICJcXC5EU19TdG9yZXx5b3VyLW1vbSIsCiAgICAid3JpdGVfbW9kZSI6ICJjb3B5Igp\
 9Cg=='''
         svt.parse_json_file_content(content)
 
+        content_with_comment = '''data:application/json;base64,\
+ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
+        svt.parse_json_file_content(content_with_comment)
+
         expected = 'File header is not JSON. Header: '
         expected += 'data:application/text;base64.'
         content = re.sub('json', 'text', content)

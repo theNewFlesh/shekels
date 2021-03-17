@@ -8,6 +8,7 @@ import traceback
 
 import flask
 import jinja2
+import jsoncomment as jsonc
 import lunchbox.tools as lbt
 # ------------------------------------------------------------------------------
 
@@ -96,4 +97,4 @@ def parse_json_file_content(raw_content):
         raise ValueError(msg)
 
     output = base64.b64decode(content).decode('utf-8')
-    return json.loads(output)
+    return jsonc.JsonComment().loads(output)
