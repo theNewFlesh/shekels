@@ -307,7 +307,6 @@ def handle_sql_error(error):
 
 
 API.register_error_handler(500, handle_data_error)
-API.register_error_handler(500, handle_data_error)
-API.register_error_handler(500, handle_runtime_error)
 API.register_error_handler(500, handle_json_decode_error)
+API.register_error_handler(500, handle_runtime_error)
 API.register_error_handler(500, handle_sql_error)
