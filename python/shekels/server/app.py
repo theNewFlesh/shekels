@@ -93,34 +93,27 @@ def on_event(*inputs):
     config = store.get('config', api.CONFIG)  # type: Dict
     conf = json.dumps(config)
 
-    context = dash.callback_context
-    inputs_ = {}
-    for item in context.inputs_list:
-        key = item['id']
-        val = None
-        if 'value' in item.keys():
-            val = item['value']
-        inputs_[key] = val
+    input_ = dash.callback_context.triggered[0]
+    element = input_['prop_id'].split('.')[0]
+    value = input_['value']
 
-    input_id = context.triggered[0]['prop_id'].split('.')[0]
-
-    if input_id == 'query':
+    if element == 'query':
         # needed to block input which is called twice on page load
         global QUERY_COUNTER
         if QUERY_COUNTER < 2:
             QUERY_COUNTER += 1
         else:
-            query = json.dumps({'query': inputs_['query']})
+            query = json.dumps({'query': value})
             response = APP.server.test_client().post('/api/search', json=query).json
             store['/api/read'] = response
-            store['query'] = inputs_['query']
+            store['query'] = value
 
-    elif input_id == 'init-button':
+    elif element == 'init-button':
         response = APP.server.test_client().post('/api/initialize', json=conf).json
         if 'error' in response.keys():
             store['/api/read'] = response
 
-    elif input_id == 'update-button':
+    elif element == 'update-button':
         if api.DATABASE is None:
             response = APP.server.test_client().post('/api/initialize', json=conf).json
             if 'error' in response.keys():
@@ -130,17 +123,16 @@ def on_event(*inputs):
         response = APP.server.test_client().post('/api/search', json=query).json
         store['/api/read'] = response
 
-    elif input_id == 'search-button':
-        query = json.dumps({'query': inputs_['query']})
+    elif element == 'search-button':
+        query = json.dumps({'query': value})
         response = APP.server.test_client().post('/api/search', json=query).json
         store['/api/read'] = response
-        store['query'] = inputs_['query']
+        store['query'] = value
 
-    elif input_id == 'upload':
+    elif element == 'upload':
         temp = 'invalid'  # type: Any
         try:
-            upload = inputs_['upload']  # type: Any
-            temp = svt.parse_json_file_content(upload)
+            temp = svt.parse_json_file_content(value)
             cfg.Config(temp).validate()
             store['config'] = temp
             store['config_error'] = None
@@ -149,7 +141,7 @@ def on_event(*inputs):
             store['config'] = temp
             store['config_error'] = svt.error_to_response(error).json
 
-    elif input_id == 'write-button':
+    elif element == 'write-button':
         try:
             config = store['config']
             cfg.Config(config).validate()
