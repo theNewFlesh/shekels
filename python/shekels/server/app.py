@@ -7,6 +7,7 @@ import os
 
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
+from flask_caching import Cache
 import dash
 import dash_core_components as dcc
 import dash_table
@@ -26,14 +27,15 @@ Shekels app used for displaying and interacting with database.
 '''
 
 
-APP = flask.Flask('$hekels')  # type: Union[flask.Flask, dash.Dash]
-swg.Swagger(APP)
-APP.register_blueprint(api.API)
-APP = comp.get_dash_app(APP)
+app = flask.Flask('$hekels')  # type: Union[flask.Flask, dash.Dash]
+cache = Cache(app, config={'CACHE_TYPE': 'SimpleCache'})
+swg.Swagger(app)
+app.register_blueprint(api.API)
+app = comp.get_dash_app(app)
 CONFIG_PATH = None  # type: Union[str, Path, None]
 
 
-@APP.server.route('/static/<stylesheet>')
+@app.server.route('/static/<stylesheet>')
 def serve_stylesheet(stylesheet):
     # type: (str) -> flask.Response
     '''
@@ -71,7 +73,7 @@ def update_store(store, endpoint, data=None):
         endpoint (str): API endpoint.
         data (dict, optional): Data to be provided to endpoint request.
     '''
-    client = APP.server.test_client()
+    client = app.server.test_client()
     response = None
     try:
         if data is not None:
@@ -107,7 +109,7 @@ def store_key_is_valid(store, key):
 
 # EVENTS------------------------------------------------------------------------
 # TODO: Find a way to test events.
-@APP.callback(
+@app.callback(
     Output('store', 'data'),
     [
         Input('query', 'value'),
@@ -186,10 +188,11 @@ def on_event(*inputs):
     return store
 
 
-@APP.callback(
+@app.callback(
     Output('table-content', 'children'),
     [Input('store', 'data')]
 )
+@cache.memoize(100)
 def on_datatable_update(store):
     # type: (Dict) -> dash_table.DataTable
     '''
@@ -208,10 +211,11 @@ def on_datatable_update(store):
     return comp.get_datatable(store['/api/search']['response'])
 
 
-@APP.callback(
+@app.callback(
     Output('plots-content', 'children'),
     [Input('store', 'data')]
 )
+@cache.memoize(100)
 def on_plots_update(store):
     # type: (Dict) -> dash_table.DataTable
     '''
@@ -231,7 +235,7 @@ def on_plots_update(store):
     return comp.get_plots(store['/api/search']['response'], plots)
 
 
-@APP.callback(
+@app.callback(
     Output('content', 'children'),
     [Input('tabs', 'value')],
     [State('store', 'data')]
@@ -272,11 +276,12 @@ def on_get_tab(tab, store):
         )
 
 
-@APP.callback(
+@app.callback(
     Output('config-content', 'children'),
     [Input('store', 'modified_timestamp')],
     [State('store', 'data')]
 )
+@cache.memoize(100)
 def on_config_card_update(timestamp, store):
     # type: (int, Dict[str, Any]) -> flask.Response
     '''
@@ -310,4 +315,4 @@ if __name__ == '__main__':
     temp = cfg.Config(temp)
     temp.validate()
     api.CONFIG = temp.to_primitive()
-    APP.run_server(debug=debug, host='0.0.0.0', port=5014)
+    app.run_server(debug=debug, host='0.0.0.0', port=5014)

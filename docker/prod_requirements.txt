@@ -6,6 +6,7 @@ dash-html-components
 dash-table
 flasgger
 flask
+flask-caching
 jinja2
 jsoncomment
 lunchbox>=0.1.2
