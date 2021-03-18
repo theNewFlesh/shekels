@@ -6,7 +6,6 @@ import json
 import os
 
 from dash.dependencies import Input, Output, State
-from dash.exceptions import PreventUpdate
 from flask_caching import Cache
 import dash
 import dash_core_components as dcc
@@ -28,6 +27,7 @@ Shekels app used for displaying and interacting with database.
 
 
 app = flask.Flask('$hekels')  # type: Union[flask.Flask, dash.Dash]
+client = app.test_client()
 cache = Cache(app, config={'CACHE_TYPE': 'SimpleCache'})
 swg.Swagger(app)
 app.register_blueprint(api.API)
@@ -58,53 +58,6 @@ def serve_stylesheet(stylesheet):
     )
     content = svt.render_template('style.css.j2', params)
     return flask.Response(content, mimetype='text/css')
-
-
-# TOOLS-------------------------------------------------------------------------
-def update_store(store, endpoint, data=None):
-    # type (dict, str, Optional(dict)) -> None
-    '''
-    Updates store with data from given endpoint.
-    Calls app client endpoint.
-    Captures errors and passes them into store key.
-
-    Args:
-        store (dict): Dash store.
-        endpoint (str): API endpoint.
-        data (dict, optional): Data to be provided to endpoint request.
-    '''
-    client = app.server.test_client()
-    response = None
-    try:
-        if data is not None:
-            response = client.post(endpoint, json=json.dumps(data)).json
-        else:
-            response = client.post(endpoint).json
-    except Exception as error:
-        response = svt.error_to_response(error)
-    store[endpoint] = response
-
-
-def store_key_is_valid(store, key):
-    # type: (dict, str) -> bool
-    '''
-    Determines if given key is in store and does not have an error.
-
-    Args:
-        store (dict): Dash store.
-        key (str): Store key.
-
-    Raises:
-        PreventUpdate: If key is not in store.
-
-    Returns:
-        bool: True if key exists and does not have an error.
-    '''
-    if key not in store:
-        raise PreventUpdate
-    if 'error' in store[key]:
-        return False
-    return True
 
 
 # EVENTS------------------------------------------------------------------------
@@ -148,22 +101,27 @@ def on_event(*inputs):
             count += 1
             store[key] = count
         else:
-            update_store(store, '/api/search', data={'query': value})
+            svt.update_store(
+                client, store, '/api/search', data={'query': value}
+            )
             store['/api/search/query'] = value
 
     elif element == 'init-button':
-        update_store(store, '/api/initialize', data=config)
+        svt.update_store(client, store, '/api/initialize', data=config)
 
     elif element == 'update-button':
         if api.DATABASE is None:
-            update_store(store, '/api/initialize', data=config)
-        update_store(store, '/api/update')
-        update_store(
-            store, '/api/search', data={'query': config['default_query']}
+            svt.update_store(client, store, '/api/initialize', data=config)
+        svt.update_store(client, store, '/api/update')
+        svt.update_store(
+            client,
+            store,
+            '/api/search',
+            data={'query': config['default_query']}
         )
 
     elif element == 'search-button':
-        update_store(store, '/api/search', data={'query': value})
+        svt.update_store(client, store, '/api/search', data={'query': value})
         store['/api/search/query'] = value
 
     elif element == 'upload':
@@ -204,7 +162,7 @@ def on_datatable_update(store):
     Returns:
         DataTable: Dash DataTable.
     '''
-    if not store_key_is_valid(store, '/api/search'):
+    if not svt.store_key_is_valid(store, '/api/search'):
         return comp.get_key_value_card(
             store['/api/search'], header='error', id_='error'
         )
@@ -227,7 +185,7 @@ def on_plots_update(store):
     Returns:
         list[dcc.Graph]: Plots.
     '''
-    if not store_key_is_valid(store, '/api/search'):
+    if not svt.store_key_is_valid(store, '/api/search'):
         return comp.get_key_value_card(
             store['/api/search'], header='error', id_='error'
         )
@@ -294,7 +252,7 @@ def on_config_card_update(timestamp, store):
     Returns:
         flask.Response: Response.
     '''
-    if not store_key_is_valid(store, '/config'):
+    if not svt.store_key_is_valid(store, '/config'):
         return comp.get_key_value_card(store['/config'], 'error', 'error')
     return comp.get_key_value_card(store['/config'], 'config', 'config-card')
 # ------------------------------------------------------------------------------

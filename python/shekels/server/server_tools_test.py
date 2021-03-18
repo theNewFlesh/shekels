@@ -1,5 +1,9 @@
+import json
 import re
 import unittest
+
+from dash.exceptions import PreventUpdate
+import flask
 
 import shekels.server.server_tools as svt
 # ------------------------------------------------------------------------------
@@ -71,3 +75,68 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
         content = re.sub('json', 'text', content)
         with self.assertRaisesRegexp(ValueError, expected):
             svt.parse_json_file_content(content)
+
+    def get_client(self):
+        app = flask.Flask('test')
+
+        @app.route('/api/foo', methods=['POST'])
+        def foo():
+            return flask.Response(
+                response=json.dumps({'value': 'foo'}),
+                mimetype='application/json'
+            )
+
+        @app.route('/api/bar', methods=['POST'])
+        def bar():
+            data = flask.request.get_json()
+            data = json.loads(data)
+            return flask.Response(
+                response=json.dumps({'value': data}),
+                mimetype='application/json'
+            )
+
+        @app.route('/api/error', methods=['POST'])
+        def error():
+            raise RuntimeError('some error')
+
+        @app.errorhandler(RuntimeError)
+        def handler(error):
+            return svt.error_to_response(error)
+
+        app.register_error_handler(500, handler)
+        return app.test_client()
+
+    def test_update_store(self):
+        client = self.get_client()
+        store = {}
+
+        svt.update_store(client, store, '/api/foo')
+        expected = {'/api/foo': {'value': 'foo'}}
+        self.assertEqual(store, expected)
+
+        svt.update_store(client, store, '/api/bar', data=['data'])
+        expected.update({'/api/bar': {'value': ['data']}})
+        self.assertEqual(store, expected)
+
+        svt.update_store(client, store, '/api/error')
+        expected = svt.error_to_response(RuntimeError('some error')).json
+        result = store['/api/error']
+        self.assertEqual(result['args'], expected['args'])
+        self.assertEqual(result['error'], expected['error'])
+
+    def test_store_key_is_valid(self):
+        store = {}
+        with self.assertRaises(PreventUpdate):
+            svt.store_key_is_valid(store, 'foo')
+
+        store['foo'] = {'error': ''}
+        result = svt.store_key_is_valid(store, 'foo')
+        self.assertFalse(result)
+
+        store['bar'] = {'taco': ''}
+        result = svt.store_key_is_valid(store, 'bar')
+        self.assertTrue(result)
+
+        store['pizza'] = 'error'
+        result = svt.store_key_is_valid(store, 'pizza')
+        self.assertTrue(result)

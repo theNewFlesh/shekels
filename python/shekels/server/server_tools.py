@@ -6,6 +6,7 @@ import json
 import os
 import traceback
 
+from dash.exceptions import PreventUpdate
 import flask
 import jinja2
 import jsoncomment as jsonc
@@ -98,3 +99,44 @@ def parse_json_file_content(raw_content):
 
     output = base64.b64decode(content).decode('utf-8')
     return jsonc.JsonComment().loads(output)
+
+
+def update_store(client, store, endpoint, data=None):
+    # type (FlaskClient, dict, str, Optional(dict)) -> None
+    '''
+    Updates store with data from given endpoint.
+    Makes a post call to endpoint with client.
+
+    Args:
+        client (FlaskClient): Flask client instance.
+        store (dict): Dash store.
+        endpoint (str): API endpoint.
+        data (dict, optional): Data to be provided to endpoint request.
+    '''
+    if data is not None:
+        store[endpoint] = client.post(endpoint, json=json.dumps(data)).json
+    else:
+        store[endpoint] = client.post(endpoint).json
+
+
+def store_key_is_valid(store, key):
+    # type: (dict, str) -> bool
+    '''
+    Determines if given key is in store and does not have an error.
+
+    Args:
+        store (dict): Dash store.
+        key (str): Store key.
+
+    Raises:
+        PreventUpdate: If key is not in store.
+
+    Returns:
+        bool: True if key exists and does not have an error key.
+    '''
+    if key not in store:
+        raise PreventUpdate
+    value = store[key]
+    if isinstance(value, dict) and 'error' in value:
+        return False
+    return True
