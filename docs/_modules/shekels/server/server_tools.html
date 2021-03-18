@@ -172,6 +172,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
 
+<span class="kn">from</span> <span class="nn">dash.exceptions</span> <span class="kn">import</span> <span class="n">PreventUpdate</span>
 <span class="kn">import</span> <span class="nn">flask</span>
 <span class="kn">import</span> <span class="nn">jinja2</span>
 <span class="kn">import</span> <span class="nn">jsoncomment</span> <span class="k">as</span> <span class="nn">jsonc</span>
@@ -264,6 +265,47 @@
 
     <span class="n">output</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">jsonc</span><span class="o">.</span><span class="n">JsonComment</span><span class="p">()</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="update_store"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.update_store">[docs]</a><span class="k">def</span> <span class="nf">update_store</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># type (FlaskClient, dict, str, Optional(dict)) -&gt; None</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Updates store with data from given endpoint.</span>
+<span class="sd">    Makes a post call to endpoint with client.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        client (FlaskClient): Flask client instance.</span>
+<span class="sd">        store (dict): Dash store.</span>
+<span class="sd">        endpoint (str): API endpoint.</span>
+<span class="sd">        data (dict, optional): Data to be provided to endpoint request.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">store</span><span class="p">[</span><span class="n">endpoint</span><span class="p">]</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">))</span><span class="o">.</span><span class="n">json</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">store</span><span class="p">[</span><span class="n">endpoint</span><span class="p">]</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">endpoint</span><span class="p">)</span><span class="o">.</span><span class="n">json</span></div>
+
+
+<div class="viewcode-block" id="store_key_is_valid"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.store_key_is_valid">[docs]</a><span class="k">def</span> <span class="nf">store_key_is_valid</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="c1"># type: (dict, str) -&gt; bool</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Determines if given key is in store and does not have an error.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        store (dict): Dash store.</span>
+<span class="sd">        key (str): Store key.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        PreventUpdate: If key is not in store.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if key exists and does not have an error key.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">store</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">PreventUpdate</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">store</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
 </pre></div>
 
            </div>

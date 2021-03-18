@@ -172,7 +172,6 @@
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">from</span> <span class="nn">dash.dependencies</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">State</span>
-<span class="kn">from</span> <span class="nn">dash.exceptions</span> <span class="kn">import</span> <span class="n">PreventUpdate</span>
 <span class="kn">from</span> <span class="nn">flask_caching</span> <span class="kn">import</span> <span class="n">Cache</span>
 <span class="kn">import</span> <span class="nn">dash</span>
 <span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="nn">dcc</span>
@@ -194,6 +193,7 @@
 
 
 <span class="n">app</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">Flask</span><span class="p">(</span><span class="s1">&#39;$hekels&#39;</span><span class="p">)</span>  <span class="c1"># type: Union[flask.Flask, dash.Dash]</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span>
 <span class="n">cache</span> <span class="o">=</span> <span class="n">Cache</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;CACHE_TYPE&#39;</span><span class="p">:</span> <span class="s1">&#39;SimpleCache&#39;</span><span class="p">})</span>
 <span class="n">swg</span><span class="o">.</span><span class="n">Swagger</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
 <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">API</span><span class="p">)</span>
@@ -224,53 +224,6 @@
     <span class="p">)</span>
     <span class="n">content</span> <span class="o">=</span> <span class="n">svt</span><span class="o">.</span><span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;style.css.j2&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;text/css&#39;</span><span class="p">)</span></div>
-
-
-<span class="c1"># TOOLS-------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="update_store"><a class="viewcode-back" href="../../../server.html#shekels.server.app.update_store">[docs]</a><span class="k">def</span> <span class="nf">update_store</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="c1"># type (dict, str, Optional(dict)) -&gt; None</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Updates store with data from given endpoint.</span>
-<span class="sd">    Calls app client endpoint.</span>
-<span class="sd">    Captures errors and passes them into store key.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        store (dict): Dash store.</span>
-<span class="sd">        endpoint (str): API endpoint.</span>
-<span class="sd">        data (dict, optional): Data to be provided to endpoint request.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">client</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">))</span><span class="o">.</span><span class="n">json</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">endpoint</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">svt</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-    <span class="n">store</span><span class="p">[</span><span class="n">endpoint</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span></div>
-
-
-<div class="viewcode-block" id="store_key_is_valid"><a class="viewcode-back" href="../../../server.html#shekels.server.app.store_key_is_valid">[docs]</a><span class="k">def</span> <span class="nf">store_key_is_valid</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-    <span class="c1"># type: (dict, str) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Determines if given key is in store and does not have an error.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        store (dict): Dash store.</span>
-<span class="sd">        key (str): Store key.</span>
-
-<span class="sd">    Raises:</span>
-<span class="sd">        PreventUpdate: If key is not in store.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        bool: True if key exists and does not have an error.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">store</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">PreventUpdate</span>
-    <span class="k">if</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">store</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="kc">False</span>
-    <span class="k">return</span> <span class="kc">True</span></div>
 
 
 <span class="c1"># EVENTS------------------------------------------------------------------------</span>
@@ -314,22 +267,27 @@
             <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">store</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">update_store</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/search&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span>
+            <span class="n">svt</span><span class="o">.</span><span class="n">update_store</span><span class="p">(</span>
+                <span class="n">client</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/search&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">}</span>
+            <span class="p">)</span>
             <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/search/query&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
     <span class="k">elif</span> <span class="n">element</span> <span class="o">==</span> <span class="s1">&#39;init-button&#39;</span><span class="p">:</span>
-        <span class="n">update_store</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">svt</span><span class="o">.</span><span class="n">update_store</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">element</span> <span class="o">==</span> <span class="s1">&#39;update-button&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">api</span><span class="o">.</span><span class="n">DATABASE</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">update_store</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
-        <span class="n">update_store</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/update&#39;</span><span class="p">)</span>
-        <span class="n">update_store</span><span class="p">(</span>
-            <span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/search&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default_query&#39;</span><span class="p">]}</span>
+            <span class="n">svt</span><span class="o">.</span><span class="n">update_store</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">svt</span><span class="o">.</span><span class="n">update_store</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/update&#39;</span><span class="p">)</span>
+        <span class="n">svt</span><span class="o">.</span><span class="n">update_store</span><span class="p">(</span>
+            <span class="n">client</span><span class="p">,</span>
+            <span class="n">store</span><span class="p">,</span>
+            <span class="s1">&#39;/api/search&#39;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default_query&#39;</span><span class="p">]}</span>
         <span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">element</span> <span class="o">==</span> <span class="s1">&#39;search-button&#39;</span><span class="p">:</span>
-        <span class="n">update_store</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/search&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span>
+        <span class="n">svt</span><span class="o">.</span><span class="n">update_store</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/search&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span>
         <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/search/query&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
     <span class="k">elif</span> <span class="n">element</span> <span class="o">==</span> <span class="s1">&#39;upload&#39;</span><span class="p">:</span>
@@ -370,7 +328,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        DataTable: Dash DataTable.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">store_key_is_valid</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/search&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">svt</span><span class="o">.</span><span class="n">store_key_is_valid</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/search&#39;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">comp</span><span class="o">.</span><span class="n">get_key_value_card</span><span class="p">(</span>
             <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/search&#39;</span><span class="p">],</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;error&#39;</span>
         <span class="p">)</span>
@@ -393,7 +351,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        list[dcc.Graph]: Plots.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">store_key_is_valid</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/search&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">svt</span><span class="o">.</span><span class="n">store_key_is_valid</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/search&#39;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">comp</span><span class="o">.</span><span class="n">get_key_value_card</span><span class="p">(</span>
             <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/search&#39;</span><span class="p">],</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;error&#39;</span>
         <span class="p">)</span>
@@ -460,7 +418,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        flask.Response: Response.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">store_key_is_valid</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/config&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">svt</span><span class="o">.</span><span class="n">store_key_is_valid</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/config&#39;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">comp</span><span class="o">.</span><span class="n">get_key_value_card</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">],</span> <span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">comp</span><span class="o">.</span><span class="n">get_key_value_card</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">],</span> <span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;config-card&#39;</span><span class="p">)</span></div>
 <span class="c1"># ------------------------------------------------------------------------------</span>
