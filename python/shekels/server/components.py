@@ -397,7 +397,6 @@ def get_plots(data, plots):
     Raises:
         EnforceError: If data is not a list of dicts.
         EnforceError: If plots is not a list of dicts.
-        DataError: If invalid plot found in plots.
 
     Returns:
         list[dcc.Graph]: Plots.
