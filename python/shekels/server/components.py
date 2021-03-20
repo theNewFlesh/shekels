@@ -3,8 +3,9 @@ from typing import Any, Dict, List, Optional
 from copy import copy
 import re
 
-from lunchbox.enforce import Enforce
+from lunchbox.enforce import Enforce, EnforceError
 from pandas import DataFrame, DatetimeIndex
+from schematics.exceptions import DataError
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -411,7 +412,7 @@ def get_plots(data, plots):
     Enforce(plots, 'instance of', list, message=msg)
     for item in plots:
         Enforce(item, 'instance of', dict, message=msg)
-    # --------------------------------------------------------------------------
+# --------------------------------------------------------------------------
 
     data_ = DataFrame(data)
     if 'date' in data_.columns:
@@ -424,18 +425,29 @@ def get_plots(data, plots):
         plot = plot.to_primitive()
         min_width = str(plot['min_width']) + '%'
 
-        fig = sdt.get_figure(
-            data_,
-            filters=plot['filters'],
-            group=plot['group'],
-            pivot=plot['pivot'],
-            **plot['figure'],
-        )
-        fig = dcc.Graph(
-            id=f'plot-{i:02d}',
-            className='plot',
-            figure=fig,
-            style={'min-width': min_width},
-        )
+        try:
+            fig = sdt.get_figure(
+                data_,
+                filters=plot['filters'],
+                group=plot['group'],
+                pivot=plot['pivot'],
+                **plot['figure'],
+            )
+            fig = dcc.Graph(
+                id=f'plot-{i:02d}',
+                className='plot',
+                figure=fig,
+                style={'min-width': min_width},
+            )
+        except (DataError, EnforceError):
+            fig = html.Div(
+                id=f'plot-{i:02d}',
+                className='plot plot-error',
+                style={'min-width': min_width},
+                children=html.Div(
+                    className='plot-error-message',
+                    children='no data found'
+                ),
+            )
         elems.append(fig)
     return elems

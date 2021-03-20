@@ -189,3 +189,38 @@ class ComponentsTests(unittest.TestCase):
         }
         result = comp.get_plots(data, [plot, plot])
         self.assertEqual(len(result), 2)
+
+    def test_get_plots_no_data(self):
+        data = [
+            {'date': '2020-04-05T12:00:00', 'name': 'foo', 'amount': 1},
+            {'date': '2020-04-05T12:00:01', 'name': 'foo', 'amount': 2},
+            {'date': '2020-04-05T12:00:02', 'name': 'bar', 'amount': 3},
+        ]
+        good = {
+            "pivot": {
+                "columns": ["name"],
+                "values": ["amount"],
+                "index": "date",
+            },
+            "figure": {
+                "kind": "bar",
+                "title": "Expenditures",
+                "x_title": "names",
+                "y_title": "amount",
+            }
+        }
+        bad = {
+            "pivot": {
+                "columns": ["not_a_column"],
+                "values": ["amount"],
+                "index": "date",
+            },
+            "figure": {"kind": "bar"}
+        }
+        # DataError
+        result = comp.get_plots(data, [good, bad])[1].children.children
+        self.assertEqual(result, 'no data found')
+
+        # EnforceError
+        result = comp.get_plots([], [good, good])[1].children.children
+        self.assertEqual(result, 'no data found')
