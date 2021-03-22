@@ -10,15 +10,15 @@ ARG NO_COLOR='\033[0m'
 RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${NO_COLOR}"; \
     apt update && \
     apt install -y \
-    curl \
-    git \
-    parallel \
-    pandoc \
-    python3.7-dev \
-    software-properties-common \
-    tree \
-    vim \
-    wget
+        curl \
+        git \
+        parallel \
+        pandoc \
+        python3.7-dev \
+        software-properties-common \
+        tree \
+        vim \
+        wget
 
 # install python3.7 and pip
 RUN echo "\n${CYAN}SETUP PYTHON3.7${NO_COLOR}"; \
@@ -36,7 +36,7 @@ RUN echo "\n${CYAN}INSTALL NODE.JS DEPENDENCIES${NO_COLOR}"; \
     apt upgrade -y && \
     echo "\n${CYAN}INSTALL JUPYTERLAB DEPENDENCIES${NO_COLOR}"; \
     apt install -y \
-    nodejs && \
+        nodejs && \
     rm -rf /var/lib/apt/lists/*
 
 # install python dependencies
@@ -45,8 +45,8 @@ COPY ./prod_requirements.txt /root/prod_requirements.txt
 RUN echo "\n${CYAN}INSTALL PYTHON DEPENDECIES${NO_COLOR}"; \
     apt update && \
     apt install -y \
-    graphviz \
-    python3-pydot && \
+        graphviz \
+        python3-pydot && \
     pip3.7 install -r dev_requirements.txt && \
     pip3.7 install -r prod_requirements.txt;
 RUN rm -rf /root/dev_requirements;
@@ -61,10 +61,10 @@ ENV NODE_OPTIONS="--max-old-space-size=8192"
 RUN echo "\n${CYAN}INSTALL JUPYTER LAB EXTENSIONS${NO_COLOR}"; \
     jupyter labextension install \
     --dev-build=False \
-    nbdime-jupyterlab \
-    @oriolmirosa/jupyterlab_materialdarker \
-    @ryantam626/jupyterlab_sublime \
-    @jupyterlab/plotly-extension
+        nbdime-jupyterlab \
+        @oriolmirosa/jupyterlab_materialdarker \
+        @ryantam626/jupyterlab_sublime \
+        @jupyterlab/plotly-extension
 
 ENV PYTHONPATH "${PYTHONPATH}:/root/shekels/python"
 ENV LANGUAGE "C"
