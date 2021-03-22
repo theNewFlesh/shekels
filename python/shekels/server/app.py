@@ -86,7 +86,7 @@ def on_event(*inputs):
     Returns:
         dict: Store data.
     '''
-    store = inputs[-1] or {}  # type: Any
+    store = inputs[-1] or {'/api/search/query/count': 0}  # type: Any
     config = store.get('config', api.CONFIG)  # type: Dict
 
     input_ = dash.callback_context.triggered[0]
@@ -96,10 +96,8 @@ def on_event(*inputs):
     if element == 'query':
         # needed to block input which is called twice on page load
         key = '/api/search/query/count'
-        count = store.get(key, 0)
-        if count < 2:
-            count += 1
-            store[key] = count
+        if store[key] < 1:
+            store[key] += 1
         else:
             svt.update_store(
                 client, store, '/api/search', data={'query': value}
