@@ -13,9 +13,6 @@ import shekels.enforce.enforce_tools as eft
 # ------------------------------------------------------------------------------
 
 
-# TODO: create mock data generator
-
-
 class DataToolsTests(unittest.TestCase):
     # CONFORM-------------------------------------------------------------------
     def get_conform_actions(self):
