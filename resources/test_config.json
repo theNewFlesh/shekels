@@ -1,0 +1,128 @@
+{
+    "data_path": "/root/shekels/resources/test_transactions.csv",
+    "columns": [
+        "date",
+        "description",
+        "original_description",
+        "auto_pay",
+        "category",
+        "account",
+        "type",
+        "amount"
+    ],
+    "default_query": "select * from data where date >= '2018-04-01'",
+    // "default_query": "select * from data where date >= '2018-01-01'",
+    "plots": [
+        {
+            "figure": { "kind": "bar", "title": "Monthly Expenses",
+                        "x_axis": "month", "y_axis": "amount",
+                        "x_title": "month", "y_title": "amount",
+                        "color_scheme": {"cyan2": "#A0D17B", "grey1": "#181818",
+                        "bg": "#242424"}},
+            "filters": [
+                {"column": "type", "comparator": "==", "value": "debit"},
+                {   "column": "description", "comparator": "!~",
+                    "value": "ecorp|globocorp"}
+            ],
+            "group": {"columns": ["month"], "metric": "sum"}
+        },
+        {
+            "figure": { "kind": "bar", "title": "Monthly Income",
+                        "x_axis": "month", "y_axis": "amount",
+                        "x_title": "month", "y_title": "amount",
+                        "color_scheme": {"cyan2": "#A0D17B", "grey1": "#181818",
+                        "bg": "#242424"}},
+            "filters": [
+                {"column": "type", "comparator": "==", "value": "credit"},
+                {   "column": "description", "comparator": "~",
+                    "value": "ecorp|globocorp"}
+            ],
+            "group": {"columns": ["month"], "metric": "sum"}
+        },
+        {
+            "figure": { "kind": "bar", "title": "Monthly Credit Card Expenses",
+                        "x_title": "date", "y_title": "amount"},
+            "min_width": 100,
+            "filters": [
+                {"column": "type", "comparator": "==", "value": "debit"},
+                {   "column": "category", "comparator": "!~",
+                    "value": "payroll"},
+            ],
+            "group": {"columns": ["description", "month"], "metric": "sum"},
+            "pivot": {
+                "columns": ["account"], "values": ["amount"], "index": "month"}
+        },
+        {
+            "figure": { "kind": "bar", "title": "Monthly Grocery Expenses",
+                        "x_title": "date", "y_title": "amount"},
+            "min_width": 50,
+            "filters": [
+                {   "column": "description", "comparator": "~",
+                    "value": "safeway|vons"
+                }
+            ],
+            "group": {"columns": ["description", "month"], "metric": "sum"},
+            "pivot": {
+                "columns": ["description"], "values": ["amount"], "index": "month"}
+        },
+        {
+            "figure": { "kind": "bar", "title": "Air Travel Expenses",
+                        "x_title": "date", "y_title": "amount"},
+            "filters": [
+                {   "column": "description", "comparator": "~",
+                    "value": "american airlines|delta"
+                }
+            ],
+            "pivot": {
+                "columns": ["description"], "values": ["amount"], "index": "date"}
+        },
+        {
+            "figure": { "kind": "bar", "title": "Monthly Coffee Expenses",
+                        "x_title": "date", "y_title": "amount"},
+            "min_width": 50,
+            "filters": [
+                {   "column": "description", "comparator": "~",
+                    "value": "sightglass|starbucks"
+                }
+            ],
+            "group": {"columns": ["description", "month"], "metric": "sum"},
+            "pivot": {
+                "columns": ["description"], "values": ["amount"], "index": "month"}
+        }
+    ],
+    "conform": [
+        {
+            "action": "overwrite",
+            "source_column": "description",
+            "target_column": "description",
+            "mapping": {
+                "sight ?gla ?ss( coffee)?": "Sightglass",
+                "st ?arbucks": "starbucks"
+            }
+        },
+        {
+            "action": "overwrite",
+            "source_column": "description",
+            "target_column": "category",
+            "mapping": {
+                "sightglass|starbucks": "coffee"
+            }
+        },
+        {
+            "action": "overwrite",
+            "source_column": "description",
+            "target_column": "auto_pay",
+            "mapping": {
+                "ecorp|globocorp": true
+            }
+        },
+        {
+            "action": "overwrite",
+            "source_column": "account",
+            "target_column": "account",
+            "mapping": {
+                "american.express": "amex"
+            }
+        }
+    ]
+}

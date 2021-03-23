@@ -260,7 +260,7 @@ if __name__ == '__main__':
     debug = 'DEBUG_MODE' in os.environ.keys()
     temp = None
     if debug:
-        CONFIG_PATH = '/root/shekels/resources/config.json'
+        CONFIG_PATH = '/root/shekels/resources/test_config.json'
         with open(CONFIG_PATH) as f:
             temp = jsonc.JsonComment().load(f)
     else:
