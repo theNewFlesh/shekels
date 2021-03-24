@@ -59,10 +59,10 @@ RUN rm -rf /root/dev_requirements;
 
 # configure zsh
 WORKDIR /root
-COPY ./henanigans.zsh-theme /root/.oh-my-zsh/custom/themes/henanigans.zsh-theme
-COPY ./zshrc /root/.zshrc
 RUN echo "\n${CYAN}CONFIGURE ZSH${NO_COLOR}"; \
     echo 'export PYTHONPATH="/root/shekels/python"' >> /root/.zshrc
+COPY ./henanigans.zsh-theme /root/.oh-my-zsh/custom/themes/henanigans.zsh-theme
+COPY ./zshrc /root/.zshrc
 
 # install jupyter lab extensions
 ENV NODE_OPTIONS="--max-old-space-size=8192"
