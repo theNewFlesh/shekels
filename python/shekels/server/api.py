@@ -18,10 +18,14 @@ Shekels REST API.
 '''
 
 
-API = flask.Blueprint('api', __name__, url_prefix='')
-# TODO: Find a way to share database and config inside Flask instance without globals.
-DATABASE = None
-CONFIG = None
+def get_api():
+    api = flask.Blueprint('api', __name__, url_prefix='')
+    api.database = None
+    api.config = None
+    return api
+
+
+API = get_api()
 
 
 @API.route('/api')
@@ -76,9 +80,6 @@ def initialize():
     Returns:
         Response: Flask Response instance.
     '''
-    global DATABASE
-    global CONFIG
-
     config = flask.request.get_json()
     msg = 'Please supply a config dictionary.'
     if config is None:
@@ -88,13 +89,13 @@ def initialize():
     if not isinstance(config, dict):
         raise RuntimeError(msg)
 
-    DATABASE = Database(config)
-    CONFIG = DATABASE.config
+    api.database = Database(config)
+    api.config = api.database.config
 
     return flask.Response(
         response=json.dumps(dict(
             message='Database initialized.',
-            config=CONFIG,
+            config=api.config,
         )),
         mimetype='application/json'
     )
@@ -124,18 +125,15 @@ def update():
     Returns:
         Response: Flask Response instance.
     '''
-    global DATABASE
-    global CONFIG
-
-    if DATABASE is None:
+    if api.database is None:
         msg = 'Database not initialized. Please call initialize.'
         raise RuntimeError(msg)
 
-    DATABASE.update()
+    api.database.update()
     return flask.Response(
         response=json.dumps(dict(
             message='Database updated.',
-            config=CONFIG,
+            config=api.config,
         )),
         mimetype='application/json'
     )
@@ -165,16 +163,13 @@ def read():
     Returns:
         Response: Flask Response instance.
     '''
-    global DATABASE
-    global CONFIG
-
-    if DATABASE is None:
+    if api.database is None:
         msg = 'Database not initialized. Please call initialize.'
         raise RuntimeError(msg)
 
     response = {}  # type: Any
     try:
-        response = DATABASE.read()
+        response = api.database.read()
     except Exception as error:
         if isinstance(error, RuntimeError):
             msg = 'Database not updated. Please call update.'
@@ -216,9 +211,6 @@ def search():
     Returns:
         Response: Flask Response instance.
     '''
-    global DATABASE
-    global CONFIG
-
     params = flask.request.get_json()
     params = json.loads(params)
     try:
@@ -228,15 +220,15 @@ def search():
         msg += '{"query": SQL query}.'
         raise RuntimeError(msg)
 
-    if DATABASE is None:
+    if api.database is None:
         msg = 'Database not initialized. Please call initialize.'
         raise RuntimeError(msg)
 
-    if DATABASE.data is None:
+    if api.database.data is None:
         msg = 'Database not updated. Please call update.'
         raise RuntimeError(msg)
 
-    response = DATABASE.search(query)  # type: Any
+    response = api.database.search(query)  # type: Any
     response = {'response': response}
     return flask.Response(
         response=json.dumps(response),

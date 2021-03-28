@@ -1,7 +1,6 @@
 from typing import Any, Dict, List, Tuple, Union
 
 from copy import copy
-from pathlib import Path
 import json
 import os
 
@@ -15,7 +14,7 @@ import flask
 import jsoncomment as jsonc
 
 import shekels.core.config as cfg
-import shekels.server.api as api
+from shekels.server.api import API
 import shekels.server.components as comp
 import shekels.server.server_tools as svt
 # ------------------------------------------------------------------------------
@@ -26,13 +25,18 @@ Shekels app used for displaying and interacting with database.
 '''
 
 
-app = flask.Flask('$hekels')  # type: Union[flask.Flask, dash.Dash]
-client = app.test_client()
-cache = Cache(app, config={'CACHE_TYPE': 'SimpleCache'})
-swg.Swagger(app)
-app.register_blueprint(api.API)
-app = comp.get_dash_app(app)
-CONFIG_PATH = None  # type: Union[str, Path, None]
+def get_app():
+    flask_app = flask.Flask('$hekels')  # type: Union[flask.Flask, dash.Dash]
+    swg.Swagger(flask_app)
+    flask_app.register_blueprint(API)
+    app = comp.get_dash_app(flask_app)
+    app.api = API
+    app.client = flask_app.test_client()
+    app.cache = Cache(flask_app, config={'CACHE_TYPE': 'SimpleCache'})
+    return app
+
+
+app = get_app()
 
 
 @app.server.route('/static/<stylesheet>')
@@ -47,7 +51,7 @@ def serve_stylesheet(stylesheet):
     Returns:
         flask.Response: Response.
     '''
-    temp = api.CONFIG or {}
+    temp = app.api.config or {}
     color_scheme = copy(cfg.COLOR_SCHEME)
     cs = temp.get('color_scheme', {})
     color_scheme.update(cs)
@@ -87,7 +91,7 @@ def on_event(*inputs):
         dict: Store data.
     '''
     store = inputs[-1] or {'/api/search/query/count': 0}  # type: Any
-    config = store.get('config', api.CONFIG)  # type: Dict
+    config = store.get('config', app.api.config)  # type: Dict
 
     input_ = dash.callback_context.triggered[0]
     element = input_['prop_id'].split('.')[0]
@@ -100,26 +104,26 @@ def on_event(*inputs):
             store[key] += 1
         else:
             svt.update_store(
-                client, store, '/api/search', data={'query': value}
+                app.client, store, '/api/search', data={'query': value}
             )
             store['/api/search/query'] = value
 
     elif element == 'init-button':
-        svt.update_store(client, store, '/api/initialize', data=config)
+        svt.update_store(app.client, store, '/api/initialize', data=config)
 
     elif element == 'update-button':
-        if api.DATABASE is None:
-            svt.update_store(client, store, '/api/initialize', data=config)
-        svt.update_store(client, store, '/api/update')
+        if app.api.database is None:
+            svt.update_store(app.client, store, '/api/initialize', data=config)
+        svt.update_store(app.client, store, '/api/update')
         svt.update_store(
-            client,
+            app.client,
             store,
             '/api/search',
             data={'query': config['default_query']}
         )
 
     elif element == 'search-button':
-        svt.update_store(client, store, '/api/search', data={'query': value})
+        svt.update_store(app.client, store, '/api/search', data={'query': value})
         store['/api/search/query'] = value
 
     elif element == 'upload':
@@ -136,7 +140,7 @@ def on_event(*inputs):
             config = store['/config']
             config = cfg.Config(config)
             config.validate()
-            with open(CONFIG_PATH, 'w') as f:  # type: ignore
+            with open(app.api.config_path, 'w') as f:  # type: ignore
                 json.dump(config.to_primitive(), f, indent=4, sort_keys=True)
         except Exception as error:
             store['/config'] = svt.error_to_response(error).json
@@ -148,7 +152,7 @@ def on_event(*inputs):
     Output('table-content', 'children'),
     [Input('store', 'data')]
 )
-@cache.memoize(100)
+@app.cache.memoize(100)
 def on_datatable_update(store):
     # type: (Dict) -> dash_table.DataTable
     '''
@@ -171,7 +175,7 @@ def on_datatable_update(store):
     Output('plots-content', 'children'),
     [Input('store', 'data')]
 )
-@cache.memoize(100)
+@app.cache.memoize(100)
 def on_plots_update(store):
     # type: (Dict) -> dash_table.DataTable
     '''
@@ -187,7 +191,7 @@ def on_plots_update(store):
         return comp.get_key_value_card(
             store['/api/search'], header='error', id_='error'
         )
-    plots = store.get('config', api.CONFIG).get('plots', [])
+    plots = store.get('config', app.api.config).get('plots', [])
     return comp.get_plots(store['/api/search']['response'], plots)
 
 
@@ -211,15 +215,15 @@ def on_get_tab(tab, store):
     store = store or {}
 
     if tab == 'plots':
-        query = store.get('query', api.CONFIG['default_query'])  # type: ignore
+        query = store.get('query', app.api.config['default_query'])  # type: ignore
         return comp.get_plots_tab(query)
 
     elif tab == 'data':
-        query = store.get('query', api.CONFIG['default_query'])  # type: ignore
+        query = store.get('query', app.api.config['default_query'])  # type: ignore
         return comp.get_data_tab(query)
 
     elif tab == 'config':
-        config = store.get('config', api.CONFIG)
+        config = store.get('config', app.api.config)
         return comp.get_config_tab(config)
 
     elif tab == 'api':
@@ -237,7 +241,7 @@ def on_get_tab(tab, store):
     [Input('store', 'modified_timestamp')],
     [State('store', 'data')]
 )
-@cache.memoize(100)
+@app.cache.memoize(100)
 def on_config_card_update(timestamp, store):
     # type: (int, Dict[str, Any]) -> flask.Response
     '''
@@ -256,19 +260,18 @@ def on_config_card_update(timestamp, store):
 # ------------------------------------------------------------------------------
 
 
-if __name__ == '__main__':
-    debug = 'DEBUG_MODE' in os.environ.keys()
-    temp = None
-    if debug:
-        CONFIG_PATH = '/root/shekels/resources/test_config.json'
-        with open(CONFIG_PATH) as f:
-            temp = jsonc.JsonComment().load(f)
-    else:
-        CONFIG_PATH = '/mnt/storage/config.json'
-        with open(CONFIG_PATH) as f:
-            temp = jsonc.JsonComment().load(f)
-
-    temp = cfg.Config(temp)
-    temp.validate()
-    api.CONFIG = temp.to_primitive()
+def run(config_path, debug=False):
+    with open(config_path) as f:
+        config = jsonc.JsonComment().load(f)
+    config = cfg.Config(config)
+    config.validate()
+    app.api.config = config.to_primitive()
+    app.api.config_path = config_path
     app.run_server(debug=debug, host='0.0.0.0', port=5014)
+
+
+if __name__ == '__main__':
+    run(
+        '/root/shekels/resources/test_config.json',
+        debug='DEBUG_MODE' in os.environ.keys()
+    )
