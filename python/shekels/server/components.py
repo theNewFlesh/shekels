@@ -401,7 +401,6 @@ def get_plots(data, plots):
     Returns:
         list[dcc.Graph]: Plots.
     '''
-    # TODO: add support for plot errors
     msg = 'Data must be a list of dictionaries. Given value: {a}.'
     Enforce(data, 'instance of', list, message=msg)
     for item in data:
