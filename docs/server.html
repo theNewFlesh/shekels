@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.8.9
+                0.9.0
               </div>
             
           
@@ -189,6 +189,20 @@
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>html</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="shekels.server.api.get_api">
+<code class="sig-prename descclassname"><span class="pre">shekels.server.api.</span></code><code class="sig-name descname"><span class="pre">get_api</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference internal" href="_modules/shekels/server/api.html#get_api"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.api.get_api" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a Blueprint for the Shekels REST API.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>API Blueprint.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>flask.Blueprint</p>
 </dd>
 </dl>
 </dd></dl>
@@ -334,6 +348,20 @@
 <div class="section" id="module-shekels.server.app">
 <span id="app"></span><h2>app<a class="headerlink" href="#module-shekels.server.app" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
+<dt id="shekels.server.app.get_app">
+<code class="sig-prename descclassname"><span class="pre">shekels.server.app.</span></code><code class="sig-name descname"><span class="pre">get_app</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">dash.dash.Dash</span><a class="reference internal" href="_modules/shekels/server/app.html#get_app"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.app.get_app" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a Shekels app.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Dash app.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Dash</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="shekels.server.app.on_config_card_update">
 <code class="sig-prename descclassname"><span class="pre">shekels.server.app.</span></code><code class="sig-name descname"><span class="pre">on_config_card_update</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">flask.wrappers.Response</span><a class="reference internal" href="_modules/shekels/server/app.html#on_config_card_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.app.on_config_card_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates config card with config information from store.</p>
@@ -420,6 +448,22 @@
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list[dcc.Graph]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="shekels.server.app.run">
+<code class="sig-prename descclassname"><span class="pre">shekels.server.app.</span></code><code class="sig-name descname"><span class="pre">run</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/server/app.html#run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.app.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs a given Shekels app.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Dash</strong> – Shekels app.</p></li>
+<li><p><strong>config_path</strong> (<em>str</em><em> or </em><em>Path</em>) – Path to configuration JSON.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether debug mode is turned on. Default: False.</p></li>
+<li><p><strong>test</strong> (<em>bool</em><em>, </em><em>optional</em>) – Calls app.run_server if False. Default: False.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

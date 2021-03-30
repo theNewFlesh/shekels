@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.5
+                0.9.0
               </div>
             
           
@@ -201,7 +201,6 @@
                         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;Command to run in </span><span class="si">{repo}</span><span class="s1"> service.</span>
 
 <span class="s1">    app          - Run Flask app inside </span><span class="si">{repo}</span><span class="s1"> container</span>
-<span class="s1">    bash         - Run BASH session inside </span><span class="si">{repo}</span><span class="s1"> container</span>
 <span class="s1">    container    - Display the Docker container id for </span><span class="si">{repo}</span><span class="s1"> service</span>
 <span class="s1">    coverage     - Generate coverage report for </span><span class="si">{repo}</span><span class="s1"> service</span>
 <span class="s1">    destroy      - Shutdown </span><span class="si">{repo}</span><span class="s1"> service and destroy its Docker image</span>
@@ -223,6 +222,7 @@
 <span class="s1">    stop         - Stop </span><span class="si">{repo}</span><span class="s1"> service</span>
 <span class="s1">    test         - Run testing on </span><span class="si">{repo}</span><span class="s1"> service</span>
 <span class="s1">    tox          - Run tox tests on </span><span class="si">{repo}</span><span class="s1"></span>
+<span class="s1">    zsh          - Run ZSH session inside </span><span class="si">{repo}</span><span class="s1"> container</span>
 <span class="s1">&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">))</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
@@ -359,20 +359,6 @@
     <span class="k">return</span> <span class="n">cmd</span></div>
 
 
-<div class="viewcode-block" id="get_bash_command"><a class="viewcode-back" href="../cli.html#cli.get_bash_command">[docs]</a><span class="k">def</span> <span class="nf">get_bash_command</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Opens a bash session inside a running container.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        info (dict): Info dictionary.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        str: Command.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{exec}</span><span class="s2"> bash&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exec</span><span class="o">=</span><span class="n">get_docker_exec_command</span><span class="p">(</span><span class="n">info</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">cmd</span></div>
-
-
 <div class="viewcode-block" id="get_container_id_command"><a class="viewcode-back" href="../cli.html#cli.get_container_id_command">[docs]</a><span class="k">def</span> <span class="nf">get_container_id_command</span><span class="p">():</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Gets current container id.</span>
@@ -423,7 +409,7 @@
 <span class="sd">        str: Fully resolved build docs command.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> mkdir -p /root/</span><span class="si">{repo}</span><span class="s1">/docs; &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> bash -c &quot;&#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> zsh -c &quot;&#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;pandoc /root/</span><span class="si">{repo}</span><span class="s1">/README.md -o /root/</span><span class="si">{repo}</span><span class="s1">/sphinx/intro.rst; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;sphinx-build /root/</span><span class="si">{repo}</span><span class="s1">/sphinx /root/</span><span class="si">{repo}</span><span class="s1">/docs; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp /root/</span><span class="si">{repo}</span><span class="s1">/sphinx/style.css /root/</span><span class="si">{repo}</span><span class="s1">/docs/_static/style.css; &#39;</span>
@@ -605,7 +591,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        str: Command.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> bash -c &quot;&#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> zsh -c &quot;&#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;rm -rf /tmp/</span><span class="si">{repo}</span><span class="s1">; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp -R /root/</span><span class="si">{repo}</span><span class="s1">/python /tmp/</span><span class="si">{repo}</span><span class="s1">; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp /root/</span><span class="si">{repo}</span><span class="s1">/README.md /tmp/</span><span class="si">{repo}</span><span class="s1">/README.md; &#39;</span>
@@ -672,7 +658,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        str: Command.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> bash -c &quot;python3.7 -m pip list --format freeze &gt; &#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> zsh -c &quot;python3.7 -m pip list --format freeze &gt; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;/root/</span><span class="si">{repo}</span><span class="s1">/docker/frozen_requirements.txt &amp;&amp; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;chown -R </span><span class="si">{user}</span><span class="s1"> /root/</span><span class="si">{repo}</span><span class="s1">/docker/frozen_requirements.txt&quot;&#39;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -786,7 +772,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        str: Command.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> bash -c &quot;&#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> zsh -c &quot;&#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;rm -rf /tmp/</span><span class="si">{repo}</span><span class="s1">; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp -R /root/</span><span class="si">{repo}</span><span class="s1">/python /tmp/</span><span class="si">{repo}</span><span class="s1">; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp /root/</span><span class="si">{repo}</span><span class="s1">/README.md /tmp/</span><span class="si">{repo}</span><span class="s1">/; &#39;</span>
@@ -802,6 +788,20 @@
         <span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span>
         <span class="n">exec</span><span class="o">=</span><span class="n">get_docker_exec_command</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">env_vars</span><span class="o">=</span><span class="p">[]),</span>
     <span class="p">)</span>
+    <span class="k">return</span> <span class="n">cmd</span></div>
+
+
+<div class="viewcode-block" id="get_zsh_command"><a class="viewcode-back" href="../cli.html#cli.get_zsh_command">[docs]</a><span class="k">def</span> <span class="nf">get_zsh_command</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Opens a zsh session inside a running container.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        info (dict): Info dictionary.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Command.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{exec}</span><span class="s2"> zsh&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exec</span><span class="o">=</span><span class="n">get_docker_exec_command</span><span class="p">(</span><span class="n">info</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">cmd</span></div>
 
 
@@ -897,9 +897,6 @@
     <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;app&#39;</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_app_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;bash&#39;</span><span class="p">:</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_bash_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
-
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;container&#39;</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_container_id_command</span><span class="p">()</span>
 
@@ -984,6 +981,9 @@
 
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;tox&#39;</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_tox_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;zsh&#39;</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_zsh_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
 
     <span class="c1"># print is used instead of execute because REPO_PATH and CURRENT_USER do not</span>
     <span class="c1"># resolve in a subprocess and subprocesses do not give real time stdout.</span>

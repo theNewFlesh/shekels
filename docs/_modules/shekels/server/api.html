@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.7
+                0.9.0
               </div>
             
           
@@ -184,10 +184,23 @@
 <span class="sd">&#39;&#39;&#39;</span>
 
 
-<span class="n">API</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">Blueprint</span><span class="p">(</span><span class="s1">&#39;api&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-<span class="c1"># TODO: Find a way to share database and config inside Flask instance without globals.</span>
-<span class="n">DATABASE</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="n">CONFIG</span> <span class="o">=</span> <span class="kc">None</span>
+<div class="viewcode-block" id="get_api"><a class="viewcode-back" href="../../../server.html#shekels.server.api.get_api">[docs]</a><span class="k">def</span> <span class="nf">get_api</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; Any</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Creates a Blueprint for the Shekels REST API.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        flask.Blueprint: API Blueprint.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">class</span> <span class="nc">ApiBlueprint</span><span class="p">(</span><span class="n">flask</span><span class="o">.</span><span class="n">Blueprint</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">ApiBlueprint</span><span class="p">(</span><span class="s1">&#39;api&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+
+<span class="n">API</span> <span class="o">=</span> <span class="n">get_api</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="api"><a class="viewcode-back" href="../../../server.html#shekels.server.api.api">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api&#39;</span><span class="p">)</span>
@@ -242,9 +255,6 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Response: Flask Response instance.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">global</span> <span class="n">DATABASE</span>
-    <span class="k">global</span> <span class="n">CONFIG</span>
-
     <span class="n">config</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
     <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Please supply a config dictionary.&#39;</span>
     <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -254,13 +264,13 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-    <span class="n">DATABASE</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-    <span class="n">CONFIG</span> <span class="o">=</span> <span class="n">DATABASE</span><span class="o">.</span><span class="n">config</span>
+    <span class="n">API</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">API</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">API</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">config</span>
 
     <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
         <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Database initialized.&#39;</span><span class="p">,</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">CONFIG</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">API</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
         <span class="p">)),</span>
         <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span>
     <span class="p">)</span></div>
@@ -290,18 +300,15 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Response: Flask Response instance.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">global</span> <span class="n">DATABASE</span>
-    <span class="k">global</span> <span class="n">CONFIG</span>
-
-    <span class="k">if</span> <span class="n">DATABASE</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">API</span><span class="o">.</span><span class="n">database</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Database not initialized. Please call initialize.&#39;</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-    <span class="n">DATABASE</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+    <span class="n">API</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
         <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Database updated.&#39;</span><span class="p">,</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">CONFIG</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">API</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
         <span class="p">)),</span>
         <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span>
     <span class="p">)</span></div>
@@ -331,16 +338,13 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Response: Flask Response instance.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">global</span> <span class="n">DATABASE</span>
-    <span class="k">global</span> <span class="n">CONFIG</span>
-
-    <span class="k">if</span> <span class="n">DATABASE</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">API</span><span class="o">.</span><span class="n">database</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Database not initialized. Please call initialize.&#39;</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="n">response</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Any</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">DATABASE</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">API</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="ne">RuntimeError</span><span class="p">):</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Database not updated. Please call update.&#39;</span>
@@ -382,9 +386,6 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Response: Flask Response instance.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">global</span> <span class="n">DATABASE</span>
-    <span class="k">global</span> <span class="n">CONFIG</span>
-
     <span class="n">params</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
     <span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
@@ -394,15 +395,15 @@
         <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;{&quot;query&quot;: SQL query}.&#39;</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">DATABASE</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">API</span><span class="o">.</span><span class="n">database</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Database not initialized. Please call initialize.&#39;</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">DATABASE</span><span class="o">.</span><span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">API</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Database not updated. Please call update.&#39;</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-    <span class="n">response</span> <span class="o">=</span> <span class="n">DATABASE</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>  <span class="c1"># type: Any</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">API</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>  <span class="c1"># type: Any</span>
     <span class="n">response</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="n">response</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
         <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="p">),</span>
