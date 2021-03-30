@@ -147,7 +147,7 @@ def on_event(*inputs):
             config = store['/config']
             config = cfg.Config(config)
             config.validate()
-            with open(APP.api.config_path, 'w') as f:  # type: ignore
+            with open(APP.api.config_path, 'w') as f:
                 json.dump(config.to_primitive(), f, indent=4, sort_keys=True)
         except Exception as error:
             store['/config'] = svt.error_to_response(error).json
@@ -222,11 +222,11 @@ def on_get_tab(tab, store):
     store = store or {}
 
     if tab == 'plots':
-        query = store.get('query', APP.api.config['default_query'])  # type: ignore
+        query = store.get('query', APP.api.config['default_query'])
         return comp.get_plots_tab(query)
 
     elif tab == 'data':
-        query = store.get('query', APP.api.config['default_query'])  # type: ignore
+        query = store.get('query', APP.api.config['default_query'])
         return comp.get_data_tab(query)
 
     elif tab == 'config':
