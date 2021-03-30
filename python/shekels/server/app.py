@@ -26,6 +26,13 @@ Shekels app used for displaying and interacting with database.
 
 
 def get_app():
+    # type: () -> dash.Dash
+    '''
+    Creates a Shekels app.
+
+    Returns:
+        Dash: Dash app.
+    '''
     flask_app = flask.Flask('$hekels')  # type: Union[flask.Flask, dash.Dash]
     swg.Swagger(flask_app)
     flask_app.register_blueprint(API)
@@ -260,18 +267,25 @@ def on_config_card_update(timestamp, store):
 # ------------------------------------------------------------------------------
 
 
-def run(config_path, debug=False):
+def run(app, config_path, debug=False):
+    '''
+    Runs a given Shekels app.
+
+    Args:
+        Dash: Shekels app.
+        config_path (str): Path to configuration JSON.
+        debug (bool, optional): Whether debug mode is turned on. Default: False.
+    '''
     with open(config_path) as f:
         config = jsonc.JsonComment().load(f)
-    config = cfg.Config(config)
-    config.validate()
-    APP.api.config = config.to_primitive()
-    APP.api.config_path = config_path
-    APP.run_server(debug=debug, host='0.0.0.0', port=5014)
+    app.api.config = config
+    app.api.config_path = config_path
+    app.run_server(debug=debug, host='0.0.0.0', port=5014)
 
 
 if __name__ == '__main__':
     run(
+        APP,
         '/root/shekels/resources/test_config.json',
         debug='DEBUG_MODE' in os.environ.keys()
     )

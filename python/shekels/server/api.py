@@ -19,6 +19,13 @@ Shekels REST API.
 
 
 def get_api():
+    # type: () -> flask.Blueprint
+    '''
+    Creates a Blueprint for the Shekels REST API.
+
+    Returns:
+        flask.Blueprint: API Blueprint.
+    '''
     api = flask.Blueprint('api', __name__, url_prefix='')
     api.database = None
     api.config = None
