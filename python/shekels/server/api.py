@@ -96,13 +96,13 @@ def initialize():
     if not isinstance(config, dict):
         raise RuntimeError(msg)
 
-    api.database = Database(config)
-    api.config = api.database.config
+    API.database = Database(config)
+    API.config = API.database.config
 
     return flask.Response(
         response=json.dumps(dict(
             message='Database initialized.',
-            config=api.config,
+            config=API.config,
         )),
         mimetype='application/json'
     )
@@ -132,15 +132,15 @@ def update():
     Returns:
         Response: Flask Response instance.
     '''
-    if api.database is None:
+    if API.database is None:
         msg = 'Database not initialized. Please call initialize.'
         raise RuntimeError(msg)
 
-    api.database.update()
+    API.database.update()
     return flask.Response(
         response=json.dumps(dict(
             message='Database updated.',
-            config=api.config,
+            config=API.config,
         )),
         mimetype='application/json'
     )
@@ -170,13 +170,13 @@ def read():
     Returns:
         Response: Flask Response instance.
     '''
-    if api.database is None:
+    if API.database is None:
         msg = 'Database not initialized. Please call initialize.'
         raise RuntimeError(msg)
 
     response = {}  # type: Any
     try:
-        response = api.database.read()
+        response = API.database.read()
     except Exception as error:
         if isinstance(error, RuntimeError):
             msg = 'Database not updated. Please call update.'
@@ -227,15 +227,15 @@ def search():
         msg += '{"query": SQL query}.'
         raise RuntimeError(msg)
 
-    if api.database is None:
+    if API.database is None:
         msg = 'Database not initialized. Please call initialize.'
         raise RuntimeError(msg)
 
-    if api.database.data is None:
+    if API.database.data is None:
         msg = 'Database not updated. Please call update.'
         raise RuntimeError(msg)
 
-    response = api.database.search(query)  # type: Any
+    response = API.database.search(query)  # type: Any
     response = {'response': response}
     return flask.Response(
         response=json.dumps(response),

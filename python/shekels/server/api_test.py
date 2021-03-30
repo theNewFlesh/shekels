@@ -8,6 +8,7 @@ from pandas import DataFrame
 import flasgger as swg
 import flask
 
+from shekels.core.database import Database
 import shekels.server.api as api
 # ------------------------------------------------------------------------------
 
@@ -93,14 +94,14 @@ class ApiTests(unittest.TestCase):
         app = flask.Flask(__name__)
         swg.Swagger(app)
         app.register_blueprint(api.API)
+        app.api = api.API
         self.context = app.app_context()
         self.context.push()
 
         self.app = self.context.app
-        api.DATABASE = None
-        api.CONFIG = None
+        self.app.api.database = None
+        api.config = None
 
-        self.api = api
         self.client = self.app.test_client()
         self.app.config['TESTING'] = True
 
@@ -115,6 +116,7 @@ class ApiTests(unittest.TestCase):
         result = result.json['message']
         expected = 'Database initialized.'
         self.assertEqual(result, expected)
+        self.assertIsInstance(self.app.api.database, Database)
 
     def test_initialize_no_config(self):
         result = self.client.post('/api/initialize').json['message']
@@ -149,13 +151,8 @@ class ApiTests(unittest.TestCase):
 
         # call read
         result = self.client.post('/api/read').json['response']
-        expected = api.DATABASE.read()
+        expected = self.app.api.database.read()
         self.assertEqual(result, expected)
-
-        # test general exceptions
-        api.DATABASE = 'foo'
-        result = self.client.post('/api/read').json['error']
-        self.assertEqual(result, 'AttributeError')
 
     def test_read_no_init(self):
         result = self.client.post('/api/read').json['message']
@@ -200,7 +197,7 @@ class ApiTests(unittest.TestCase):
         temp = {'query': query}
         temp = json.dumps(temp)
         result = self.client.post('/api/search', json=temp).json['response']
-        expected = api.DATABASE.search(query)
+        expected = self.app.api.database.search(query)
         self.assertEqual(result, expected)
 
     def test_search_no_query(self):
