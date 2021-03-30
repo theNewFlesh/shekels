@@ -110,6 +110,12 @@ class ApiTests(unittest.TestCase):
         self.tempdir.cleanup()
 
     # INITIALIZE----------------------------------------------------------------
+    def test_get_api(self):
+        result = api.get_api()
+        self.assertIsInstance(result, flask.Blueprint)
+        self.assertIsNone(result.database)
+        self.assertIsNone(result.config)
+
     def test_initialize(self):
         config = json.dumps(self.config)
         result = self.client.post('/api/initialize', json=config)
