@@ -1,6 +1,7 @@
 from typing import Any, Dict, List, Tuple, Union
 
 from copy import copy
+from pathlib import Path
 import json
 import os
 
@@ -33,7 +34,7 @@ def get_app():
     Returns:
         Dash: Dash app.
     '''
-    flask_app = flask.Flask('$hekels')  # type: Union[flask.Flask, dash.Dash]
+    flask_app = flask.Flask('$hekels')
     swg.Swagger(flask_app)
     flask_app.register_blueprint(API)
     app = comp.get_dash_app(flask_app)
@@ -273,9 +274,10 @@ def run(app, config_path, debug=False):
 
     Args:
         Dash: Shekels app.
-        config_path (str): Path to configuration JSON.
+        config_path (str or Path): Path to configuration JSON.
         debug (bool, optional): Whether debug mode is turned on. Default: False.
     '''
+    config_path = Path(config_path).as_posix()
     with open(config_path) as f:
         config = jsonc.JsonComment().load(f)
     app.api.config = config
