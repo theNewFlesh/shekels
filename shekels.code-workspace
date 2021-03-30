@@ -16,10 +16,10 @@
     "python.testing.unittestEnabled": false,
     "terminal.integrated.shell.linux": "/bin/zsh",
     "debug.allowBreakpointsEverywhere": true,
-    "python.testing.pytestArgs": [
-      "--cov=/root/shekels/python",
-      "--cov-config=/root/shekels/docker/pytest.ini"
-    ],
+    // "python.testing.pytestArgs": [
+    //   "--cov=/root/shekels/python",
+    //   "--cov-config=/root/shekels/docker/pytest.ini"
+    // ],
     "files.exclude": {
       "**/.classpath": true,
       "**/.coverage": true,
