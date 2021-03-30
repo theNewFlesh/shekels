@@ -268,7 +268,7 @@ def on_config_card_update(timestamp, store):
 # ------------------------------------------------------------------------------
 
 
-def run(app, config_path, debug=False):
+def run(app, config_path, debug=False, test=False):
     '''
     Runs a given Shekels app.
 
@@ -276,13 +276,15 @@ def run(app, config_path, debug=False):
         Dash: Shekels app.
         config_path (str or Path): Path to configuration JSON.
         debug (bool, optional): Whether debug mode is turned on. Default: False.
+        test (bool, optional): Calls app.run_server if False. Default: False.
     '''
     config_path = Path(config_path).as_posix()
     with open(config_path) as f:
         config = jsonc.JsonComment().load(f)
     app.api.config = config
     app.api.config_path = config_path
-    app.run_server(debug=debug, host='0.0.0.0', port=5014)
+    if not test:
+        app.run_server(debug=debug, host='0.0.0.0', port=5014)
 
 
 if __name__ == '__main__':

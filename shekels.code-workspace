@@ -16,10 +16,11 @@
     "python.testing.unittestEnabled": false,
     "terminal.integrated.shell.linux": "/bin/zsh",
     "debug.allowBreakpointsEverywhere": true,
-    // "python.testing.pytestArgs": [
+    "python.testing.pytestArgs": [
+        "--headless"
     //   "--cov=/root/shekels/python",
     //   "--cov-config=/root/shekels/docker/pytest.ini"
-    // ],
+    ],
     "files.exclude": {
       "**/.classpath": true,
       "**/.coverage": true,
@@ -70,7 +71,7 @@
         "label": "coverage",
         "command": [
           "mkdir -p docs && ",
-          "pytest python -c docker/pytest.ini --cov=python --cov-config=docker/pytest.ini --cov-report=html:docs/htmlcov && ",
+          "pytest python -c docker/pytest.ini --headless --cov=python --cov-config=docker/pytest.ini --cov-report=html:docs/htmlcov && ",
           "chown -R $USER docs"
         ],
         "type": "shell"
@@ -161,7 +162,7 @@
       },
       {
         "label": "test",
-        "command": "pytest python -c docker/pytest.ini",
+        "command": "pytest python -c docker/pytest.ini --headless",
         "type": "shell"
       },
       {

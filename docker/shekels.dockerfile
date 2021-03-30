@@ -51,6 +51,7 @@ COPY ./prod_requirements.txt /root/prod_requirements.txt
 RUN echo "\n${CYAN}INSTALL PYTHON DEPENDECIES${NO_COLOR}"; \
     apt update && \
     apt install -y \
+        chromium-chromedriver \
         graphviz \
         python3-pydot && \
     pip3.7 install -r dev_requirements.txt && \
@@ -74,6 +75,7 @@ RUN echo "\n${CYAN}INSTALL JUPYTER LAB EXTENSIONS${NO_COLOR}"; \
         @ryantam626/jupyterlab_sublime \
         @jupyterlab/plotly-extension
 
+ENV REPO_ENV=True
 ENV PYTHONPATH "${PYTHONPATH}:/root/shekels/python"
 ENV LANGUAGE "C"
 ENV LC_ALL "C"
