@@ -109,6 +109,14 @@ class ApiTests(unittest.TestCase):
         self.context.pop()
         self.tempdir.cleanup()
 
+    # DOCS----------------------------------------------------------------------
+    def test_apidocs(self):
+        result = self.client.get('/api').data.decode('utf-8')
+        self.assertIn('/apidocs/', result)
+
+        result = self.client.get('/apidocs/').data.decode('utf-8')
+        self.assertIn('flasgger', result)
+
     # INITIALIZE----------------------------------------------------------------
     def test_get_api(self):
         result = api.get_api()
