@@ -6,7 +6,6 @@ import unittest
 
 from dash.exceptions import PreventUpdate
 import flask
-from shekels.core.config import COLOR_SCHEME
 
 import shekels.server.server_tools as svt
 # ------------------------------------------------------------------------------
