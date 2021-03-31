@@ -158,7 +158,6 @@ class ApiTests(unittest.TestCase):
         # init database
         config = json.dumps(self.config)
         self.client.post('/api/initialize', json=config)
-        self.client.post('/api/update')
 
         # update
         self.client.post('/api/update')

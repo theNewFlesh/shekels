@@ -170,7 +170,7 @@ class DatabaseTests(unittest.TestCase):
 
             self.assertEqual(result, expected)
 
-            expected = 'Data not initialized. Please call update.'
+            expected = 'Database not updated. Please call update.'
             with self.assertRaisesRegexp(RuntimeError, expected):
                 db.Database(config).read()
 

@@ -117,7 +117,7 @@ class Database:
             list[dict]: Data as records.
         '''
         if self._data is None:
-            msg = 'Data not initialized. Please call update.'
+            msg = 'Database not updated. Please call update.'
             raise RuntimeError(msg)
         return self._to_records(self._data)
 

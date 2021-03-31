@@ -180,9 +180,6 @@ def read():
     try:
         response = API.database.read()
     except Exception as error:
-        if isinstance(error, RuntimeError):
-            msg = 'Database not updated. Please call update.'
-            raise RuntimeError(msg)
         return svt.error_to_response(error)
 
     response = {'response': response}
