@@ -1,9 +1,12 @@
+from pathlib import Path
+from tempfile import TemporaryDirectory
 import json
 import re
 import unittest
 
 from dash.exceptions import PreventUpdate
 import flask
+from shekels.core.config import COLOR_SCHEME
 
 import shekels.server.server_tools as svt
 # ------------------------------------------------------------------------------
@@ -55,6 +58,23 @@ TypeError(
         self.assertEqual(result.json['args'][2], 'arg2')
         self.assertEqual(result.json['message'], expected)
         self.assertEqual(result.json['code'], 500)
+
+    def test_render_template(self):
+        with TemporaryDirectory() as root:
+            template = Path(root, 'foo.j2').as_posix()
+            lines = '''
+                foo: {{ foo }}
+                bar: {{ bar }}
+            '''
+            with open(template, 'w') as f:
+                f.write(lines)
+            params = dict(foo='taco', bar='pizza')
+            result = svt.render_template('foo.j2', params, directory=root)
+            expected = b'''
+                foo: taco
+                bar: pizza
+            '''
+            self.assertEqual(result, expected)
 
     def test_parse_json_file_content(self):
         content = '''data:application/json;base64,\

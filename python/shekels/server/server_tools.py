@@ -1,5 +1,6 @@
 from typing import Any, Dict
 
+from pathlib import Path
 from pprint import pformat
 import base64
 import json
@@ -49,24 +50,28 @@ def error_to_response(error):
     )
 
 
-def render_template(filename, parameters):
-    # type: (str, Dict[str, Any]) -> bytes
+def render_template(filename, parameters, directory='../../../templates'):
+    # type: (str, Dict[str, Any], str) -> bytes
     '''
     Renders a jinja2 template given by filename with given parameters.
 
     Args:
         filename (str): Filename of template.
         parameters (dict): Dictionary of template parameters.
+        directory (str or Path, optional): Templates directory.
+            Default: '../../../templates'.
 
     Returns:
         bytes: HTML.
     '''
+    directory = Path(directory).as_posix()
+
     # path to templates inside pip package
     tempdir = lbt.relative_path(__file__, '../templates').as_posix()
 
     # path to templates inside repo
     if 'REPO_ENV' in os.environ.keys():
-        tempdir = lbt.relative_path(__file__, '../../../templates').as_posix()
+        tempdir = lbt.relative_path(__file__, directory).as_posix()
 
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(tempdir),
