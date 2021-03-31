@@ -75,7 +75,7 @@ def test_on_get_tab_plots_no_init(dash_duo, run_app):
 
     dash_duo.find_elements('#tabs .tab')[2].click()
     dash_duo.find_elements('#tabs .tab')[1].click()
-    time.sleep(0.03)
+    time.sleep(0.04)
     result = dash_duo.find_element('#plots-content > div')
     assert result.get_property('id') == 'error'
 
