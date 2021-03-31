@@ -710,6 +710,7 @@ class DataToolsTests(unittest.TestCase):
     def test_query_data_empty(self):
         data = self.get_data()
         query = 'select * from data where '
+        query += "Category ~ '.*' and "
         query += "Category = 'empty' and "
         query += 'Amount > 78'
         result = sdt.query_data(data, query)
