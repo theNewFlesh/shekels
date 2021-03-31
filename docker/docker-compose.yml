@@ -17,6 +17,7 @@ services:
       - ../:/root/shekels
       - ./jupyter:/root/.jupyter
       - ./ipython:/root/.ipython
+      - ../artifacts:/tmp/dash_artifacts
       - ~/.ssh:/root/.ssh
     working_dir: "/root/shekels/python"
     command: "tail -f /dev/null"

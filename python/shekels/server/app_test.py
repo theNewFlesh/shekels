@@ -1,5 +1,6 @@
-import json
 from pathlib import Path
+import json
+import time
 
 import dash
 import flask
@@ -46,3 +47,36 @@ def test_stylesheet(dash_duo, run_app):
     dash_duo.start_server(test_app)
     result = client.get('/stylesheet/style.css').data.decode('utf-8')
     assert 'static/style.css' in result
+
+
+def test_on_get_tab_data_no_init(dash_duo, run_app):
+    test_app, _ = run_app
+    dash_duo.start_server(test_app)
+
+    result = dash_duo.find_element('#lower-content div')
+    assert result.get_property('id') == 'plots-content'
+
+    dash_duo.find_elements('#tabs .tab')[2].click()
+    result = dash_duo.find_element('#lower-content div')
+    assert result.get_property('id') == 'table-content'
+
+    result = dash_duo.find_element('#table-content div')
+    assert result.get_property('id') == 'error'
+
+
+def test_on_get_tab_plots_no_init(dash_duo, run_app):
+    test_app, _ = run_app
+    dash_duo.start_server(test_app)
+
+    result = dash_duo.find_element('#lower-content div')
+    assert result.get_property('id') == 'plots-content'
+
+    # dash_duo.take_snapshot('test_on_get_tab_plots_no_init-before')
+
+    dash_duo.find_elements('#tabs .tab')[2].click()
+    dash_duo.find_elements('#tabs .tab')[1].click()
+    time.sleep(0.03)
+    result = dash_duo.find_element('#plots-content > div')
+    assert result.get_property('id') == 'error'
+
+    # dash_duo.take_snapshot('test_on_get_tab_plots_no_init-after')

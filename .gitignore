@@ -57,6 +57,9 @@ sftp-config.json
 # Data
 data/
 
+# testing artifacts
+artifacts/
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt

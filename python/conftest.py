@@ -17,6 +17,7 @@ def pytest_setup_options():
 @pytest.fixture
 def run_app():
     config_path = lbt \
-        .relative_path(__file__, '../resources/test_config.json').as_posix()
+        .relative_path(__file__, '../resources/test_config.json') \
+        .as_posix()
     app.run(app.APP, config_path, debug=True, test=True)
     return app.APP, app.APP.client
