@@ -707,6 +707,15 @@ class DataToolsTests(unittest.TestCase):
         expected = pandasql.sqldf(query, dict(data=data))
         eft.enforce_dataframes_are_equal(result, expected)
 
+    def test_query_data_empty(self):
+        data = self.get_data()
+        query = 'select * from data where '
+        query += "Category = 'empty' and "
+        query += 'Amount > 78'
+        result = sdt.query_data(data, query)
+        expected = DataFrame(columns=data.columns)
+        eft.enforce_dataframes_are_equal(result, expected)
+
     def test_query_data_regex(self):
         data = self.get_data()
         expected = data.loc[:1, ['Description', 'Amount']]
