@@ -39,3 +39,10 @@ def test_run():
     app.run(result, config_path, debug=True, test=True)
     assert result.api.config_path == config_path
     assert isinstance(result.api.config, dict)
+
+
+def test_stylesheet(dash_duo, run_app):
+    test_app, client = run_app
+    dash_duo.start_server(test_app)
+    result = client.get('/stylesheet/style.css').data.decode('utf-8')
+    assert 'static/style.css' in result
