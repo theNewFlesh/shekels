@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.9.0
+                0.9.1
               </div>
             
           
@@ -770,13 +770,15 @@ Assumes dict element has all columns of table as keys.</p>
 
 <dl class="py function">
 <dt id="shekels.server.server_tools.render_template">
-<code class="sig-prename descclassname"><span class="pre">shekels.server.server_tools.</span></code><code class="sig-name descname"><span class="pre">render_template</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">bytes</span><a class="reference internal" href="_modules/shekels/server/server_tools.html#render_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.server_tools.render_template" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">shekels.server.server_tools.</span></code><code class="sig-name descname"><span class="pre">render_template</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'../../../templates'</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">bytes</span><a class="reference internal" href="_modules/shekels/server/server_tools.html#render_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.server_tools.render_template" title="Permalink to this definition">¶</a></dt>
 <dd><p>Renders a jinja2 template given by filename with given parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filename</strong> (<em>str</em>) – Filename of template.</p></li>
 <li><p><strong>parameters</strong> (<em>dict</em>) – Dictionary of template parameters.</p></li>
+<li><p><strong>directory</strong> (<em>str</em><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Templates directory.
+Default: ‘../../../templates’.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
