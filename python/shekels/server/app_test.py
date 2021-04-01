@@ -49,6 +49,7 @@ def test_stylesheet(dash_duo, run_app):
     assert 'static/style.css' in result
 
 
+# TABS-NO-INIT------------------------------------------------------------------
 def test_on_get_tab_data_no_init(dash_duo, run_app):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
@@ -71,12 +72,22 @@ def test_on_get_tab_plots_no_init(dash_duo, run_app):
     result = dash_duo.find_element('#lower-content div')
     assert result.get_property('id') == 'plots-content'
 
-    # dash_duo.take_snapshot('test_on_get_tab_plots_no_init-before')
-
     dash_duo.find_elements('#tabs .tab')[2].click()
     dash_duo.find_elements('#tabs .tab')[1].click()
     time.sleep(0.04)
     result = dash_duo.find_element('#plots-content > div')
     assert result.get_property('id') == 'error'
 
-    # dash_duo.take_snapshot('test_on_get_tab_plots_no_init-after')
+
+def test_on_get_tab_config_no_init(dash_duo, run_app):
+    test_app, _ = run_app
+    dash_duo.start_server(test_app)
+
+    result = dash_duo.find_element('#lower-content div')
+    assert result.get_property('id') == 'plots-content'
+
+    dash_duo.find_elements('#tabs .tab')[3].click()
+    dash_duo.wait_for_element('#config-content > div')
+    # dash_duo.take_snapshot('test_on_get_tab_config_no_init-before')
+    result = dash_duo.find_element('#config-content > div')
+    assert result.get_property('id') == 'key-value-table-container'
