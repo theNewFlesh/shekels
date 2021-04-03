@@ -129,15 +129,15 @@ def test_datatable_update(dash_duo, run_app):
     assert len(result) == 680
 
 
-def test_on_get_tab_config_no_init(dash_duo, run_app):
+def test_on_config_update(dash_duo, run_app):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
 
-    result = dash_duo.find_element('#lower-content div')
-    assert result.get_property('id') == 'plots-content'
-
+    # click on config tab
     dash_duo.find_elements('#tabs .tab')[3].click()
-    dash_duo.wait_for_element('#config-content > div')
-    # dash_duo.take_snapshot('test_on_get_tab_config_no_init-before')
-    result = dash_duo.find_element('#config-content > div')
-    assert result.get_property('id') == 'key-value-table-container'
+    dash_duo.wait_for_element('#config-content')
+    result = dash_duo.find_element('#lower-content div')
+    assert result.get_property('id') == 'config-content'
+
+    result = dash_duo.find_elements('#key-value-table tr')
+    assert len(result) == 117
