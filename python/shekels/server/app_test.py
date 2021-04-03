@@ -139,5 +139,20 @@ def test_on_config_update(dash_duo, run_app):
     result = dash_duo.find_element('#lower-content div')
     assert result.get_property('id') == 'config-content'
 
+    # content
+    dash_duo.find_elements('#init-button')[-1].click()
     result = dash_duo.find_elements('#key-value-table tr')
     assert len(result) == 117
+
+
+def test_on_config_update_error(dash_duo, run_app):
+    test_app, _ = run_app
+    test_app.api.config['columns'] = 99
+    dash_duo.start_server(test_app)
+
+    # click on config tab and init button
+    dash_duo.find_elements('#tabs .tab')[3].click()
+    dash_duo.find_elements('#init-button')[-1].click()
+    dash_duo.wait_for_element('#error')
+    result = dash_duo.wait_for_element('#error-value').text
+    assert result == 'DataError'

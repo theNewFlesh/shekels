@@ -47,7 +47,7 @@ def get_app():
 APP = get_app()
 
 
-def solve_component_state(store):
+def solve_component_state(store, config=False):
     # type (dict) -> Optional(html.Div)
     '''
     Solves what component to return given the state of the given store.
@@ -56,44 +56,37 @@ def solve_component_state(store):
     if a required key is not found in the store, or it contain a dictionary with
     am "error" key in it. Those required keys are as follows:
 
+        * /config
         * /api/initialize
         * /api/update
         * /api/search
 
     Args:
         store (dict): Dash store.
+        config (bool, optional): Whether the component is for the config tab.
+            Default: False.
 
     Returns:
         Div: Key value card if store values are not present or have errors,
             otherwise, none.
     '''
-    # init
-    value = store.get('/api/initialize')
-    if value is None:
-        return svc.get_key_value_card(
-            {'action': 'Please call init or update.'},
-            header='status',
-            id_='status'
-        )
-    elif isinstance(value, dict) and 'error' in value:
-        return svc.get_key_value_card(value, header='error', id_='error')
-
-    # update
-    value = store.get('/api/update')
-    if value is None:
-        return svc.get_key_value_card(
-            {'action': 'Please call update.'},
-            header='status',
-            id_='status'
-        )
-    elif isinstance(value, dict) and 'error' in value:
-        return svc.get_key_value_card(value, header='error', id_='error')
-
-    # search
-    value = store.get('/api/search')
-    if isinstance(value, dict) and 'error' in value:
-        return svc.get_key_value_card(value, header='error', id_='error')
-
+    states = [
+        ['/config', None],
+        ['/api/initialize', 'Please call init or update.'],
+        ['/api/update', 'Please call update.'],
+        ['/api/search', None],
+    ]
+    if config:
+        states = states[:2]
+        states[1][1] = None
+    for key, message in states:
+        value = store.get(key)
+        if message is not None and value is None:
+            return svc.get_key_value_card(
+                {'action': message}, header='status', id_='status'
+            )
+        elif isinstance(value, dict) and 'error' in value:
+            return svc.get_key_value_card(value, header='error', id_='error')
     return None
 
 
@@ -167,10 +160,14 @@ def on_event(*inputs):
 
     elif element == 'init-button':
         svt.update_store(APP.client, store, '/api/initialize', data=config)
+        if 'error' in store['/api/initialize']:
+            store['/config'] = store['/api/initialize']
 
     elif element == 'update-button':
         if APP.api.database is None:
             svt.update_store(APP.client, store, '/api/initialize', data=config)
+            if 'error' in store['/api/initialize']:
+                store['/config'] = store['/api/initialize']
         svt.update_store(APP.client, store, '/api/update')
         svt.update_store(
             APP.client,
@@ -268,9 +265,11 @@ def on_config_update(timestamp, store):
     Returns:
         flask.Response: Response.
     '''
-    if not svt.store_key_is_valid(store, '/config'):
-        return svc.get_key_value_card(store['/config'], 'error', 'error')
-    return svc.get_key_value_card(store['/config'], 'config', 'config-card')
+    store['/config'] = store.get('/config', APP.api.config)
+    comp = solve_component_state(store, config=True)
+    if comp is not None:
+        return comp
+    return svc.get_key_value_table(store['/config'])
 
 
 @APP.callback(
