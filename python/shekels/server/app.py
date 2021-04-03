@@ -47,6 +47,56 @@ def get_app():
 APP = get_app()
 
 
+def solve_component_state(store):
+    # type (dict) -> Optional(html.Div)
+    '''
+    Solves what component to return given the state of the given store.
+
+    Returns a key value card component embedded with a relevant message or error
+    if a required key is not found in the store, or it contain a dictionary with
+    am "error" key in it. Those required keys are as follows:
+
+        * /api/initialize
+        * /api/update
+        * /api/search
+
+    Args:
+        store (dict): Dash store.
+
+    Returns:
+        Div: Key value card if store values are not present or have errors,
+            otherwise, none.
+    '''
+    # init
+    value = store.get('/api/initialize')
+    if value is None:
+        return svc.get_key_value_card(
+            {'action': 'Please call init or update.'},
+            header='status',
+            id_='status'
+        )
+    elif isinstance(value, dict) and 'error' in value:
+        return svc.get_key_value_card(value, header='error', id_='error')
+
+    # update
+    value = store.get('/api/update')
+    if value is None:
+        return svc.get_key_value_card(
+            {'action': 'Please call update.'},
+            header='status',
+            id_='status'
+        )
+    elif isinstance(value, dict) and 'error' in value:
+        return svc.get_key_value_card(value, header='error', id_='error')
+
+    # search
+    value = store.get('/api/search')
+    if isinstance(value, dict) and 'error' in value:
+        return svc.get_key_value_card(value, header='error', id_='error')
+
+    return None
+
+
 @APP.server.route('/static/<stylesheet>')
 def serve_stylesheet(stylesheet):
     # type: (str) -> flask.Response

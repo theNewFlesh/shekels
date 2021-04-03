@@ -32,6 +32,35 @@ def test_get_app(dash_duo):
     assert isinstance(result.cache, flask_caching.Cache)
 
 
+def test_solve_component_state():
+    # correct
+    store = {'/api/initialize': {}, '/api/update': {}, '/api/search': {}}
+    result = app.solve_component_state(store)
+    assert result is None
+
+    states = {
+        '/api/initialize': 'Please call init or update.',
+        '/api/update': 'Please call update.',
+        '/api/search': None,
+    }
+    keys = states.keys()
+    for key, expected in states.items():
+        # missing
+        store = dict(zip(keys, [{}] * len(keys)))
+        del store[key]
+        result = None
+        if expected is not None:
+            result = app.solve_component_state(store) \
+                .children[-1].children[-1].children[0]
+        assert result == expected
+
+        # error
+        store[key] = {'error': 'foobar'}
+        result = app.solve_component_state(store) \
+            .children[-1].children[-1].children[0]
+        assert result == 'foobar'
+
+
 def test_run():
     result = app.APP
     config_path = lbt.relative_path(
