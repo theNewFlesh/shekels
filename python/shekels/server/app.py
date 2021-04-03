@@ -222,10 +222,9 @@ def on_datatable_update(store):
     Returns:
         DataTable: Dash DataTable.
     '''
-    if not svt.store_key_is_valid(store, '/api/search'):
-        return svc.get_key_value_card(
-            store['/api/search'], header='error', id_='error'
-        )
+    comp = solve_component_state(store)
+    if comp is not None:
+        return comp
     return svc.get_datatable(store['/api/search']['response'])
 
 
@@ -245,10 +244,9 @@ def on_plots_update(store):
     Returns:
         list[dcc.Graph]: Plots.
     '''
-    if not svt.store_key_is_valid(store, '/api/search'):
-        return svc.get_key_value_card(
-            store['/api/search'], header='error', id_='error'
-        )
+    comp = solve_component_state(store)
+    if comp is not None:
+        return comp
     plots = store.get('config', APP.api.config).get('plots', [])
     return svc.get_plots(store['/api/search']['response'], plots)
 

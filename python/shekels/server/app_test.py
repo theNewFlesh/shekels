@@ -78,34 +78,55 @@ def test_stylesheet(dash_duo, run_app):
     assert 'static/style.css' in result
 
 
-# TABS-NO-INIT------------------------------------------------------------------
-def test_on_get_tab_data_no_init(dash_duo, run_app):
+# TABS--------------------------------------------------------------------------
+def test_plots_update(dash_duo, run_app):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
 
-    result = dash_duo.find_element('#lower-content div')
+    # default tab
+    result = dash_duo.wait_for_element('#lower-content div')
     assert result.get_property('id') == 'plots-content'
 
+    # init message
+    result = dash_duo.wait_for_element('#action-value').text
+    assert result == 'Please call init or update.'
+
+    # update message
+    dash_duo.find_elements('#init-button')[-1].click()
+    time.sleep(0.04)
+    result = dash_duo.wait_for_element('#action-value').text
+    assert result == 'Please call update.'
+
+    # content
+    dash_duo.find_elements('#update-button')[-1].click()
+    result = len(dash_duo.find_elements('.dash-graph.plot'))
+    assert result == 6
+
+
+def test_datatable_update(dash_duo, run_app):
+    test_app, _ = run_app
+    dash_duo.start_server(test_app)
+
+    # click on data tab
     dash_duo.find_elements('#tabs .tab')[2].click()
+    dash_duo.wait_for_element('#action-value')
     result = dash_duo.find_element('#lower-content div')
     assert result.get_property('id') == 'table-content'
 
-    result = dash_duo.find_element('#table-content div')
-    assert result.get_property('id') == 'error'
+    # init message
+    result = dash_duo.find_element('#action-value').text
+    assert result == 'Please call init or update.'
 
-
-def test_on_get_tab_plots_no_init(dash_duo, run_app):
-    test_app, _ = run_app
-    dash_duo.start_server(test_app)
-
-    result = dash_duo.find_element('#lower-content div')
-    assert result.get_property('id') == 'plots-content'
-
-    dash_duo.find_elements('#tabs .tab')[2].click()
-    dash_duo.find_elements('#tabs .tab')[1].click()
+    # update message
+    dash_duo.find_elements('#init-button')[-1].click()
     time.sleep(0.04)
-    result = dash_duo.find_element('#plots-content > div')
-    assert result.get_property('id') == 'error'
+    result = dash_duo.wait_for_element('#action-value').text
+    assert result == 'Please call update.'
+
+    # content
+    dash_duo.find_elements('#update-button')[-1].click()
+    result = dash_duo.find_elements('#datatable td')
+    assert len(result) == 680
 
 
 def test_on_get_tab_config_no_init(dash_duo, run_app):
