@@ -16,7 +16,7 @@ import jsoncomment as jsonc
 
 import shekels.core.config as cfg
 from shekels.server.api import API
-import shekels.server.components as comp
+import shekels.server.components as svc
 import shekels.server.server_tools as svt
 # ------------------------------------------------------------------------------
 
@@ -37,7 +37,7 @@ def get_app():
     flask_app = flask.Flask('$hekels')
     swg.Swagger(flask_app)
     flask_app.register_blueprint(API)
-    app = comp.get_dash_app(flask_app)
+    app = svc.get_dash_app(flask_app)
     app.api = API
     app.client = flask_app.test_client()
     app.cache = Cache(flask_app, config={'CACHE_TYPE': 'SimpleCache'})
@@ -173,10 +173,10 @@ def on_datatable_update(store):
         DataTable: Dash DataTable.
     '''
     if not svt.store_key_is_valid(store, '/api/search'):
-        return comp.get_key_value_card(
+        return svc.get_key_value_card(
             store['/api/search'], header='error', id_='error'
         )
-    return comp.get_datatable(store['/api/search']['response'])
+    return svc.get_datatable(store['/api/search']['response'])
 
 
 @APP.callback(
@@ -196,11 +196,11 @@ def on_plots_update(store):
         list[dcc.Graph]: Plots.
     '''
     if not svt.store_key_is_valid(store, '/api/search'):
-        return comp.get_key_value_card(
+        return svc.get_key_value_card(
             store['/api/search'], header='error', id_='error'
         )
     plots = store.get('config', APP.api.config).get('plots', [])
-    return comp.get_plots(store['/api/search']['response'], plots)
+    return svc.get_plots(store['/api/search']['response'], plots)
 
 
 @APP.callback(
@@ -224,15 +224,15 @@ def on_get_tab(tab, store):
 
     if tab == 'plots':
         query = store.get('query', APP.api.config['default_query'])
-        return comp.get_plots_tab(query)
+        return svc.get_plots_tab(query)
 
     elif tab == 'data':
         query = store.get('query', APP.api.config['default_query'])
-        return comp.get_data_tab(query)
+        return svc.get_data_tab(query)
 
     elif tab == 'config':
         config = store.get('config', APP.api.config)
-        return comp.get_config_tab(config)
+        return svc.get_config_tab(config)
 
     elif tab == 'api':
         return dcc.Location(id='api', pathname='/api')
@@ -263,8 +263,8 @@ def on_config_card_update(timestamp, store):
         flask.Response: Response.
     '''
     if not svt.store_key_is_valid(store, '/config'):
-        return comp.get_key_value_card(store['/config'], 'error', 'error')
-    return comp.get_key_value_card(store['/config'], 'config', 'config-card')
+        return svc.get_key_value_card(store['/config'], 'error', 'error')
+    return svc.get_key_value_card(store['/config'], 'config', 'config-card')
 # ------------------------------------------------------------------------------
 
 
