@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.9.3
+                0.9.4
               </div>
             
           
@@ -362,8 +362,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="shekels.server.app.on_config_card_update">
-<code class="sig-prename descclassname"><span class="pre">shekels.server.app.</span></code><code class="sig-name descname"><span class="pre">on_config_card_update</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">flask.wrappers.Response</span><a class="reference internal" href="_modules/shekels/server/app.html#on_config_card_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.app.on_config_card_update" title="Permalink to this definition">¶</a></dt>
+<dt id="shekels.server.app.on_config_update">
+<code class="sig-prename descclassname"><span class="pre">shekels.server.app.</span></code><code class="sig-name descname"><span class="pre">on_config_update</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">flask.wrappers.Response</span><a class="reference internal" href="_modules/shekels/server/app.html#on_config_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.app.on_config_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates config card with config information from store.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -487,13 +487,14 @@
 
 <dl class="py function">
 <dt id="shekels.server.app.solve_component_state">
-<code class="sig-prename descclassname"><span class="pre">shekels.server.app.</span></code><code class="sig-name descname"><span class="pre">solve_component_state</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">store</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/server/app.html#solve_component_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.app.solve_component_state" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">shekels.server.app.</span></code><code class="sig-name descname"><span class="pre">solve_component_state</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">store</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/server/app.html#solve_component_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.app.solve_component_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Solves what component to return given the state of the given store.</p>
 <p>Returns a key value card component embedded with a relevant message or error
 if a required key is not found in the store, or it contain a dictionary with
 am “error” key in it. Those required keys are as follows:</p>
 <blockquote>
 <div><ul class="simple">
+<li><p>/config</p></li>
 <li><p>/api/initialize</p></li>
 <li><p>/api/update</p></li>
 <li><p>/api/search</p></li>
@@ -501,7 +502,11 @@ am “error” key in it. Those required keys are as follows:</p>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>store</strong> (<em>dict</em>) – Dash store.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>store</strong> (<em>dict</em>) – Dash store.</p></li>
+<li><p><strong>config</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the component is for the config tab.
+Default: False.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
