@@ -206,6 +206,29 @@ def on_event(*inputs):
 
 
 @APP.callback(
+    Output('plots-content', 'children'),
+    [Input('store', 'data')]
+)
+@APP.cache.memoize(100)
+def on_plots_update(store):
+    # type: (Dict) -> dash_table.DataTable
+    '''
+    Updates plots with read information from store.
+
+    Args:
+        store (dict): Store data.
+
+    Returns:
+        list[dcc.Graph]: Plots.
+    '''
+    comp = solve_component_state(store)
+    if comp is not None:
+        return comp
+    plots = store.get('config', APP.api.config).get('plots', [])
+    return svc.get_plots(store['/api/search']['response'], plots)
+
+
+@APP.callback(
     Output('table-content', 'children'),
     [Input('store', 'data')]
 )
@@ -228,26 +251,26 @@ def on_datatable_update(store):
 
 
 @APP.callback(
-    Output('plots-content', 'children'),
-    [Input('store', 'data')]
+    Output('config-content', 'children'),
+    [Input('store', 'modified_timestamp')],
+    [State('store', 'data')]
 )
 @APP.cache.memoize(100)
-def on_plots_update(store):
-    # type: (Dict) -> dash_table.DataTable
+def on_config_update(timestamp, store):
+    # type: (int, Dict[str, Any]) -> flask.Response
     '''
-    Updates plots with read information from store.
+    Updates config card with config information from store.
 
     Args:
+        timestamp (int): Store modification timestamp.
         store (dict): Store data.
 
     Returns:
-        list[dcc.Graph]: Plots.
+        flask.Response: Response.
     '''
-    comp = solve_component_state(store)
-    if comp is not None:
-        return comp
-    plots = store.get('config', APP.api.config).get('plots', [])
-    return svc.get_plots(store['/api/search']['response'], plots)
+    if not svt.store_key_is_valid(store, '/config'):
+        return svc.get_key_value_card(store['/config'], 'error', 'error')
+    return svc.get_key_value_card(store['/config'], 'config', 'config-card')
 
 
 @APP.callback(
@@ -289,29 +312,6 @@ def on_get_tab(tab, store):
             id='docs',
             href='https://thenewflesh.github.io/shekels/'
         )
-
-
-@APP.callback(
-    Output('config-content', 'children'),
-    [Input('store', 'modified_timestamp')],
-    [State('store', 'data')]
-)
-@APP.cache.memoize(100)
-def on_config_card_update(timestamp, store):
-    # type: (int, Dict[str, Any]) -> flask.Response
-    '''
-    Updates config card with config information from store.
-
-    Args:
-        timestamp (int): Store modification timestamp.
-        store (dict): Store data.
-
-    Returns:
-        flask.Response: Response.
-    '''
-    if not svt.store_key_is_valid(store, '/config'):
-        return svc.get_key_value_card(store['/config'], 'error', 'error')
-    return svc.get_key_value_card(store['/config'], 'config', 'config-card')
 # ------------------------------------------------------------------------------
 
 
@@ -334,7 +334,7 @@ def run(app, config_path, debug=False, test=False):
         app.run_server(debug=debug, host='0.0.0.0', port=5014)  # pragma: no cover
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     run(
         APP,
         '/root/shekels/resources/test_config.json',
