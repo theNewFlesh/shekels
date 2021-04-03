@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.9.1
+                0.9.3
               </div>
             
           
@@ -481,6 +481,37 @@
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>flask.Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="shekels.server.app.solve_component_state">
+<code class="sig-prename descclassname"><span class="pre">shekels.server.app.</span></code><code class="sig-name descname"><span class="pre">solve_component_state</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">store</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/server/app.html#solve_component_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.app.solve_component_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solves what component to return given the state of the given store.</p>
+<p>Returns a key value card component embedded with a relevant message or error
+if a required key is not found in the store, or it contain a dictionary with
+am “error” key in it. Those required keys are as follows:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>/api/initialize</p></li>
+<li><p>/api/update</p></li>
+<li><p>/api/search</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>store</strong> (<em>dict</em>) – Dash store.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Key value card if store values are not present or have errors,</dt><dd><p>otherwise, none.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Div</p>
 </dd>
 </dl>
 </dd></dl>

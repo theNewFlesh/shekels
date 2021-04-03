@@ -123,7 +123,6 @@ def serve_stylesheet(stylesheet):
 
 
 # EVENTS------------------------------------------------------------------------
-# TODO: Find a way to test events.
 @APP.callback(
     Output('store', 'data'),
     [
@@ -282,10 +281,10 @@ def on_get_tab(tab, store):
         config = store.get('config', APP.api.config)
         return svc.get_config_tab(config)
 
-    elif tab == 'api':
+    elif tab == 'api':  # pragma: no cover
         return dcc.Location(id='api', pathname='/api')
 
-    elif tab == 'docs':
+    elif tab == 'docs':  # pragma: no cover
         return dcc.Location(
             id='docs',
             href='https://thenewflesh.github.io/shekels/'
@@ -332,7 +331,7 @@ def run(app, config_path, debug=False, test=False):
     app.api.config = config
     app.api.config_path = config_path
     if not test:
-        app.run_server(debug=debug, host='0.0.0.0', port=5014)
+        app.run_server(debug=debug, host='0.0.0.0', port=5014)  # pragma: no cover
 
 
 if __name__ == '__main__':
