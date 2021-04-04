@@ -164,7 +164,7 @@ def on_event(*inputs):
             store['/config'] = store['/api/initialize']
 
     elif element == 'update-button':
-        if APP.api.database is None:
+        if store.get('/api/initialize') is None:
             svt.update_store(APP.client, store, '/api/initialize', data=config)
             if 'error' in store['/api/initialize']:
                 store['/config'] = store['/api/initialize']
