@@ -17,6 +17,7 @@ import shekels.core.config as cfg
 import shekels.core.data_tools as sdt
 
 
+# TODO: refactor components tests to use selnium and be less brittle
 # TODO: add JSON editor component for config
 # APP---------------------------------------------------------------------------
 def get_dash_app(server, storage_type='memory'):
