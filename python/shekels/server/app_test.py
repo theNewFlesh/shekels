@@ -103,6 +103,18 @@ def test_plots_update(dash_duo, run_app):
     assert result == 6
 
 
+def test_on_plots_update_error(dash_duo, run_app):
+    test_app, _ = run_app
+    test_app.api.config['columns'] = 99
+    dash_duo.start_server(test_app)
+
+    dash_duo.wait_for_element('#action-value').text
+    dash_duo.find_elements('#init-button')[-1].click()
+    dash_duo.wait_for_element('#error')
+    result = dash_duo.wait_for_element('#error-value').text
+    assert result == 'DataError'
+
+
 def test_datatable_update(dash_duo, run_app):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
@@ -127,6 +139,20 @@ def test_datatable_update(dash_duo, run_app):
     dash_duo.find_elements('#update-button')[-1].click()
     result = dash_duo.find_elements('#datatable td')
     assert len(result) == 680
+
+
+def test_on_plots_datatable_error(dash_duo, run_app):
+    test_app, _ = run_app
+    test_app.api.config['columns'] = 99
+    dash_duo.start_server(test_app)
+
+    # click on data tab
+    dash_duo.find_elements('#tabs .tab')[2].click()
+    dash_duo.wait_for_element('#action-value').text
+    dash_duo.find_elements('#init-button')[-1].click()
+    dash_duo.wait_for_element('#error')
+    result = dash_duo.wait_for_element('#error-value').text
+    assert result == 'DataError'
 
 
 def test_on_config_update(dash_duo, run_app):
