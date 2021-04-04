@@ -95,6 +95,46 @@ def test_on_event_update_button(dash_duo, run_app):
     assert result == 6
 
 
+def test_on_event_search_button(dash_duo, run_app):
+    test_app, _ = run_app
+    dash_duo.start_server(test_app)
+
+    # default tab
+    dash_duo.wait_for_element('#lower-content div')
+    dash_duo.find_elements('#search-button')[-1].click()
+    time.sleep(0.01)
+
+    # init message
+    result = dash_duo.wait_for_element('#action-value').text
+    assert result == 'Please call init or update.'
+
+    # update message
+    dash_duo.find_elements('#init-button')[-1].click()
+    time.sleep(0.04)
+    dash_duo.find_elements('#search-button')[-1].click()
+    result = dash_duo.wait_for_element('#action-value').text
+    assert result == 'Please call update.'
+
+    # click update button
+    dash_duo.find_elements('#update-button')[-1].click()
+    dash_duo.wait_for_element('.js-plotly-plot')
+    # dash_duo.take_snapshot('on_event_search-0')
+
+    # enter new query
+    query = dash_duo.find_elements('#query')[-1]
+    query.send_keys(sek.Keys.CONTROL + 'a')
+    query.send_keys(sek.Keys.BACK_SPACE)
+    query.send_keys('select * from data')
+    # dash_duo.take_snapshot('on_event_search-1')
+
+    # click search button
+    dash_duo.find_elements('#search-button')[-1].click()
+    dash_duo.wait_for_element('.js-plotly-plot')
+    # dash_duo.take_snapshot('on_event_search-2')
+    result = len(dash_duo.find_elements('.dash-graph.plot'))
+    assert result == 6
+
+
 # TABS--------------------------------------------------------------------------
 def test_plots_update(dash_duo, run_app):
     test_app, _ = run_app
