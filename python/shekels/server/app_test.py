@@ -1,11 +1,14 @@
 from pathlib import Path
 import json
+import os
 import time
 
 import dash
 import flask
 import flask_caching
 import lunchbox.tools as lbt
+import pytest
+import selenium.webdriver.common.keys as sek
 
 import shekels.server.api as api
 import shekels.server.app as app
@@ -23,7 +26,7 @@ def write_config(root):
     return config_path
 
 
-def test_get_app(dash_duo):
+def test_get_app(dash_duo, serial):
     result = app.get_app()
     dash_duo.start_server(result)
     assert isinstance(result, dash.Dash)
@@ -71,14 +74,14 @@ def test_run():
     assert isinstance(result.api.config, dict)
 
 
-def test_stylesheet(dash_duo, run_app):
+def test_stylesheet(dash_duo, run_app, serial):
     test_app, client = run_app
     dash_duo.start_server(test_app)
     result = client.get('/stylesheet/style.css').data.decode('utf-8')
     assert 'static/style.css' in result
 
 
-def test_on_event_update_button(dash_duo, run_app):
+def test_on_event_update_button(dash_duo, run_app, serial):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
 
@@ -95,7 +98,21 @@ def test_on_event_update_button(dash_duo, run_app):
     assert result == 6
 
 
-def test_on_event_search_button(dash_duo, run_app):
+def test_on_event_update_button_no_init(dash_duo, run_app, serial):
+    test_app, _ = run_app
+    dash_duo.start_server(test_app)
+
+    # click update button
+    dash_duo.wait_for_element('#lower-content div')
+    # dash_duo.take_snapshot('test_on_event_update_button_no_init-0')
+    dash_duo.find_elements('#update-button')[-1].click()
+    # dash_duo.take_snapshot('test_on_event_update_button_no_init-1')
+    dash_duo.wait_for_element('.js-plotly-plot')
+    result = dash_duo.find_elements('.dash-graph.plot')
+    assert len(result) == 6
+
+
+def test_on_event_search_button(dash_duo, run_app, serial):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
 
@@ -136,7 +153,7 @@ def test_on_event_search_button(dash_duo, run_app):
 
 
 # TABS--------------------------------------------------------------------------
-def test_plots_update(dash_duo, run_app):
+def test_plots_update(dash_duo, run_app, serial):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
 
@@ -160,7 +177,7 @@ def test_plots_update(dash_duo, run_app):
     assert result == 6
 
 
-def test_on_plots_update_error(dash_duo, run_app):
+def test_on_plots_update_error(dash_duo, run_app, serial):
     test_app, _ = run_app
     test_app.api.config['columns'] = 99
     dash_duo.start_server(test_app)
@@ -172,7 +189,7 @@ def test_on_plots_update_error(dash_duo, run_app):
     assert result == 'DataError'
 
 
-def test_datatable_update(dash_duo, run_app):
+def test_datatable_update(dash_duo, run_app, serial):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
 
@@ -198,7 +215,7 @@ def test_datatable_update(dash_duo, run_app):
     assert len(result) == 680
 
 
-def test_on_plots_datatable_error(dash_duo, run_app):
+def test_on_plots_datatable_error(dash_duo, run_app, serial):
     test_app, _ = run_app
     test_app.api.config['columns'] = 99
     dash_duo.start_server(test_app)
@@ -212,7 +229,7 @@ def test_on_plots_datatable_error(dash_duo, run_app):
     assert result == 'DataError'
 
 
-def test_on_config_update(dash_duo, run_app):
+def test_on_config_update(dash_duo, run_app, serial):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
 
@@ -228,7 +245,7 @@ def test_on_config_update(dash_duo, run_app):
     assert len(result) == 117
 
 
-def test_on_config_update_error(dash_duo, run_app):
+def test_on_config_update_error(dash_duo, run_app, serial):
     test_app, _ = run_app
     test_app.api.config['columns'] = 99
     dash_duo.start_server(test_app)
