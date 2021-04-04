@@ -78,6 +78,23 @@ def test_stylesheet(dash_duo, run_app):
     assert 'static/style.css' in result
 
 
+def test_on_event_update_button(dash_duo, run_app):
+    test_app, _ = run_app
+    dash_duo.start_server(test_app)
+
+    # click init button
+    dash_duo.wait_for_element('#lower-content div')
+    dash_duo.find_elements('#init-button')[-1].click()
+    dash_duo.wait_for_element('#action-value').text
+
+    # click update button
+    dash_duo.find_elements('#update-button')[-1].click()
+    dash_duo.wait_for_element('.js-plotly-plot')
+    time.sleep(0.01)
+    result = len(dash_duo.find_elements('.dash-graph.plot'))
+    assert result == 6
+
+
 # TABS--------------------------------------------------------------------------
 def test_plots_update(dash_duo, run_app):
     test_app, _ = run_app
