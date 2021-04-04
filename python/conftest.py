@@ -1,3 +1,5 @@
+from filelock import FileLock
+
 from selenium.webdriver.chrome.options import Options
 import lunchbox.tools as lbt
 import pytest
@@ -21,3 +23,13 @@ def run_app():
         .as_posix()
     app.run(app.APP, config_path, debug=True, test=True)
     return app.APP, app.APP.client
+
+
+@pytest.fixture(autouse=True)
+def serial(request):
+    # https://github.com/pytest-dev/pytest-xdist/issues/385
+    if request.node.get_closest_marker("sequential"):
+        with FileLock("semaphore.lock"):
+            yield
+    else:
+        yield
