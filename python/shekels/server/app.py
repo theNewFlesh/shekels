@@ -82,11 +82,18 @@ def solve_component_state(store, config=False):
     for key, message in states:
         value = store.get(key)
         if message is not None and value is None:
-            return svc.get_key_value_card(
-                {'action': message}, header='status', id_='status'
+            return svc.get_key_value_table(
+                {'action': message},
+                id_='status',
+                header='status',
             )
         elif isinstance(value, dict) and 'error' in value:
-            return svc.get_key_value_card(value, header='error', id_='error')
+            return svc.get_key_value_table(
+                value,
+                id_='error',
+                header='error',
+                key_order=['error', 'message', 'code', 'traceback'],
+            )
     return None
 
 
@@ -269,7 +276,12 @@ def on_config_update(timestamp, store):
     comp = solve_component_state(store, config=True)
     if comp is not None:
         return comp
-    return svc.get_key_value_table(store['/config'])
+    return svc.get_key_value_table(
+        store['/config'],
+        id_='config',
+        header='config',
+        editable=True,
+    )
 
 
 @APP.callback(

@@ -1,7 +1,6 @@
 from typing import Any, Dict, List, Optional
 
 from copy import copy
-import re
 
 from lunchbox.enforce import Enforce, EnforceError
 from pandas import DataFrame, DatetimeIndex
@@ -15,6 +14,7 @@ import rolling_pin.blob_etl as rpb
 
 import shekels.core.config as cfg
 import shekels.core.data_tools as sdt
+# ------------------------------------------------------------------------------
 
 
 # TODO: refactor components tests to use selnium and be less brittle
@@ -126,7 +126,9 @@ def get_config_tab(config):
     # dummies must go first for element props behavior to work
     content = html.Div(id='lower-content', children=[
         html.Div(id='config-content', className='col', children=[
-            get_key_value_table(config)
+            get_key_value_table(
+                config, id_='config', header='config', editable=True
+            )
         ])
     ])
     return [*get_dummy_elements(), get_configbar(config), content]
@@ -253,83 +255,39 @@ def get_button(title):
     return html.Button(id=f'{title}-button', children=[title], n_clicks=0)
 
 
-def get_key_value_card(data, header=None, id_='key-value-card'):
-    # type: (Dict, Optional[str], str) -> html.Div
-    '''
-    Creates a key-value card using the keys and values from the given data.
-    One key-value pair per row.
-
-    Args:
-        data (dict): Dictionary to be represented.
-        header (str, optional): Name of header. Default: None.
-        id_ (str): Name of id property. Default: "key-value-card".
-
-    Returns:
-        Div: Card with key-value child elements.
-    '''
-    data = rpb.BlobETL(data)\
-        .set(
-            predicate=lambda k, v: re.search(r'<list_\d', k),
-            key_setter=lambda k, v: re.sub('<list_|>', '', k))\
-        .to_flat_dict()
-
-    children = []  # type: List[Any]
-    if header is not None:
-        header = html.Div(
-            id=f'{id_}-header',
-            className='key-value-card-header',
-            children=[str(header)]
-        )
-        children.append(header)
-
-    for i, (k, v) in enumerate(sorted(data.items())):
-        even = i % 2 == 0
-        klass = 'odd'
-        if even:
-            klass = 'even'
-
-        key = html.Div(
-            id=f'{k}-key', className='key-value-card-key', children=[str(k)]
-        )
-        sep = html.Div(className='key-value-card-separator')
-        val = html.Div(
-            id=f'{k}-value', className='key-value-card-value', children=[str(v)]
-        )
-
-        row = html.Div(
-            id=f'{id_}-row',
-            className=f'key-value-card-row {klass}',
-            children=[key, sep, val]
-        )
-        children.append(row)
-    children[-1].className += ' last'
-
-    card = html.Div(
-        id=f'{id_}',
-        className='key-value-card',
-        children=children
-    )
-    return card
-
-
-def get_key_value_table(data, color_scheme=cfg.COLOR_SCHEME, editable=True):
+def get_key_value_table(data, id_='', header='', editable=False, key_order=None):
+    # type (dict, Optional(str), str, bool, Optional(List[str])) -> DataTable
     '''
     Gets a Dash DataTable element representing given dictionary.
 
     Args:
         data (dict): Dictionary.
-        color_scheme (dict, optional): Color scheme dictionary.
-            Default: COLOR_SCHEME.
+        id_ (str, optional): CSS id. Default: ''.
+        header (str, optional): Table header title. Default: ''.
         editable (bool, optional): Whether table is editable. Default: False.
+        key_order (list[str], optional): Order in which keys will be displayed.
+            Default: None.
 
     Returns:
-        DataTable: Table of data.w
+        DataTable: Tablular representation of given dictionary.
     '''
-    cs = copy(cfg.COLOR_SCHEME)
-    cs.update(color_scheme)
-
     data = rpb.BlobETL(data).to_flat_dict()
-    data = [dict(key=k, value=v) for k, v in sorted(data.items())]
+
+    # determine keys
+    keys = sorted(list(data.keys()))
+    if key_order is not None:
+        diff = set(key_order).difference(keys)
+        if len(diff) > 0:
+            diff = list(sorted(diff))
+            msg = f'Invalid key order. Keys not found in data: {diff}.'
+            raise KeyError(msg)
+
+        keys = set(key_order).difference(keys)
+        keys = list(sorted(keys))
+        keys = key_order + keys
+
+    # transform data
+    data = [dict(key=k, value=data[k]) for k in keys]
 
     cols = []  # type: Any
     if len(data) > 0:
@@ -346,8 +304,10 @@ def get_key_value_table(data, color_scheme=cfg.COLOR_SCHEME, editable=True):
         editable=editable,
         page_action='none',
     )
-    header = html.Div(id='key-value-table-header', children='config')
-    return html.Div(id='key-value-table-container', children=[header, table])
+    head = html.Div(className='key-value-table-header', children=header)
+    return html.Div(
+        id=id_, className='key-value-table-container', children=[head, table]
+    )
 
 
 def get_datatable(data, color_scheme=cfg.COLOR_SCHEME, editable=False):

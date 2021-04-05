@@ -55,15 +55,21 @@ def test_solve_component_state():
         del store[key]
         result = None
         if expected is not None:
-            result = app.solve_component_state(store) \
-                .children[-1].children[-1].children[0]
+            result = app \
+                .solve_component_state(store).children[-1].data[0]['value']
         assert result == expected
 
         # error
-        store[key] = {'error': 'foobar'}
-        result = app.solve_component_state(store) \
-            .children[-1].children[-1].children[0]
-        assert result == 'foobar'
+        store[key] = {
+            'error': 'FooBarError',
+            'message': 'Not all foos are bars.',
+            'code': '500',
+            'traceback': 'foobar',
+            'args': ['foo', 'bar'],
+        }
+        result = app \
+            .solve_component_state(store).children[-1].data[0]['value']
+        assert result == 'FooBarError'
 
 
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
@@ -93,7 +99,7 @@ def test_on_event_update_button(dash_duo, run_app, serial):
     # click init button
     dash_duo.wait_for_element('#lower-content div')
     dash_duo.find_elements('#init-button')[-1].click()
-    dash_duo.wait_for_element('#action-value').text
+    dash_duo.wait_for_element('#key-value-table td:last-child > div').text
 
     # click update button
     dash_duo.find_elements('#update-button')[-1].click()
@@ -128,7 +134,7 @@ def test_on_event_update_button_no_init_error(dash_duo, run_app, serial):
     dash_duo.wait_for_element('#lower-content div')
     dash_duo.find_elements('#update-button')[-1].click()
     dash_duo.wait_for_element('#error')
-    result = dash_duo.wait_for_element('#error-value').text
+    result = dash_duo.wait_for_element('#error tr td:last-child > div').text
     assert result == 'DataError'
 
 
@@ -143,14 +149,14 @@ def test_on_event_search_button(dash_duo, run_app, serial):
     time.sleep(0.01)
 
     # init message
-    result = dash_duo.wait_for_element('#action-value').text
+    result = dash_duo.wait_for_element('#key-value-table td:last-child > div').text
     assert result == 'Please call init or update.'
 
     # update message
     dash_duo.find_elements('#init-button')[-1].click()
     time.sleep(0.04)
     dash_duo.find_elements('#search-button')[-1].click()
-    result = dash_duo.wait_for_element('#action-value').text
+    result = dash_duo.wait_for_element('#key-value-table td:last-child > div').text
     assert result == 'Please call update.'
 
     # click update button
@@ -184,13 +190,13 @@ def test_plots_update(dash_duo, run_app, serial):
     assert result.get_property('id') == 'plots-content'
 
     # init message
-    result = dash_duo.wait_for_element('#action-value').text
+    result = dash_duo.wait_for_element('#key-value-table td:last-child > div').text
     assert result == 'Please call init or update.'
 
     # update message
     dash_duo.find_elements('#init-button')[-1].click()
     time.sleep(0.04)
-    result = dash_duo.wait_for_element('#action-value').text
+    result = dash_duo.wait_for_element('#key-value-table td:last-child > div').text
     assert result == 'Please call update.'
 
     # content
@@ -205,10 +211,10 @@ def test_on_plots_update_error(dash_duo, run_app, serial):
     test_app.api.config['columns'] = 99
     dash_duo.start_server(test_app)
 
-    dash_duo.wait_for_element('#action-value').text
+    dash_duo.wait_for_element('#key-value-table td:last-child > div').text
     dash_duo.find_elements('#init-button')[-1].click()
     dash_duo.wait_for_element('#error')
-    result = dash_duo.wait_for_element('#error-value').text
+    result = dash_duo.wait_for_element('#error tr td:last-child > div').text
     assert result == 'DataError'
 
 
@@ -219,18 +225,18 @@ def test_datatable_update(dash_duo, run_app, serial):
 
     # click on data tab
     dash_duo.find_elements('#tabs .tab')[2].click()
-    dash_duo.wait_for_element('#action-value')
+    dash_duo.wait_for_element('#key-value-table')
     result = dash_duo.find_element('#lower-content div')
     assert result.get_property('id') == 'table-content'
 
     # init message
-    result = dash_duo.find_element('#action-value').text
+    result = dash_duo.find_element('#key-value-table td:last-child > div').text
     assert result == 'Please call init or update.'
 
     # update message
     dash_duo.find_elements('#init-button')[-1].click()
     time.sleep(0.04)
-    result = dash_duo.wait_for_element('#action-value').text
+    result = dash_duo.wait_for_element('#key-value-table td:last-child > div').text
     assert result == 'Please call update.'
 
     # content
@@ -247,10 +253,10 @@ def test_on_plots_datatable_error(dash_duo, run_app, serial):
 
     # click on data tab
     dash_duo.find_elements('#tabs .tab')[2].click()
-    dash_duo.wait_for_element('#action-value').text
+    dash_duo.wait_for_element('#key-value-table td:last-child > div').text
     dash_duo.find_elements('#init-button')[-1].click()
     dash_duo.wait_for_element('#error')
-    result = dash_duo.wait_for_element('#error-value').text
+    result = dash_duo.wait_for_element('#error tr td:last-child > div').text
     assert result == 'DataError'
 
 
@@ -261,6 +267,7 @@ def test_on_config_update(dash_duo, run_app, serial):
 
     # click on config tab
     dash_duo.find_elements('#tabs .tab')[3].click()
+    time.sleep(0.1)
     dash_duo.wait_for_element('#config-content')
     result = dash_duo.find_element('#lower-content div')
     assert result.get_property('id') == 'config-content'
@@ -279,7 +286,8 @@ def test_on_config_update_error(dash_duo, run_app, serial):
 
     # click on config tab and init button
     dash_duo.find_elements('#tabs .tab')[3].click()
+    time.sleep(0.1)
     dash_duo.find_elements('#init-button')[-1].click()
     dash_duo.wait_for_element('#error')
-    result = dash_duo.wait_for_element('#error-value').text
+    result = dash_duo.wait_for_element('#error tr td:last-child > div').text
     assert result == 'DataError'
