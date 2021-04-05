@@ -253,6 +253,7 @@ def test_on_plots_datatable_error(dash_duo, run_app, serial):
 
     # click on data tab
     dash_duo.find_elements('#tabs .tab')[2].click()
+    time.sleep(0.1)
     dash_duo.wait_for_element('#key-value-table td:last-child > div').text
     dash_duo.find_elements('#init-button')[-1].click()
     dash_duo.wait_for_element('#error')
