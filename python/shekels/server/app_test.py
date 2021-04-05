@@ -119,6 +119,20 @@ def test_on_event_update_button_no_init(dash_duo, run_app, serial):
 
 
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
+def test_on_event_update_button_no_init_error(dash_duo, run_app, serial):
+    test_app, _ = run_app
+    test_app.api.config['columns'] = 99
+    dash_duo.start_server(test_app)
+
+    # click update button
+    dash_duo.wait_for_element('#lower-content div')
+    dash_duo.find_elements('#update-button')[-1].click()
+    dash_duo.wait_for_element('#error')
+    result = dash_duo.wait_for_element('#error-value').text
+    assert result == 'DataError'
+
+
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_on_event_search_button(dash_duo, run_app, serial):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
