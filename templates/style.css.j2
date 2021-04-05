@@ -785,6 +785,35 @@ button:active {
     border-right: 2px solid {{ COLOR_SCHEME['red2'] }} !important;
 }
 
+/* Status Key Value Table */
+#status {
+    border-left: 2px solid {{ COLOR_SCHEME['orange2'] }};
+    border-right: 2px solid {{ COLOR_SCHEME['orange2'] }};
+    border-bottom: 2px solid {{ COLOR_SCHEME['orange2'] }};
+}
+
+#status .key-value-table-header {
+    background: {{ COLOR_SCHEME['orange2'] }};
+}
+
+#status input {
+    color: {{ COLOR_SCHEME['orange2'] }} !important;
+    -webkit-text-fill-color: {{ COLOR_SCHEME['orange2'] }} !important;
+}
+
+#status .input-active,
+#status .dash-cell.focused,
+#status .dash-filter input,
+#status .sort,
+#status .dash-delete-cell,
+#status .previous-next-container button:hover {
+    color: {{ COLOR_SCHEME['orange2'] }} !important;
+}
+
+#status td.dash-cell:first-child {
+    border-right: 2px solid {{ COLOR_SCHEME['orange2'] }} !important;
+}
+
 /* Config */
 .config-row {
     display: flex;
