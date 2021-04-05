@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.9.5
+                0.9.6
               </div>
             
           
@@ -248,11 +248,18 @@
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
         <span class="n">value</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">message</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">svc</span><span class="o">.</span><span class="n">get_key_value_card</span><span class="p">(</span>
-                <span class="p">{</span><span class="s1">&#39;action&#39;</span><span class="p">:</span> <span class="n">message</span><span class="p">},</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">,</span> <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;status&#39;</span>
+            <span class="k">return</span> <span class="n">svc</span><span class="o">.</span><span class="n">get_key_value_table</span><span class="p">(</span>
+                <span class="p">{</span><span class="s1">&#39;action&#39;</span><span class="p">:</span> <span class="n">message</span><span class="p">},</span>
+                <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">,</span>
+                <span class="n">header</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">svc</span><span class="o">.</span><span class="n">get_key_value_card</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">svc</span><span class="o">.</span><span class="n">get_key_value_table</span><span class="p">(</span>
+                <span class="n">value</span><span class="p">,</span>
+                <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span>
+                <span class="n">header</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span>
+                <span class="n">key_order</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="s1">&#39;code&#39;</span><span class="p">,</span> <span class="s1">&#39;traceback&#39;</span><span class="p">],</span>
+            <span class="p">)</span>
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
@@ -435,7 +442,12 @@
     <span class="n">comp</span> <span class="o">=</span> <span class="n">solve_component_state</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">comp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">comp</span>
-    <span class="k">return</span> <span class="n">svc</span><span class="o">.</span><span class="n">get_key_value_table</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">])</span></div>
+    <span class="k">return</span> <span class="n">svc</span><span class="o">.</span><span class="n">get_key_value_table</span><span class="p">(</span>
+        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">],</span>
+        <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span>
+        <span class="n">header</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span>
+        <span class="n">editable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="on_get_tab"><a class="viewcode-back" href="../../../server.html#shekels.server.app.on_get_tab">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
