@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.9.4
+                0.9.5
               </div>
             
           
@@ -330,7 +330,7 @@
             <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">]</span>
 
     <span class="k">elif</span> <span class="n">element</span> <span class="o">==</span> <span class="s1">&#39;update-button&#39;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">APP</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">database</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">svt</span><span class="o">.</span><span class="n">update_store</span><span class="p">(</span><span class="n">APP</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
             <span class="k">if</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">]:</span>
                 <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">]</span>

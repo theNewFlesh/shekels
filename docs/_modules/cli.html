@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.9.0
+                0.9.5
               </div>
             
           
@@ -206,6 +206,7 @@
 <span class="s1">    destroy      - Shutdown </span><span class="si">{repo}</span><span class="s1"> service and destroy its Docker image</span>
 <span class="s1">    destroy-prod - Shutdown </span><span class="si">{repo}</span><span class="s1">-prod container and destroy its Docker image</span>
 <span class="s1">    docs         - Generate documentation for </span><span class="si">{repo}</span><span class="s1"> service</span>
+<span class="s1">    fast-test    - Run testing on </span><span class="si">{repo}</span><span class="s1"> service skipping tests marked as slow</span>
 <span class="s1">    full-docs    - Generates documentation, coverage report and metrics</span>
 <span class="s1">    image        - Display the Docker image id for </span><span class="si">{repo}</span><span class="s1"> service</span>
 <span class="s1">    lab          - Start a Jupyter lab server</span>
@@ -742,21 +743,27 @@
     <span class="k">return</span> <span class="n">cmd</span></div>
 
 
-<div class="viewcode-block" id="get_test_command"><a class="viewcode-back" href="../cli.html#cli.get_test_command">[docs]</a><span class="k">def</span> <span class="nf">get_test_command</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
+<div class="viewcode-block" id="get_test_command"><a class="viewcode-back" href="../cli.html#cli.get_test_command">[docs]</a><span class="k">def</span> <span class="nf">get_test_command</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">skip_slow_tests</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Runs pytest.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        info (dict): Info dictionary.</span>
+<span class="sd">        skip_slow_tests (bool, optional): If true, skips tests marked as slow.</span>
+<span class="sd">            Default: False.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        str: Command.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;REPO_ENV=True&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">skip_slow_tests</span><span class="p">:</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;SKIP_SLOW_TESTS=true&#39;</span><span class="p">)</span>
+
     <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;pytest /root/</span><span class="si">{repo}</span><span class="s1">/python -c /root/</span><span class="si">{repo}</span><span class="s1">/docker/pytest.ini </span><span class="si">{args}</span><span class="s1">&#39;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span>
-        <span class="n">exec</span><span class="o">=</span><span class="n">get_docker_exec_command</span><span class="p">(</span><span class="n">info</span><span class="p">),</span>
+        <span class="n">exec</span><span class="o">=</span><span class="n">get_docker_exec_command</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">env_vars</span><span class="o">=</span><span class="n">env</span><span class="p">),</span>
         <span class="n">args</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]),</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">cmd</span></div>
@@ -914,6 +921,9 @@
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;docs&#39;</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_docs_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
         <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;; &#39;</span> <span class="o">+</span> <span class="n">get_fix_permissions_command</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">docs</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;fast-test&#39;</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_test_command</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">skip_slow_tests</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;full-docs&#39;</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_docs_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
