@@ -26,6 +26,7 @@ def write_config(root):
     return config_path
 
 
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_get_app(dash_duo, serial):
     result = app.get_app()
     dash_duo.start_server(result)
@@ -35,6 +36,7 @@ def test_get_app(dash_duo, serial):
     assert isinstance(result.cache, flask_caching.Cache)
 
 
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_solve_component_state():
     # correct
     store = {'/api/initialize': {}, '/api/update': {}, '/api/search': {}}
@@ -64,6 +66,7 @@ def test_solve_component_state():
         assert result == 'foobar'
 
 
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_run():
     result = app.APP
     config_path = lbt.relative_path(
@@ -74,6 +77,7 @@ def test_run():
     assert isinstance(result.api.config, dict)
 
 
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_stylesheet(dash_duo, run_app, serial):
     test_app, client = run_app
     dash_duo.start_server(test_app)
@@ -81,6 +85,7 @@ def test_stylesheet(dash_duo, run_app, serial):
     assert 'static/style.css' in result
 
 
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_on_event_update_button(dash_duo, run_app, serial):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
@@ -98,6 +103,7 @@ def test_on_event_update_button(dash_duo, run_app, serial):
     assert result == 6
 
 
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_on_event_update_button_no_init(dash_duo, run_app, serial):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
@@ -112,6 +118,7 @@ def test_on_event_update_button_no_init(dash_duo, run_app, serial):
     assert len(result) == 6
 
 
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_on_event_search_button(dash_duo, run_app, serial):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
@@ -153,6 +160,7 @@ def test_on_event_search_button(dash_duo, run_app, serial):
 
 
 # TABS--------------------------------------------------------------------------
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_plots_update(dash_duo, run_app, serial):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
@@ -177,6 +185,7 @@ def test_plots_update(dash_duo, run_app, serial):
     assert result == 6
 
 
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_on_plots_update_error(dash_duo, run_app, serial):
     test_app, _ = run_app
     test_app.api.config['columns'] = 99
@@ -189,6 +198,7 @@ def test_on_plots_update_error(dash_duo, run_app, serial):
     assert result == 'DataError'
 
 
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_datatable_update(dash_duo, run_app, serial):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
@@ -215,6 +225,7 @@ def test_datatable_update(dash_duo, run_app, serial):
     assert len(result) == 680
 
 
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_on_plots_datatable_error(dash_duo, run_app, serial):
     test_app, _ = run_app
     test_app.api.config['columns'] = 99
@@ -229,6 +240,7 @@ def test_on_plots_datatable_error(dash_duo, run_app, serial):
     assert result == 'DataError'
 
 
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_on_config_update(dash_duo, run_app, serial):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
@@ -245,6 +257,7 @@ def test_on_config_update(dash_duo, run_app, serial):
     assert len(result) == 117
 
 
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_on_config_update_error(dash_duo, run_app, serial):
     test_app, _ = run_app
     test_app.api.config['columns'] = 99
