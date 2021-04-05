@@ -61,7 +61,8 @@ RUN rm -rf /root/dev_requirements;
 # configure zsh
 WORKDIR /root
 RUN echo "\n${CYAN}CONFIGURE ZSH${NO_COLOR}"; \
-    echo 'export PYTHONPATH="/root/shekels/python"' >> /root/.zshrc
+    echo 'export PYTHONPATH="/root/shekels/python"' >> /root/.zshrc && \
+    echo 'UTC' > /etc/timezone
 COPY ./henanigans.zsh-theme /root/.oh-my-zsh/custom/themes/henanigans.zsh-theme
 COPY ./zshrc /root/.zshrc
 

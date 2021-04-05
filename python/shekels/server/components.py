@@ -51,7 +51,8 @@ def get_dash_app(server, storage_type='memory'):
             dcc.Tab(className='tab', label='data', value='data'),
             dcc.Tab(className='tab', label='config', value='config'),
             dcc.Tab(className='tab', label='api', value='api'),
-            dcc.Tab(className='tab', label='docs', value='docs')
+            dcc.Tab(className='tab', label='docs', value='docs'),
+            dcc.Tab(className='tab', label='monitor', value='monitor'),
         ],
     )
     content = dcc.Loading(

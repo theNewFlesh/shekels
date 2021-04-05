@@ -12,6 +12,7 @@ import dash_core_components as dcc
 import dash_table
 import flasgger as swg
 import flask
+import flask_monitoringdashboard as fmdb
 import jsoncomment as jsonc
 
 import shekels.core.config as cfg
@@ -37,6 +38,14 @@ def get_app():
     flask_app = flask.Flask('$hekels')
     swg.Swagger(flask_app)
     flask_app.register_blueprint(API)
+
+    # flask monitoring
+    fmdb.config.link = 'monitor'
+    fmdb.config.monitor_level = 3
+    fmdb.config.git = 'https://thenewflesh.github.io/shekels/'
+    fmdb.config.database_name
+    fmdb.bind(flask_app)
+
     app = svc.get_dash_app(flask_app)
     app.api = API
     app.client = flask_app.test_client()
@@ -323,6 +332,9 @@ def on_get_tab(tab, store):
             id='docs',
             href='https://thenewflesh.github.io/shekels/'
         )
+
+    elif tab == 'monitor':  # pragma: no cover
+        return dcc.Location(id='monitor', pathname='/monitor')
 # ------------------------------------------------------------------------------
 
 
