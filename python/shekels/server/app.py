@@ -43,7 +43,6 @@ def get_app():
     fmdb.config.link = 'monitor'
     fmdb.config.monitor_level = 3
     fmdb.config.git = 'https://thenewflesh.github.io/shekels/'
-    fmdb.config.database_name
     fmdb.bind(flask_app)
 
     app = svc.get_dash_app(flask_app)
