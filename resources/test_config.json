@@ -11,7 +11,7 @@
         "amount"
     ],
     "default_query": "select * from data where date >= '2018-04-01'",
-    // "default_query": "select * from data where date >= '2018-01-01'",
+    // a comment
     "plots": [
         {
             "figure": { "kind": "bar", "title": "Monthly Expenses",

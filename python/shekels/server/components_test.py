@@ -3,13 +3,13 @@ import unittest
 from lunchbox.enforce import EnforceError
 import flask
 
-import shekels.server.components as comp
+import shekels.server.components as svc
 # ------------------------------------------------------------------------------
 
 
 class ComponentsTests(unittest.TestCase):
     def test_get_dash_app(self):
-        result = comp.get_dash_app(flask.Flask('foo'))._layout
+        result = svc.get_dash_app(flask.Flask('foo'))._layout
         self.assertEqual(result.children[0].id, 'store')
         self.assertEqual(result.children[1].id, 'tabs')
         self.assertEqual(result.children[2].id, 'content')
@@ -17,77 +17,19 @@ class ComponentsTests(unittest.TestCase):
     def test_get_button(self):
         expected = '10 is not a string.'
         with self.assertRaisesRegexp(TypeError, expected):
-            comp.get_button(10)
+            svc.get_button(10)
 
-        result = comp.get_button('foo')
+        result = svc.get_button('foo')
         self.assertEqual(result.id, 'foo-button')
         self.assertEqual(result.children[0], 'foo')
 
-    def test_get_key_value_card(self):
-        items = {
-            'foo': 'bar', 'taco': 'pizza', 'parent': {'child': 'grandchild'}
-        }
-        result = comp.get_key_value_card(items, id_='foo')
-        self.assertEqual(result.id, 'foo')
-        self.assertEqual(len(result.children), 3)
-
-        row = result.children[0]
-        key = row.children[0]
-        val = row.children[2]
-        self.assertEqual(key.id, 'foo-key')
-        self.assertEqual(key.children[0], 'foo')
-        self.assertEqual(val.id, 'foo-value')
-        self.assertEqual(val.children[0], 'bar')
-
-        row = result.children[1]
-        key = row.children[0]
-        val = row.children[2]
-        self.assertEqual(key.id, 'parent/child-key')
-        self.assertEqual(key.children[0], 'parent/child')
-        self.assertEqual(val.id, 'parent/child-value')
-        self.assertEqual(val.children[0], 'grandchild')
-
-        row = result.children[2]
-        key = row.children[0]
-        val = row.children[2]
-        self.assertEqual(key.id, 'taco-key')
-        self.assertEqual(key.children[0], 'taco')
-        self.assertEqual(val.id, 'taco-value')
-        self.assertEqual(val.children[0], 'pizza')
-
-    def test_get_key_value_card_header(self):
-        items = {'foo': 'bar', 'taco': 'pizza'}
-        result = comp.get_key_value_card(items, id_='foo', header='bar')
-        self.assertEqual(result.id, 'foo')
-        self.assertEqual(len(result.children), 3)
-
-        row = result.children[0]
-        self.assertEqual(row.id, 'foo-header')
-        self.assertEqual(row.children[0], 'bar')
-
-        row = result.children[1]
-        key = row.children[0]
-        val = row.children[2]
-        self.assertEqual(key.id, 'foo-key')
-        self.assertEqual(key.children[0], 'foo')
-        self.assertEqual(val.id, 'foo-value')
-        self.assertEqual(val.children[0], 'bar')
-
-        row = result.children[2]
-        key = row.children[0]
-        val = row.children[2]
-        self.assertEqual(key.id, 'taco-key')
-        self.assertEqual(key.children[0], 'taco')
-        self.assertEqual(val.id, 'taco-value')
-        self.assertEqual(val.children[0], 'pizza')
-
     def test_get_searchbar(self):
-        searchbar = comp.get_searchbar('foo')
+        searchbar = svc.get_searchbar('foo')
 
         query = searchbar.children[0].children[0]
         self.assertEqual(query.value, 'foo')
 
-        searchbar = comp.get_searchbar()
+        searchbar = svc.get_searchbar()
         self.assertEqual(searchbar.id, 'searchbar')
 
         query = searchbar.children[0].children[0]
@@ -108,7 +50,7 @@ class ComponentsTests(unittest.TestCase):
         self.assertEqual(button.children[0], 'update')
 
     def test_get_configbar(self):
-        configbar = comp.get_configbar({'foo': 'bar'})
+        configbar = svc.get_configbar({'foo': 'bar'})
         self.assertEqual(configbar.id, 'configbar')
 
         row = configbar.children[0].children
@@ -119,17 +61,17 @@ class ComponentsTests(unittest.TestCase):
         self.assertEqual(row[6].id, 'upload')
 
     def test_get_plots_tab(self):
-        tab = comp.get_plots_tab()
+        tab = svc.get_plots_tab()
         self.assertEqual(tab[-2].id, 'searchbar')
         self.assertEqual(tab[-1].id, 'lower-content')
 
     def test_get_data_tab(self):
-        tab = comp.get_data_tab()
+        tab = svc.get_data_tab()
         self.assertEqual(tab[-2].id, 'searchbar')
         self.assertEqual(tab[-1].id, 'lower-content')
 
     def test_get_config_tab(self):
-        tab = comp.get_config_tab({'foo': 'bar'})
+        tab = svc.get_config_tab({'foo': 'bar'})
         self.assertEqual(tab[-1].id, 'lower-content')
         self.assertEqual(tab[-1].children[0].id, 'config-content')
 
@@ -138,7 +80,7 @@ class ComponentsTests(unittest.TestCase):
             {'foo': 'pizza', 'bar': 'taco'},
             {'foo': 'kiwi', 'bar': 'potato'},
         ]
-        result = comp.get_datatable(data)
+        result = svc.get_datatable(data)
         self.assertEqual(result.id, 'datatable')
         expected = [
             {'name': 'foo', 'id': 'foo'},
@@ -146,27 +88,27 @@ class ComponentsTests(unittest.TestCase):
         ]
         self.assertEqual(result.columns, expected)
 
-        result = comp.get_datatable([])
+        result = svc.get_datatable([])
         self.assertEqual(result.columns, [])
 
     def test_get_plots_errors(self):
         # data
         expected = 'Data must be a list of dictionaries. Given value: foo.'
         with self.assertRaisesRegexp(EnforceError, expected):
-            comp.get_plots('foo', [])
+            svc.get_plots('foo', [])
 
         expected = 'Data must be a list of dictionaries. Given value: foo.'
         with self.assertRaisesRegexp(EnforceError, expected):
-            comp.get_plots(['foo'], [])
+            svc.get_plots(['foo'], [])
 
         # plots
         expected = 'Plots must be a list of dictionaries. Given value: foo.'
         with self.assertRaisesRegexp(EnforceError, expected):
-            comp.get_plots([], 'foo')
+            svc.get_plots([], 'foo')
 
         expected = 'Plots must be a list of dictionaries. Given value: foo.'
         with self.assertRaisesRegexp(EnforceError, expected):
-            comp.get_plots([], ['foo'])
+            svc.get_plots([], ['foo'])
 
     def test_get_plots(self):
         data = [
@@ -187,7 +129,7 @@ class ComponentsTests(unittest.TestCase):
                 "y_title": "amount",
             }
         }
-        result = comp.get_plots(data, [plot, plot])
+        result = svc.get_plots(data, [plot, plot])
         self.assertEqual(len(result), 2)
 
     def test_get_plots_no_data(self):
@@ -218,9 +160,9 @@ class ComponentsTests(unittest.TestCase):
             "figure": {"kind": "bar"}
         }
         # DataError
-        result = comp.get_plots(data, [good, bad])[1].children.children
+        result = svc.get_plots(data, [good, bad])[1].children.children
         self.assertEqual(result, 'no data found')
 
         # EnforceError
-        result = comp.get_plots([], [good, good])[1].children.children
+        result = svc.get_plots([], [good, good])[1].children.children
         self.assertEqual(result, 'no data found')

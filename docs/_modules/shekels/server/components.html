@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.9.0
+                0.9.6
               </div>
             
           
@@ -167,7 +167,6 @@
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
-<span class="kn">import</span> <span class="nn">re</span>
 
 <span class="kn">from</span> <span class="nn">lunchbox.enforce</span> <span class="kn">import</span> <span class="n">Enforce</span><span class="p">,</span> <span class="n">EnforceError</span>
 <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">DatetimeIndex</span>
@@ -181,8 +180,10 @@
 
 <span class="kn">import</span> <span class="nn">shekels.core.config</span> <span class="k">as</span> <span class="nn">cfg</span>
 <span class="kn">import</span> <span class="nn">shekels.core.data_tools</span> <span class="k">as</span> <span class="nn">sdt</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
 
 
+<span class="c1"># TODO: refactor components tests to use selnium and be less brittle</span>
 <span class="c1"># TODO: add JSON editor component for config</span>
 <span class="c1"># APP---------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="get_dash_app"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_dash_app">[docs]</a><span class="k">def</span> <span class="nf">get_dash_app</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">storage_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">):</span>
@@ -291,7 +292,9 @@
     <span class="c1"># dummies must go first for element props behavior to work</span>
     <span class="n">content</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;lower-content&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span>
         <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;config-content&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;col&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span>
-            <span class="n">get_key_value_table</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+            <span class="n">get_key_value_table</span><span class="p">(</span>
+                <span class="n">config</span><span class="p">,</span> <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">editable</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
         <span class="p">])</span>
     <span class="p">])</span>
     <span class="k">return</span> <span class="p">[</span><span class="o">*</span><span class="n">get_dummy_elements</span><span class="p">(),</span> <span class="n">get_configbar</span><span class="p">(</span><span class="n">config</span><span class="p">),</span> <span class="n">content</span><span class="p">]</span></div>
@@ -418,83 +421,39 @@
     <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1">-button&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">title</span><span class="p">],</span> <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_key_value_card"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_key_value_card">[docs]</a><span class="k">def</span> <span class="nf">get_key_value_card</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;key-value-card&#39;</span><span class="p">):</span>
-    <span class="c1"># type: (Dict, Optional[str], str) -&gt; html.Div</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Creates a key-value card using the keys and values from the given data.</span>
-<span class="sd">    One key-value pair per row.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        data (dict): Dictionary to be represented.</span>
-<span class="sd">        header (str, optional): Name of header. Default: None.</span>
-<span class="sd">        id_ (str): Name of id property. Default: &quot;key-value-card&quot;.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        Div: Card with key-value child elements.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">rpb</span><span class="o">.</span><span class="n">BlobETL</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>\
-        <span class="o">.</span><span class="n">set</span><span class="p">(</span>
-            <span class="n">predicate</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&lt;list_\d&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span>
-            <span class="n">key_setter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;&lt;list_|&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>\
-        <span class="o">.</span><span class="n">to_flat_dict</span><span class="p">()</span>
-
-    <span class="n">children</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: List[Any]</span>
-    <span class="k">if</span> <span class="n">header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">header</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
-            <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s1">-header&#39;</span><span class="p">,</span>
-            <span class="n">className</span><span class="o">=</span><span class="s1">&#39;key-value-card-header&#39;</span><span class="p">,</span>
-            <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">header</span><span class="p">)]</span>
-        <span class="p">)</span>
-        <span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">())):</span>
-        <span class="n">even</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span>
-        <span class="n">klass</span> <span class="o">=</span> <span class="s1">&#39;odd&#39;</span>
-        <span class="k">if</span> <span class="n">even</span><span class="p">:</span>
-            <span class="n">klass</span> <span class="o">=</span> <span class="s1">&#39;even&#39;</span>
-
-        <span class="n">key</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
-            <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">-key&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;key-value-card-key&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)]</span>
-        <span class="p">)</span>
-        <span class="n">sep</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;key-value-card-separator&#39;</span><span class="p">)</span>
-        <span class="n">val</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
-            <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">-value&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;key-value-card-value&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span>
-        <span class="p">)</span>
-
-        <span class="n">row</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
-            <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s1">-row&#39;</span><span class="p">,</span>
-            <span class="n">className</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;key-value-card-row </span><span class="si">{</span><span class="n">klass</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-            <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">key</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">val</span><span class="p">]</span>
-        <span class="p">)</span>
-        <span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
-    <span class="n">children</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">className</span> <span class="o">+=</span> <span class="s1">&#39; last&#39;</span>
-
-    <span class="n">card</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;key-value-card&#39;</span><span class="p">,</span>
-        <span class="n">children</span><span class="o">=</span><span class="n">children</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">card</span></div>
-
-
-<div class="viewcode-block" id="get_key_value_table"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_key_value_table">[docs]</a><span class="k">def</span> <span class="nf">get_key_value_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">color_scheme</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">COLOR_SCHEME</span><span class="p">,</span> <span class="n">editable</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="get_key_value_table"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_key_value_table">[docs]</a><span class="k">def</span> <span class="nf">get_key_value_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">editable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">key_order</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># type (dict, Optional(str), str, bool, Optional(List[str])) -&gt; DataTable</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Gets a Dash DataTable element representing given dictionary.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        data (dict): Dictionary.</span>
-<span class="sd">        color_scheme (dict, optional): Color scheme dictionary.</span>
-<span class="sd">            Default: COLOR_SCHEME.</span>
+<span class="sd">        id_ (str, optional): CSS id. Default: &#39;&#39;.</span>
+<span class="sd">        header (str, optional): Table header title. Default: &#39;&#39;.</span>
 <span class="sd">        editable (bool, optional): Whether table is editable. Default: False.</span>
+<span class="sd">        key_order (list[str], optional): Order in which keys will be displayed.</span>
+<span class="sd">            Default: None.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        DataTable: Table of data.w</span>
+<span class="sd">        DataTable: Tablular representation of given dictionary.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cs</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">COLOR_SCHEME</span><span class="p">)</span>
-    <span class="n">cs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">color_scheme</span><span class="p">)</span>
-
     <span class="n">data</span> <span class="o">=</span> <span class="n">rpb</span><span class="o">.</span><span class="n">BlobETL</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">to_flat_dict</span><span class="p">()</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">())]</span>
+
+    <span class="c1"># determine keys</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+    <span class="k">if</span> <span class="n">key_order</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">key_order</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">diff</span><span class="p">))</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Invalid key order. Keys not found in data: </span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s1">.&#39;</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">key_order</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">keys</span><span class="p">))</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="n">key_order</span> <span class="o">+</span> <span class="n">keys</span>
+
+    <span class="c1"># transform data</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">]</span>
 
     <span class="n">cols</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: Any</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -511,8 +470,10 @@
         <span class="n">editable</span><span class="o">=</span><span class="n">editable</span><span class="p">,</span>
         <span class="n">page_action</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">header</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;key-value-table-header&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;key-value-table-container&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">header</span><span class="p">,</span> <span class="n">table</span><span class="p">])</span></div>
+    <span class="n">head</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;key-value-table-header&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="n">header</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="n">id_</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;key-value-table-container&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">head</span><span class="p">,</span> <span class="n">table</span><span class="p">]</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get_datatable"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_datatable">[docs]</a><span class="k">def</span> <span class="nf">get_datatable</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">color_scheme</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">COLOR_SCHEME</span><span class="p">,</span> <span class="n">editable</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>

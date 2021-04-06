@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.9.1
+                0.9.6
               </div>
             
           
@@ -618,11 +618,15 @@ Default: [‘REPO_ENV=True’].</p></li>
 
 <dl class="py function">
 <dt id="cli.get_test_command">
-<code class="sig-prename descclassname"><span class="pre">cli.</span></code><code class="sig-name descname"><span class="pre">get_test_command</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#get_test_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.get_test_command" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">cli.</span></code><code class="sig-name descname"><span class="pre">get_test_command</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_slow_tests</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#get_test_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.get_test_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs pytest.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>info</strong> (<em>dict</em>) – Info dictionary.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>info</strong> (<em>dict</em>) – Info dictionary.</p></li>
+<li><p><strong>skip_slow_tests</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, skips tests marked as slow.
+Default: False.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Command.</p>

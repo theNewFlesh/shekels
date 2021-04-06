@@ -231,84 +231,6 @@ button:active {
     width: 100vw;
 }
 
-/* Key Value Card */
-.key-value-card {
-    background: {{ COLOR_SCHEME['bg'] }};
-    font-size: 20px;
-    font-family: {{ FONT_FAMILY }};
-}
-
-.key-value-card-row {
-    min-height: 32px;
-    padding-left: 10px;
-    padding-right: 10px;
-    flex-grow: 1;
-    display: flex;
-    border-color: {{ COLOR_SCHEME['green2'] }};
-    border-left-width: 2px;
-    border-right-width: 2px;
-}
-
-.key-value-card-row.last {
-    border-bottom-width: 2px;
-}
-
-.key-value-card-header {
-    background: {{ COLOR_SCHEME['green2'] }};
-    color: {{ COLOR_SCHEME['bg'] }};
-    padding-left: 15px;
-    font-weight: bold;
-}
-
-.key-value-card-row.odd {
-    background: {{ COLOR_SCHEME['grey1'] }};
-}
-
-.key-value-card-separator {
-    min-width: 10px;
-    max-width: 10px;
-}
-
-.key-value-card-key {
-    color: {{ COLOR_SCHEME['light1'] }};
-    font-style: italic;
-    min-width: 350px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 2px;
-    text-align: right;
-    border-color: {{ COLOR_SCHEME['green2'] }};
-    border-right-width: 2px;
-}
-
-.key-value-card-value {
-    color: {{ COLOR_SCHEME['green2'] }};
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 2px;
-    flex-grow: 1000;
-    white-space: pre-wrap;
-    text-align: left;
-}
-
-/* Error Card */
-#error .key-value-card-row {
-    border-color: {{ COLOR_SCHEME['red2'] }};
-}
-
-#error .key-value-card-header {
-    background: {{ COLOR_SCHEME['red2'] }};
-}
-
-#error .key-value-card-key {
-    color: {{ COLOR_SCHEME['light1'] }};
-    border-color: {{ COLOR_SCHEME['red2'] }};
-}
-
-#error .key-value-card-value {
-    color: {{ COLOR_SCHEME['red2'] }};
-}
-
 /* Plot */
 #plots-content {
     width: 100%;
@@ -679,10 +601,6 @@ button:active {
     max-height: 90vh;
 }
 
-#key-value-table .dt-table-container__row-1 {
-    height: calc(100vh - 92px);
-}
-
 #datatable tr:nth-child(even) td.dash-cell,
 #key-value-table tr:nth-child(even) td.dash-cell {
     background: {{ COLOR_SCHEME['bg'] }} !important;
@@ -808,7 +726,8 @@ button:active {
 }
 
 /* Key value table */
-#key-value-table-container {
+.key-value-table-container {
+    flex-grow: 1;
     border-left: 2px solid {{ COLOR_SCHEME['green2'] }};
     border-right: 2px solid {{ COLOR_SCHEME['green2'] }};
     border-bottom: 2px solid {{ COLOR_SCHEME['green2'] }};
@@ -818,7 +737,7 @@ button:active {
     display: none;
 }
 
-#key-value-table-header {
+.key-value-table-header {
     color: {{ COLOR_SCHEME['dark1'] }};
     background: {{ COLOR_SCHEME['green2'] }};
     font-size: 13pt;
@@ -835,6 +754,64 @@ button:active {
 #key-value-table td.dash-cell:first-child,
 #key-value-table td.dash-cell:first-child .input-active {
     text-align: right !important;
+}
+
+/* Error Key Value Table */
+#error {
+    border-left: 2px solid {{ COLOR_SCHEME['red2'] }};
+    border-right: 2px solid {{ COLOR_SCHEME['red2'] }};
+    border-bottom: 2px solid {{ COLOR_SCHEME['red2'] }};
+}
+
+#error .key-value-table-header {
+    background: {{ COLOR_SCHEME['red2'] }};
+}
+
+#error input {
+    color: {{ COLOR_SCHEME['red2'] }} !important;
+    -webkit-text-fill-color: {{ COLOR_SCHEME['red2'] }} !important;
+}
+
+#error .input-active,
+#error .dash-cell.focused,
+#error .dash-filter input,
+#error .sort,
+#error .dash-delete-cell,
+#error .previous-next-container button:hover {
+    color: {{ COLOR_SCHEME['red2'] }} !important;
+}
+
+#error td.dash-cell:first-child {
+    border-right: 2px solid {{ COLOR_SCHEME['red2'] }} !important;
+}
+
+/* Status Key Value Table */
+#status {
+    border-left: 2px solid {{ COLOR_SCHEME['orange2'] }};
+    border-right: 2px solid {{ COLOR_SCHEME['orange2'] }};
+    border-bottom: 2px solid {{ COLOR_SCHEME['orange2'] }};
+}
+
+#status .key-value-table-header {
+    background: {{ COLOR_SCHEME['orange2'] }};
+}
+
+#status input {
+    color: {{ COLOR_SCHEME['orange2'] }} !important;
+    -webkit-text-fill-color: {{ COLOR_SCHEME['orange2'] }} !important;
+}
+
+#status .input-active,
+#status .dash-cell.focused,
+#status .dash-filter input,
+#status .sort,
+#status .dash-delete-cell,
+#status .previous-next-container button:hover {
+    color: {{ COLOR_SCHEME['orange2'] }} !important;
+}
+
+#status td.dash-cell:first-child {
+    border-right: 2px solid {{ COLOR_SCHEME['orange2'] }} !important;
 }
 
 /* Config */

@@ -40,6 +40,7 @@ def get_info():
     destroy      - Shutdown {repo} service and destroy its Docker image
     destroy-prod - Shutdown {repo}-prod container and destroy its Docker image
     docs         - Generate documentation for {repo} service
+    fast-test    - Run testing on {repo} service skipping tests marked as slow
     full-docs    - Generates documentation, coverage report and metrics
     image        - Display the Docker image id for {repo} service
     lab          - Start a Jupyter lab server
@@ -576,21 +577,27 @@ def get_stop_command(info):
     return cmd
 
 
-def get_test_command(info):
+def get_test_command(info, skip_slow_tests=False):
     '''
     Runs pytest.
 
     Args:
         info (dict): Info dictionary.
+        skip_slow_tests (bool, optional): If true, skips tests marked as slow.
+            Default: False.
 
     Returns:
         str: Command.
     '''
+    env = ['REPO_ENV=True']
+    if skip_slow_tests:
+        env.append('SKIP_SLOW_TESTS=true')
+
     cmd = '{exec} '
     cmd += 'pytest /root/{repo}/python -c /root/{repo}/docker/pytest.ini {args}'
     cmd = cmd.format(
         repo=REPO,
-        exec=get_docker_exec_command(info),
+        exec=get_docker_exec_command(info, env_vars=env),
         args=' '.join(info['args']),
     )
     return cmd
@@ -748,6 +755,9 @@ def main():
     elif mode == 'docs':
         cmd = get_docs_command(info)
         cmd += '; ' + get_fix_permissions_command(info, docs)
+
+    elif mode == 'fast-test':
+        cmd = get_test_command(info, skip_slow_tests=True)
 
     elif mode == 'full-docs':
         cmd = get_docs_command(info)

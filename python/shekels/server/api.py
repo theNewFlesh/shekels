@@ -46,7 +46,6 @@ def api():
     Returns:
         html: Flassger generated API page.
     '''
-    # TODO: Test this with selenium.
     return flask.redirect(flask.url_for('flasgger.apidocs'))
 
 
@@ -305,6 +304,6 @@ def handle_sql_error(error):
 
 
 API.register_error_handler(500, handle_data_error)
-API.register_error_handler(500, handle_json_decode_error)
 API.register_error_handler(500, handle_runtime_error)
+API.register_error_handler(500, handle_json_decode_error)
 API.register_error_handler(500, handle_sql_error)

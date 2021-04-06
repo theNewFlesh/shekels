@@ -12,11 +12,12 @@ import dash_core_components as dcc
 import dash_table
 import flasgger as swg
 import flask
+import flask_monitoringdashboard as fmdb
 import jsoncomment as jsonc
 
 import shekels.core.config as cfg
 from shekels.server.api import API
-import shekels.server.components as comp
+import shekels.server.components as svc
 import shekels.server.server_tools as svt
 # ------------------------------------------------------------------------------
 
@@ -37,7 +38,14 @@ def get_app():
     flask_app = flask.Flask('$hekels')
     swg.Swagger(flask_app)
     flask_app.register_blueprint(API)
-    app = comp.get_dash_app(flask_app)
+
+    # flask monitoring
+    fmdb.config.link = 'monitor'
+    fmdb.config.monitor_level = 3
+    fmdb.config.git = 'https://thenewflesh.github.io/shekels/'
+    fmdb.bind(flask_app)
+
+    app = svc.get_dash_app(flask_app)
     app.api = API
     app.client = flask_app.test_client()
     app.cache = Cache(flask_app, config={'CACHE_TYPE': 'SimpleCache'})
@@ -45,6 +53,56 @@ def get_app():
 
 
 APP = get_app()
+
+
+def solve_component_state(store, config=False):
+    # type (dict) -> Optional(html.Div)
+    '''
+    Solves what component to return given the state of the given store.
+
+    Returns a key value card component embedded with a relevant message or error
+    if a required key is not found in the store, or it contain a dictionary with
+    am "error" key in it. Those required keys are as follows:
+
+        * /config
+        * /api/initialize
+        * /api/update
+        * /api/search
+
+    Args:
+        store (dict): Dash store.
+        config (bool, optional): Whether the component is for the config tab.
+            Default: False.
+
+    Returns:
+        Div: Key value card if store values are not present or have errors,
+            otherwise, none.
+    '''
+    states = [
+        ['/config', None],
+        ['/api/initialize', 'Please call init or update.'],
+        ['/api/update', 'Please call update.'],
+        ['/api/search', None],
+    ]
+    if config:
+        states = states[:2]
+        states[1][1] = None
+    for key, message in states:
+        value = store.get(key)
+        if message is not None and value is None:
+            return svc.get_key_value_table(
+                {'action': message},
+                id_='status',
+                header='status',
+            )
+        elif isinstance(value, dict) and 'error' in value:
+            return svc.get_key_value_table(
+                value,
+                id_='error',
+                header='error',
+                key_order=['error', 'message', 'code', 'traceback'],
+            )
+    return None
 
 
 @APP.server.route('/static/<stylesheet>')
@@ -73,7 +131,6 @@ def serve_stylesheet(stylesheet):
 
 
 # EVENTS------------------------------------------------------------------------
-# TODO: Find a way to test events.
 @APP.callback(
     Output('store', 'data'),
     [
@@ -118,10 +175,14 @@ def on_event(*inputs):
 
     elif element == 'init-button':
         svt.update_store(APP.client, store, '/api/initialize', data=config)
+        if 'error' in store['/api/initialize']:
+            store['/config'] = store['/api/initialize']
 
     elif element == 'update-button':
-        if APP.api.database is None:
+        if store.get('/api/initialize') is None:
             svt.update_store(APP.client, store, '/api/initialize', data=config)
+            if 'error' in store['/api/initialize']:
+                store['/config'] = store['/api/initialize']
         svt.update_store(APP.client, store, '/api/update')
         svt.update_store(
             APP.client,
@@ -157,29 +218,6 @@ def on_event(*inputs):
 
 
 @APP.callback(
-    Output('table-content', 'children'),
-    [Input('store', 'data')]
-)
-@APP.cache.memoize(100)
-def on_datatable_update(store):
-    # type: (Dict) -> dash_table.DataTable
-    '''
-    Updates datatable with read information from store.
-
-    Args:
-        store (dict): Store data.
-
-    Returns:
-        DataTable: Dash DataTable.
-    '''
-    if not svt.store_key_is_valid(store, '/api/search'):
-        return comp.get_key_value_card(
-            store['/api/search'], header='error', id_='error'
-        )
-    return comp.get_datatable(store['/api/search']['response'])
-
-
-@APP.callback(
     Output('plots-content', 'children'),
     [Input('store', 'data')]
 )
@@ -195,12 +233,63 @@ def on_plots_update(store):
     Returns:
         list[dcc.Graph]: Plots.
     '''
-    if not svt.store_key_is_valid(store, '/api/search'):
-        return comp.get_key_value_card(
-            store['/api/search'], header='error', id_='error'
-        )
+    comp = solve_component_state(store)
+    if comp is not None:
+        return comp
     plots = store.get('config', APP.api.config).get('plots', [])
-    return comp.get_plots(store['/api/search']['response'], plots)
+    return svc.get_plots(store['/api/search']['response'], plots)
+
+
+@APP.callback(
+    Output('table-content', 'children'),
+    [Input('store', 'data')]
+)
+@APP.cache.memoize(100)
+def on_datatable_update(store):
+    # type: (Dict) -> dash_table.DataTable
+    '''
+    Updates datatable with read information from store.
+
+    Args:
+        store (dict): Store data.
+
+    Returns:
+        DataTable: Dash DataTable.
+    '''
+    comp = solve_component_state(store)
+    if comp is not None:
+        return comp
+    return svc.get_datatable(store['/api/search']['response'])
+
+
+@APP.callback(
+    Output('config-content', 'children'),
+    [Input('store', 'modified_timestamp')],
+    [State('store', 'data')]
+)
+@APP.cache.memoize(100)
+def on_config_update(timestamp, store):
+    # type: (int, Dict[str, Any]) -> flask.Response
+    '''
+    Updates config card with config information from store.
+
+    Args:
+        timestamp (int): Store modification timestamp.
+        store (dict): Store data.
+
+    Returns:
+        flask.Response: Response.
+    '''
+    store['/config'] = store.get('/config', APP.api.config)
+    comp = solve_component_state(store, config=True)
+    if comp is not None:
+        return comp
+    return svc.get_key_value_table(
+        store['/config'],
+        id_='config',
+        header='config',
+        editable=True,
+    )
 
 
 @APP.callback(
@@ -224,47 +313,27 @@ def on_get_tab(tab, store):
 
     if tab == 'plots':
         query = store.get('query', APP.api.config['default_query'])
-        return comp.get_plots_tab(query)
+        return svc.get_plots_tab(query)
 
     elif tab == 'data':
         query = store.get('query', APP.api.config['default_query'])
-        return comp.get_data_tab(query)
+        return svc.get_data_tab(query)
 
     elif tab == 'config':
         config = store.get('config', APP.api.config)
-        return comp.get_config_tab(config)
+        return svc.get_config_tab(config)
 
-    elif tab == 'api':
+    elif tab == 'api':  # pragma: no cover
         return dcc.Location(id='api', pathname='/api')
 
-    elif tab == 'docs':
+    elif tab == 'docs':  # pragma: no cover
         return dcc.Location(
             id='docs',
             href='https://thenewflesh.github.io/shekels/'
         )
 
-
-@APP.callback(
-    Output('config-content', 'children'),
-    [Input('store', 'modified_timestamp')],
-    [State('store', 'data')]
-)
-@APP.cache.memoize(100)
-def on_config_card_update(timestamp, store):
-    # type: (int, Dict[str, Any]) -> flask.Response
-    '''
-    Updates config card with config information from store.
-
-    Args:
-        timestamp (int): Store modification timestamp.
-        store (dict): Store data.
-
-    Returns:
-        flask.Response: Response.
-    '''
-    if not svt.store_key_is_valid(store, '/config'):
-        return comp.get_key_value_card(store['/config'], 'error', 'error')
-    return comp.get_key_value_card(store['/config'], 'config', 'config-card')
+    elif tab == 'monitor':  # pragma: no cover
+        return dcc.Location(id='monitor', pathname='/monitor')
 # ------------------------------------------------------------------------------
 
 
@@ -284,10 +353,10 @@ def run(app, config_path, debug=False, test=False):
     app.api.config = config
     app.api.config_path = config_path
     if not test:
-        app.run_server(debug=debug, host='0.0.0.0', port=5014)
+        app.run_server(debug=debug, host='0.0.0.0', port=5014)  # pragma: no cover
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     run(
         APP,
         '/root/shekels/resources/test_config.json',

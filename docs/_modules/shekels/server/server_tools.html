@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.9.0
+                0.9.3
               </div>
             
           
@@ -166,6 +166,7 @@
   <h1>Source code for shekels.server.server_tools</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
 
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pformat</span>
 <span class="kn">import</span> <span class="nn">base64</span>
 <span class="kn">import</span> <span class="nn">json</span>
@@ -215,24 +216,28 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="render_template"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.render_template">[docs]</a><span class="k">def</span> <span class="nf">render_template</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
-    <span class="c1"># type: (str, Dict[str, Any]) -&gt; bytes</span>
+<div class="viewcode-block" id="render_template"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.render_template">[docs]</a><span class="k">def</span> <span class="nf">render_template</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="s1">&#39;../../../templates&#39;</span><span class="p">):</span>
+    <span class="c1"># type: (str, Dict[str, Any], str) -&gt; bytes</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Renders a jinja2 template given by filename with given parameters.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        filename (str): Filename of template.</span>
 <span class="sd">        parameters (dict): Dictionary of template parameters.</span>
+<span class="sd">        directory (str or Path, optional): Templates directory.</span>
+<span class="sd">            Default: &#39;../../../templates&#39;.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        bytes: HTML.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+
     <span class="c1"># path to templates inside pip package</span>
     <span class="n">tempdir</span> <span class="o">=</span> <span class="n">lbt</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s1">&#39;../templates&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
 
     <span class="c1"># path to templates inside repo</span>
     <span class="k">if</span> <span class="s1">&#39;REPO_ENV&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">tempdir</span> <span class="o">=</span> <span class="n">lbt</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s1">&#39;../../../templates&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+        <span class="n">tempdir</span> <span class="o">=</span> <span class="n">lbt</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
 
     <span class="n">env</span> <span class="o">=</span> <span class="n">jinja2</span><span class="o">.</span><span class="n">Environment</span><span class="p">(</span>
         <span class="n">loader</span><span class="o">=</span><span class="n">jinja2</span><span class="o">.</span><span class="n">FileSystemLoader</span><span class="p">(</span><span class="n">tempdir</span><span class="p">),</span>
