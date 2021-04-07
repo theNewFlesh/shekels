@@ -185,8 +185,9 @@ def get_dummy_elements():
         list: List of html elements.
     '''
     return [
+        dcc.Input(className='dummy', id='config-query', value=None),
         dcc.Input(className='dummy', id='query', value=None),
-        html.Div(className='dummy', id='search-button', n_clicks=None),
+        html.Div(className='dummy', id='config-search-button', n_clicks=None),
         html.Div(className='dummy', id='search-button', n_clicks=None),
         html.Div(className='dummy', id='init-button', n_clicks=None),
         html.Div(className='dummy', id='update-button', n_clicks=None),
@@ -195,7 +196,7 @@ def get_dummy_elements():
     ]
 
 
-def get_configbar(config, query=None):
+def get_configbar(config, query='select * from config'):
     # type: (Dict, Optional[str]) -> html.Div
     '''
     Get a row of elements used for configuring Shekels.
@@ -207,21 +208,19 @@ def get_configbar(config, query=None):
     Returns:
         Div: Div with buttons and JSON editor.
     '''
-    if query is None:
-        query = 'select * from data'
-
     spacer = html.Div(className='col spacer')
     query = dcc.Input(
-        id='query',
+        id='config-query',
         className='col query',
         value=query,
-        placeholder='SQL query that uses "FROM data"',
+        placeholder='SQL query that uses "FROM config"',
         type='text',
         autoFocus=True,
         debounce=True
     )
 
     search = get_button('search')
+    search.id = 'config-search-button'
     init = get_button('init')
     upload = dcc.Upload(
         id='upload',

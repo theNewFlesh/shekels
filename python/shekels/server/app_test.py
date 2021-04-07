@@ -15,6 +15,7 @@ import shekels.server.app as app
 # ------------------------------------------------------------------------------
 
 
+# TODO: Find a way to make these tests less flakey in terms of webdriver delays
 def write_config(root):
     config = dict(
         data_path='/foo/bar.baz',
@@ -277,6 +278,40 @@ def test_on_config_update(dash_duo, run_app, serial):
     dash_duo.find_elements('#init-button')[-1].click()
     result = dash_duo.find_elements('#key-value-table tr')
     assert len(result) == 117
+
+
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
+def test_on_config_search(dash_duo, run_app, serial):
+    test_app, _ = run_app
+    dash_duo.start_server(test_app)
+
+    # click on config tab
+    dash_duo.find_elements('#tabs .tab')[3].click()
+    time.sleep(0.1)
+    dash_duo.wait_for_element('#config-content')
+
+    # init
+    dash_duo.find_elements('#init-button')[-1].click()
+
+    # search
+    query = dash_duo.find_elements('#config-query')[-1]
+    query.send_keys(sek.Keys.CONTROL + 'a')
+    query.send_keys(sek.Keys.BACK_SPACE)
+    query.send_keys('select * from config where key ~ color')
+    dash_duo.find_elements('#config-search-button')[-1].click()
+    time.sleep(0.1)
+    result = dash_duo.find_elements('#key-value-table tr')
+    assert len(result) == 38
+
+    # search error
+    query = dash_duo.find_elements('#config-query')[-1]
+    query.send_keys(sek.Keys.CONTROL + 'a')
+    query.send_keys(sek.Keys.BACK_SPACE)
+    query.send_keys('select * from config where foo ~ bar')
+    dash_duo.find_elements('#config-search-button')[-1].click()
+    dash_duo.wait_for_element('#error')
+    result = dash_duo.wait_for_element('#error tr td:last-child > div').text
+    assert result == 'KeyError'
 
 
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')

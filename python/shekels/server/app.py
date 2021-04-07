@@ -4,6 +4,7 @@ from copy import copy
 from pathlib import Path
 import json
 import os
+import re
 
 from dash.dependencies import Input, Output, State
 from flask_caching import Cache
@@ -15,8 +16,9 @@ import flask
 import flask_monitoringdashboard as fmdb
 import jsoncomment as jsonc
 
-import shekels.core.config as cfg
 from shekels.server.api import API
+import shekels.core.config as cfg
+import shekels.core.data_tools as sdt
 import shekels.server.components as svc
 import shekels.server.server_tools as svt
 # ------------------------------------------------------------------------------
@@ -134,11 +136,12 @@ def serve_stylesheet(stylesheet):
 @APP.callback(
     Output('store', 'data'),
     [
+        Input('config-query', 'value'),
+        Input('config-search-button', 'n_clicks'),
         Input('query', 'value'),
         Input('init-button', 'n_clicks'),
         Input('update-button', 'n_clicks'),
         Input('search-button', 'n_clicks'),
-        Input('query', 'value'),
         Input('upload', 'contents'),
         Input('write-button', 'n_clicks'),
     ],
@@ -155,14 +158,29 @@ def on_event(*inputs):
     Returns:
         dict: Store data.
     '''
-    store = inputs[-1] or {'/api/search/query/count': 0}  # type: Any
-    config = store.get('config', APP.api.config)  # type: Dict
+    store = inputs[-1] or {
+        '/api/search/query/count': 0,
+        '/config/query/count': 0
+    }  # type: Any
+    config = APP.api.config  # type: Dict
 
     input_ = dash.callback_context.triggered[0]
     element = input_['prop_id'].split('.')[0]
     value = input_['value']
 
-    if element == 'query':
+    if element in ['config-query', 'search-button']:
+        value = value or 'select * from config'
+        value = re.sub('from config', 'from data', value, flags=re.I)
+        key = '/config/query/count'
+        if store[key] < 1:
+            store[key] += 1
+        else:
+            try:
+                store['/config'] = sdt.query_dict(config, value)
+            except Exception as e:
+                store['/config'] = svt.error_to_response(e).json
+
+    elif element == 'query':
         # needed to block input which is called twice on page load
         key = '/api/search/query/count'
         if store[key] < 1:
@@ -264,17 +282,15 @@ def on_datatable_update(store):
 
 @APP.callback(
     Output('config-content', 'children'),
-    [Input('store', 'modified_timestamp')],
-    [State('store', 'data')]
+    [Input('store', 'data')]
 )
 @APP.cache.memoize(100)
-def on_config_update(timestamp, store):
-    # type: (int, Dict[str, Any]) -> flask.Response
+def on_config_update(store):
+    # type: (Dict[str, Any]) -> flask.Response
     '''
     Updates config card with config information from store.
 
     Args:
-        timestamp (int): Store modification timestamp.
         store (dict): Store data.
 
     Returns:

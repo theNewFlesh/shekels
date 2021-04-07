@@ -55,8 +55,8 @@ class ComponentsTests(unittest.TestCase):
 
         row = configbar.children[0].children
 
-        self.assertEqual(row[0].id, 'query')
-        self.assertEqual(row[2].id, 'search-button')
+        self.assertEqual(row[0].id, 'config-query')
+        self.assertEqual(row[2].id, 'config-search-button')
         self.assertEqual(row[4].id, 'init-button')
         self.assertEqual(row[6].id, 'upload')
 
