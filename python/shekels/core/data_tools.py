@@ -669,11 +669,12 @@ def query_dict(data, query):
     Returns:
         dict: Queried dictionary.
     '''
-    data = rpb.BlobETL(data) \
+    data_ = data  # type: Any
+    data_ = rpb.BlobETL(data_) \
         .to_flat_dict() \
         .items()
-    data = DataFrame(list(data), columns=['key', 'value'])
-    data = query_data(data, query)
-    data = dict(zip(data.key.tolist(), data.value.tolist()))
-    data = rpb.BlobETL(data).to_dict()
-    return data
+    data_ = DataFrame(list(data_), columns=['key', 'value'])
+    data_ = query_data(data_, query)
+    data_ = dict(zip(data_.key.tolist(), data_.value.tolist()))
+    data_ = rpb.BlobETL(data_).to_dict()
+    return data_
