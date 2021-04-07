@@ -166,3 +166,21 @@ class ComponentsTests(unittest.TestCase):
         # EnforceError
         result = svc.get_plots([], [good, good])[1].children.children
         self.assertEqual(result, 'no data found')
+
+    def test_get_dummy_elements(self):
+        result = svc.get_dummy_elements()
+        result = set([x.id for x in result])
+        expected = {
+            'config-query',
+            'query',
+            'config-search-button',
+            'search-button',
+            'init-button',
+            'update-button',
+            'upload',
+            'write-button',
+        }
+        self.assertEqual(result, expected)
+
+    def test_get_key_value_table(self):
+        pass
