@@ -168,7 +168,7 @@ def on_event(*inputs):
     element = input_['prop_id'].split('.')[0]
     value = input_['value']
 
-    if element in ['config-query', 'search-button']:
+    if element in ['config-query', 'config-search-button']:
         value = value or 'select * from config'
         value = re.sub('from config', 'from data', value, flags=re.I)
         key = '/config/query/count'
@@ -180,7 +180,7 @@ def on_event(*inputs):
             except Exception as e:
                 store['/config'] = svt.error_to_response(e).json
 
-    elif element == 'query':
+    elif element in ['query', 'search-button']:
         # needed to block input which is called twice on page load
         key = '/api/search/query/count'
         if store[key] < 1:
@@ -208,10 +208,6 @@ def on_event(*inputs):
             '/api/search',
             data={'query': config['default_query']}
         )
-
-    elif element == 'search-button':
-        svt.update_store(APP.client, store, '/api/search', data={'query': value})
-        store['/api/search/query'] = value
 
     elif element == 'upload':
         try:
