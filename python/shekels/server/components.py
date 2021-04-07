@@ -282,8 +282,8 @@ def get_key_value_table(data, id_='', header='', editable=False, key_order=None)
             msg = f'Invalid key order. Keys not found in data: {diff}.'
             raise KeyError(msg)
 
-        keys = set(key_order).difference(keys)
-        keys = list(sorted(keys))
+        keys = set(keys).difference(key_order)
+        keys = sorted(list(keys))
         keys = key_order + keys
 
     # transform data
