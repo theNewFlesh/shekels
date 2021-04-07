@@ -20,16 +20,18 @@ body {
     display: none !important;
 }
 
-/* Logo */
+/* Icon */
 #icon {
     height: 25px;
-    background: {{ COLOR_SCHEME['bg'] }};
+    background: {{ COLOR_SCHEME['dark1'] }};
     padding: 2px 7px 2px 7px;
 }
 
 /* Tabs */
 #tabs-container {
     display: flex;
+    position: fixed;
+    z-index: 10;
 }
 
 #tabs {
