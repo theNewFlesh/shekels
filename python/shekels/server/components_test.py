@@ -221,6 +221,6 @@ class ComponentsTests(unittest.TestCase):
             'second': 'taco',
         }
         order = ['first', 'second', 'not_a_key']
-        expected = "Invalid key order. Keys not found in data: \['not_a_key'\]\."
+        expected = r"Invalid key order. Keys not found in data: \['not_a_key'\]\."
         with self.assertRaisesRegexp(KeyError, expected):
             svc.get_key_value_table(data, key_order=order)
