@@ -13,7 +13,7 @@ import lunchbox.tools as lbt
 import numpy as np
 import pandasql
 import pyparsing as pp
-import rolling_pin.blob_etl as rpblob
+import rolling_pin.blob_etl as rpb
 import webcolors
 
 from shekels.core.config import ConformAction
@@ -539,7 +539,7 @@ def conform_figure(figure, color_scheme):
             lut[val] = color_scheme[key]
 
     # rgba? to hex --> coerce to standard colors --> coerce with color_scheme
-    figure = rpblob.BlobETL(figure) \
+    figure = rpb.BlobETL(figure) \
         .set(
             predicate=lambda k, v: isinstance(v, str) and 'rgb' in v,
             value_setter=lambda k, v: webcolors.rgb_to_hex(parse_rgba(v)[:3]).upper()) \
@@ -654,4 +654,26 @@ def query_data(data, query):
 
             if len(data) == 0:
                 break
+    return data
+
+
+def query_dict(data, query):
+    # type: (dict, str) -> dict
+    '''
+    Query a given diction with a given SQL query.
+
+    Args:
+        data (dict): Dictionary to be queried.
+        query (str): SQL query.
+
+    Returns:
+        dict: Queried dictionary.
+    '''
+    data = rpb.BlobETL(data) \
+        .to_flat_dict() \
+        .items()
+    data = DataFrame(list(data), columns=['key', 'value'])
+    data = query_data(data, query)
+    data = dict(zip(data.key.tolist(), data.value.tolist()))
+    data = rpb.BlobETL(data).to_dict()
     return data
