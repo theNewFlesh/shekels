@@ -225,7 +225,7 @@ def test_datatable_update(dash_duo, run_app, serial):
     dash_duo.start_server(test_app)
 
     # click on data tab
-    dash_duo.find_elements('#tabs .tab')[2].click()
+    dash_duo.find_elements('#tabs .tab')[1].click()
     dash_duo.wait_for_element('#key-value-table')
     result = dash_duo.find_element('#lower-content div')
     assert result.get_property('id') == 'table-content'
@@ -253,7 +253,7 @@ def test_on_plots_datatable_error(dash_duo, run_app, serial):
     dash_duo.start_server(test_app)
 
     # click on data tab
-    dash_duo.find_elements('#tabs .tab')[2].click()
+    dash_duo.find_elements('#tabs .tab')[1].click()
     time.sleep(0.1)
     dash_duo.wait_for_element('#key-value-table td:last-child > div').text
     dash_duo.find_elements('#init-button')[-1].click()
@@ -268,7 +268,7 @@ def test_on_config_update(dash_duo, run_app, serial):
     dash_duo.start_server(test_app)
 
     # click on config tab
-    dash_duo.find_elements('#tabs .tab')[3].click()
+    dash_duo.find_elements('#tabs .tab')[2].click()
     time.sleep(0.1)
     dash_duo.wait_for_element('#config-content')
     result = dash_duo.find_element('#lower-content div')
@@ -286,7 +286,7 @@ def test_on_config_search(dash_duo, run_app, serial):
     dash_duo.start_server(test_app)
 
     # click on config tab
-    dash_duo.find_elements('#tabs .tab')[3].click()
+    dash_duo.find_elements('#tabs .tab')[2].click()
     time.sleep(0.1)
     dash_duo.wait_for_element('#config-content')
 
@@ -321,7 +321,7 @@ def test_on_config_update_error(dash_duo, run_app, serial):
     dash_duo.start_server(test_app)
 
     # click on config tab and init button
-    dash_duo.find_elements('#tabs .tab')[3].click()
+    dash_duo.find_elements('#tabs .tab')[2].click()
     time.sleep(0.1)
     dash_duo.find_elements('#init-button')[-1].click()
     dash_duo.wait_for_element('#error')

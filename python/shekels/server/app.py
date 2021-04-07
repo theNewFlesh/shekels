@@ -37,7 +37,7 @@ def get_app():
     Returns:
         Dash: Dash app.
     '''
-    flask_app = flask.Flask('$hekels')
+    flask_app = flask.Flask('Shekels')
     swg.Swagger(flask_app)
     flask_app.register_blueprint(API)
 

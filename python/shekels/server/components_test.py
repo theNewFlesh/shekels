@@ -11,7 +11,7 @@ class ComponentsTests(unittest.TestCase):
     def test_get_dash_app(self):
         result = svc.get_dash_app(flask.Flask('foo'))._layout
         self.assertEqual(result.children[0].id, 'store')
-        self.assertEqual(result.children[1].id, 'tabs')
+        self.assertEqual(result.children[1].id, 'tabs-container')
         self.assertEqual(result.children[2].id, 'content')
 
     def test_get_button(self):
