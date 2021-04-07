@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.9.6
+                0.9.7
               </div>
             
           
@@ -363,14 +363,11 @@
 
 <dl class="py function">
 <dt id="shekels.server.app.on_config_update">
-<code class="sig-prename descclassname"><span class="pre">shekels.server.app.</span></code><code class="sig-name descname"><span class="pre">on_config_update</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">flask.wrappers.Response</span><a class="reference internal" href="_modules/shekels/server/app.html#on_config_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.app.on_config_update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">shekels.server.app.</span></code><code class="sig-name descname"><span class="pre">on_config_update</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">flask.wrappers.Response</span><a class="reference internal" href="_modules/shekels/server/app.html#on_config_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.app.on_config_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates config card with config information from store.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>timestamp</strong> (<em>int</em>) – Store modification timestamp.</p></li>
-<li><p><strong>store</strong> (<em>dict</em>) – Store data.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>store</strong> (<em>dict</em>) – Store data.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Response.</p>
@@ -563,7 +560,7 @@ Default: False.</p></li>
 
 <dl class="py function">
 <dt id="shekels.server.components.get_configbar">
-<code class="sig-prename descclassname"><span class="pre">shekels.server.components.</span></code><code class="sig-name descname"><span class="pre">get_configbar</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dash_html_components.Div.Div</span><a class="reference internal" href="_modules/shekels/server/components.html#get_configbar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.components.get_configbar" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">shekels.server.components.</span></code><code class="sig-name descname"><span class="pre">get_configbar</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'select</span> <span class="pre">*</span> <span class="pre">from</span> <span class="pre">config'</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dash_html_components.Div.Div</span><a class="reference internal" href="_modules/shekels/server/components.html#get_configbar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.components.get_configbar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a row of elements used for configuring Shekels.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
