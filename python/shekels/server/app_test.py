@@ -206,6 +206,10 @@ def test_on_event_save_button(dash_duo, serial):
         dash_duo.find_elements('#tabs .tab')[2].click()
         time.sleep(0.1)
 
+        # click init
+        dash_duo.find_elements('#init-button')[-1].click()
+        time.sleep(0.1)
+
         # delete config
         os.remove(config_path)
 
@@ -241,6 +245,10 @@ def test_on_event_save_button_error(dash_duo, serial):
 
         # click on config tab
         dash_duo.find_elements('#tabs .tab')[2].click()
+        time.sleep(0.1)
+
+        # click init
+        dash_duo.find_elements('#init-button')[-1].click()
         time.sleep(0.1)
 
         # delete config
