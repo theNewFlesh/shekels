@@ -1,4 +1,5 @@
 from pathlib import Path
+from tempfile import TemporaryDirectory
 import json
 import os
 import time
@@ -6,6 +7,7 @@ import time
 import dash
 import flask
 import flask_caching
+import jsoncomment as jsonc
 import lunchbox.tools as lbt
 import pytest
 import selenium.webdriver.common.keys as sek
@@ -178,6 +180,80 @@ def test_on_event_search_button(dash_duo, run_app, serial):
     # dash_duo.take_snapshot('on_event_search-2')
     result = len(dash_duo.find_elements('.dash-graph.plot'))
     assert result == 6
+
+
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
+def test_on_event_save_button(dash_duo, serial):
+    with TemporaryDirectory() as root:
+        test_config_path = lbt \
+            .relative_path(__file__, '../../../resources/test_config.json')
+        with open(test_config_path) as f:
+            config = jsonc.JsonComment().load(f)
+
+        config['columns'] = ['date']
+
+        config_path = Path(root, 'config.json')
+        with open(config_path, 'w') as f:
+            json.dump(config, f)
+
+        app.run(app.APP, config_path, debug=True, test=True)
+        test_app = app.APP
+        dash_duo.start_server(test_app)
+
+        config = test_app.api.config
+
+        # click on config tab
+        dash_duo.find_elements('#tabs .tab')[2].click()
+        time.sleep(0.1)
+        dash_duo.take_snapshot('save')
+
+        # delete config
+        os.remove(config_path)
+
+        # save bad config
+        dash_duo.find_elements('#save-button')[-1].click()
+        time.sleep(0.1)
+
+        assert config_path.is_file()
+        with open(config_path) as f:
+            result = json.load(f)['columns']
+        assert result == ['date']
+
+
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
+def test_on_event_save_button_error(dash_duo, serial):
+    with TemporaryDirectory() as root:
+        test_config_path = lbt \
+            .relative_path(__file__, '../../../resources/test_config.json')
+        with open(test_config_path) as f:
+            config = jsonc.JsonComment().load(f)
+
+        config['foo'] = 'bar'
+
+        config_path = Path(root, 'config.json')
+        with open(config_path, 'w') as f:
+            json.dump(config, f)
+
+        app.run(app.APP, config_path, debug=True, test=True)
+        test_app = app.APP
+        dash_duo.start_server(test_app)
+
+        config = test_app.api.config
+
+        # click on config tab
+        dash_duo.find_elements('#tabs .tab')[2].click()
+        time.sleep(0.1)
+
+        # delete config
+        os.remove(config_path)
+
+        # save bad config
+        dash_duo.find_elements('#save-button')[-1].click()
+
+        dash_duo.wait_for_element('#error')
+        assert not config_path.is_file()
+        result = dash_duo.wait_for_element('#error tr td:last-child > div').text
+        assert result == 'DataError'
 
 
 # TABS--------------------------------------------------------------------------

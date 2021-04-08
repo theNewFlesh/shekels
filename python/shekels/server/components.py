@@ -191,7 +191,7 @@ def get_dummy_elements():
         html.Div(className='dummy', id='init-button', n_clicks=None),
         html.Div(className='dummy', id='update-button', n_clicks=None),
         dcc.Upload(className='dummy', id='upload', contents=None),
-        html.Div(className='dummy', id='write-button', n_clicks=None),
+        html.Div(className='dummy', id='save-button', n_clicks=None),
     ]
 
 
@@ -225,9 +225,12 @@ def get_configbar(config, query='select * from config'):
         id='upload',
         children=[get_button('upload')]
     )
+    save = get_button('save')
     row = html.Div(
         className='row',
-        children=[query, spacer, search, spacer, init, spacer, upload],
+        children=[
+            query, spacer, search, spacer, init, spacer, upload, spacer, save
+        ],
     )
     configbar = html.Div(id='configbar', className='menubar', children=[row])
     return configbar

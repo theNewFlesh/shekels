@@ -143,7 +143,7 @@ def serve_stylesheet(stylesheet):
         Input('update-button', 'n_clicks'),
         Input('search-button', 'n_clicks'),
         Input('upload', 'contents'),
-        Input('write-button', 'n_clicks'),
+        Input('save-button', 'n_clicks'),
     ],
     [State('store', 'data')]
 )
@@ -218,7 +218,7 @@ def on_event(*inputs):
         except Exception as error:
             store['/config'] = svt.error_to_response(error).json
 
-    elif element == 'write-button':
+    elif element == 'save-button':
         try:
             config = store['/config']
             config = cfg.Config(config)

@@ -178,7 +178,7 @@ class ComponentsTests(unittest.TestCase):
             'init-button',
             'update-button',
             'upload',
-            'write-button',
+            'save-button',
         }
         self.assertEqual(result, expected)
 
