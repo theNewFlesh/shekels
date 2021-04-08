@@ -780,3 +780,20 @@ class DataToolsTests(unittest.TestCase):
         query += "Category !~ 'ignore|fancy'"
         result = sdt.query_data(data, query)
         eft.enforce_dataframes_are_equal(result, expected)
+
+    def test_query_dict(self):
+        data = {
+            'foo': {
+                'bar': ['baz', {'bagel': 'kiwi'}],
+                'cake': ['baz', {'taco': 'kiwi'}]
+            },
+            'taco': 'pizza'
+        }
+        query = 'select * from data where key ~ taco'
+        result = sdt.query_dict(data, query)
+        expected = {
+            'foo': {
+                'cake': [{'taco': 'kiwi'}]},
+            'taco': 'pizza'
+        }
+        self.assertEqual(result, expected)

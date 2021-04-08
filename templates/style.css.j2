@@ -15,38 +15,25 @@ body {
     padding: 0px;
 }
 
-/* Logo */
-#tabs #logo,
-#tabs #logo .tab:hover {
-    width: 130px;
-    background: linear-gradient(
-        100deg,
-        {{ COLOR_SCHEME['bg'] }} 35%,
-        {{ COLOR_SCHEME['green2'] }} 35%
-    ) !important;
-    border: 0px !important;
-    font-size: large !important;
-    font-style: italic !important;
-    font-family: sans-serif !important;
-    font-weight: bold !important;
-}
-
-#tabs #logo span {
-    background: linear-gradient(
-        100deg,
-        {{ COLOR_SCHEME['green2'] }} 15%,
-        {{ COLOR_SCHEME['bg'] }} 15%
-    ) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-}
-
 /* Dummy elements */
 .dummy {
     display: none !important;
 }
 
+/* Icon */
+#icon {
+    height: 25px;
+    background: {{ COLOR_SCHEME['dark2'] }};
+    padding: 2px 7px 2px 7px;
+}
+
 /* Tabs */
+#tabs-container {
+    display: flex;
+    position: fixed;
+    z-index: 10;
+}
+
 #tabs {
     background: {{ COLOR_SCHEME['bg'] }};
 }
@@ -158,7 +145,7 @@ button:active {
     flex-grow: 1;
 }
 
-#query {
+.query {
     color: {{ COLOR_SCHEME['green2'] }} !important;
     background: {{ COLOR_SCHEME['grey1'] }} !important;
     flex-grow: 10;

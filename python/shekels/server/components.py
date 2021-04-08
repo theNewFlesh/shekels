@@ -10,6 +10,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_table
 import flask
+import lunchbox.tools as lbt
 import rolling_pin.blob_etl as rpb
 
 import shekels.core.config as cfg
@@ -35,18 +36,12 @@ def get_dash_app(server, storage_type='memory'):
 
     store = dcc.Store(id='store', storage_type=storage_type)
 
+    icon = html.Img(id='icon', src='/assets/icon.svg')
     tabs = dcc.Tabs(
         id='tabs',
         className='tabs',
         value='plots',
         children=[
-            dcc.Tab(
-                id='logo',
-                className='tab',
-                label='$HEKELS',
-                value='',
-                disabled=True
-            ),
             dcc.Tab(className='tab', label='plots', value='plots'),
             dcc.Tab(className='tab', label='data', value='data'),
             dcc.Tab(className='tab', label='config', value='config'),
@@ -55,6 +50,8 @@ def get_dash_app(server, storage_type='memory'):
             dcc.Tab(className='tab', label='monitor', value='monitor'),
         ],
     )
+    tabs = html.Div(id='tabs-container', children=[icon, tabs])
+
     content = dcc.Loading(
         id="content",
         className='content',
@@ -62,11 +59,13 @@ def get_dash_app(server, storage_type='memory'):
         fullscreen=True,
     )
 
+    assets = lbt.relative_path(__file__, "../../../resources")
     app = dash.Dash(
-        name='$hekels',
-        title='$hekels',
+        name='Shekels',
+        title='Shekels',
         server=server,
         external_stylesheets=['/static/style.css'],
+        assets_folder=assets,
     )
     app.layout = html.Div(id='layout', children=[store, tabs, content])
     app.config['suppress_callback_exceptions'] = True
@@ -185,8 +184,9 @@ def get_dummy_elements():
         list: List of html elements.
     '''
     return [
+        dcc.Input(className='dummy', id='config-query', value=None),
         dcc.Input(className='dummy', id='query', value=None),
-        html.Div(className='dummy', id='search-button', n_clicks=None),
+        html.Div(className='dummy', id='config-search-button', n_clicks=None),
         html.Div(className='dummy', id='search-button', n_clicks=None),
         html.Div(className='dummy', id='init-button', n_clicks=None),
         html.Div(className='dummy', id='update-button', n_clicks=None),
@@ -195,7 +195,7 @@ def get_dummy_elements():
     ]
 
 
-def get_configbar(config, query=None):
+def get_configbar(config, query='select * from config'):
     # type: (Dict, Optional[str]) -> html.Div
     '''
     Get a row of elements used for configuring Shekels.
@@ -207,21 +207,19 @@ def get_configbar(config, query=None):
     Returns:
         Div: Div with buttons and JSON editor.
     '''
-    if query is None:
-        query = 'select * from data'
-
     spacer = html.Div(className='col spacer')
     query = dcc.Input(
-        id='query',
+        id='config-query',
         className='col query',
         value=query,
-        placeholder='SQL query that uses "FROM data"',
+        placeholder='SQL query that uses "FROM config"',
         type='text',
         autoFocus=True,
         debounce=True
     )
 
     search = get_button('search')
+    search.id = 'config-search-button'
     init = get_button('init')
     upload = dcc.Upload(
         id='upload',
@@ -283,8 +281,8 @@ def get_key_value_table(data, id_='', header='', editable=False, key_order=None)
             msg = f'Invalid key order. Keys not found in data: {diff}.'
             raise KeyError(msg)
 
-        keys = set(key_order).difference(keys)
-        keys = list(sorted(keys))
+        keys = set(keys).difference(key_order)
+        keys = sorted(list(keys))
         keys = key_order + keys
 
     # transform data

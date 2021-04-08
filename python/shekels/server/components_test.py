@@ -11,7 +11,7 @@ class ComponentsTests(unittest.TestCase):
     def test_get_dash_app(self):
         result = svc.get_dash_app(flask.Flask('foo'))._layout
         self.assertEqual(result.children[0].id, 'store')
-        self.assertEqual(result.children[1].id, 'tabs')
+        self.assertEqual(result.children[1].id, 'tabs-container')
         self.assertEqual(result.children[2].id, 'content')
 
     def test_get_button(self):
@@ -55,8 +55,8 @@ class ComponentsTests(unittest.TestCase):
 
         row = configbar.children[0].children
 
-        self.assertEqual(row[0].id, 'query')
-        self.assertEqual(row[2].id, 'search-button')
+        self.assertEqual(row[0].id, 'config-query')
+        self.assertEqual(row[2].id, 'config-search-button')
         self.assertEqual(row[4].id, 'init-button')
         self.assertEqual(row[6].id, 'upload')
 
@@ -166,3 +166,61 @@ class ComponentsTests(unittest.TestCase):
         # EnforceError
         result = svc.get_plots([], [good, good])[1].children.children
         self.assertEqual(result, 'no data found')
+
+    def test_get_dummy_elements(self):
+        result = svc.get_dummy_elements()
+        result = set([x.id for x in result])
+        expected = {
+            'config-query',
+            'query',
+            'config-search-button',
+            'search-button',
+            'init-button',
+            'update-button',
+            'upload',
+            'write-button',
+        }
+        self.assertEqual(result, expected)
+
+    def test_get_key_value_table(self):
+        data = {
+            'foo': [{'bar': 'baz'}, {'a': 'b'}],
+            'first': 'pizza',
+            'second': 'taco',
+        }
+        order = ['first', 'second']
+        result = svc.get_key_value_table(
+            data, id_='id', header='header', editable=True, key_order=order
+        )
+
+        # id
+        self.assertEqual(result.id, 'id')
+
+        # header
+        self.assertEqual(result.children[0].children, 'header')
+
+        df = result.children[-1]
+
+        # editable
+        self.assertTrue(df.editable)
+
+        # key_order
+        expected = ['first', 'second', 'foo/<list_0>/bar', 'foo/<list_1>/a']
+        keys = [x['key'] for x in df.data]
+        self.assertEqual(keys, expected)
+
+        # values
+        vals = [x['value'] for x in df.data]
+        expected = ['pizza', 'taco', 'baz', 'b']
+        self.assertEqual(vals, expected)
+
+    def test_get_key_value_table_error(self):
+        data = {
+            'foo': 'bar',
+            'first': 'pizza',
+            'second': 'taco',
+        }
+        order = ['first', 'second', 'not_a_key']
+        expected = r"Invalid key order. Keys not found in data: \['not_a_key'\]\."
+        with self.assertRaisesRegexp(KeyError, expected):
+            svc.get_key_value_table(data, key_order=order)
