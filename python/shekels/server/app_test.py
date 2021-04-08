@@ -205,7 +205,6 @@ def test_on_event_save_button(dash_duo, serial):
         # click on config tab
         dash_duo.find_elements('#tabs .tab')[2].click()
         time.sleep(0.1)
-        dash_duo.take_snapshot('save')
 
         # delete config
         os.remove(config_path)
@@ -249,6 +248,7 @@ def test_on_event_save_button_error(dash_duo, serial):
 
         # save bad config
         dash_duo.find_elements('#save-button')[-1].click()
+        time.sleep(0.1)
 
         dash_duo.wait_for_element('#error')
         assert not config_path.is_file()
