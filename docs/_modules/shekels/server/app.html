@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.9.6
+                0.9.8
               </div>
             
           
@@ -170,6 +170,7 @@
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
 
 <span class="kn">from</span> <span class="nn">dash.dependencies</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">State</span>
 <span class="kn">from</span> <span class="nn">flask_caching</span> <span class="kn">import</span> <span class="n">Cache</span>
@@ -178,10 +179,12 @@
 <span class="kn">import</span> <span class="nn">dash_table</span>
 <span class="kn">import</span> <span class="nn">flasgger</span> <span class="k">as</span> <span class="nn">swg</span>
 <span class="kn">import</span> <span class="nn">flask</span>
+<span class="kn">import</span> <span class="nn">flask_monitoringdashboard</span> <span class="k">as</span> <span class="nn">fmdb</span>
 <span class="kn">import</span> <span class="nn">jsoncomment</span> <span class="k">as</span> <span class="nn">jsonc</span>
 
-<span class="kn">import</span> <span class="nn">shekels.core.config</span> <span class="k">as</span> <span class="nn">cfg</span>
 <span class="kn">from</span> <span class="nn">shekels.server.api</span> <span class="kn">import</span> <span class="n">API</span>
+<span class="kn">import</span> <span class="nn">shekels.core.config</span> <span class="k">as</span> <span class="nn">cfg</span>
+<span class="kn">import</span> <span class="nn">shekels.core.data_tools</span> <span class="k">as</span> <span class="nn">sdt</span>
 <span class="kn">import</span> <span class="nn">shekels.server.components</span> <span class="k">as</span> <span class="nn">svc</span>
 <span class="kn">import</span> <span class="nn">shekels.server.server_tools</span> <span class="k">as</span> <span class="nn">svt</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
@@ -200,9 +203,16 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Dash: Dash app.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">flask_app</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">Flask</span><span class="p">(</span><span class="s1">&#39;$hekels&#39;</span><span class="p">)</span>
+    <span class="n">flask_app</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">Flask</span><span class="p">(</span><span class="s1">&#39;Shekels&#39;</span><span class="p">)</span>
     <span class="n">swg</span><span class="o">.</span><span class="n">Swagger</span><span class="p">(</span><span class="n">flask_app</span><span class="p">)</span>
     <span class="n">flask_app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">API</span><span class="p">)</span>
+
+    <span class="c1"># flask monitoring</span>
+    <span class="n">fmdb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="s1">&#39;monitor&#39;</span>
+    <span class="n">fmdb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">monitor_level</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">fmdb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">git</span> <span class="o">=</span> <span class="s1">&#39;https://thenewflesh.github.io/shekels/&#39;</span>
+    <span class="n">fmdb</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">flask_app</span><span class="p">)</span>
+
     <span class="n">app</span> <span class="o">=</span> <span class="n">svc</span><span class="o">.</span><span class="n">get_dash_app</span><span class="p">(</span><span class="n">flask_app</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">api</span> <span class="o">=</span> <span class="n">API</span>
     <span class="n">app</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">flask_app</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span>
@@ -292,13 +302,14 @@
 <div class="viewcode-block" id="on_event"><a class="viewcode-back" href="../../../server.html#shekels.server.app.on_event">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
     <span class="n">Output</span><span class="p">(</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">),</span>
     <span class="p">[</span>
+        <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;config-query&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">),</span>
+        <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;config-search-button&#39;</span><span class="p">,</span> <span class="s1">&#39;n_clicks&#39;</span><span class="p">),</span>
         <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">),</span>
         <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;init-button&#39;</span><span class="p">,</span> <span class="s1">&#39;n_clicks&#39;</span><span class="p">),</span>
         <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;update-button&#39;</span><span class="p">,</span> <span class="s1">&#39;n_clicks&#39;</span><span class="p">),</span>
         <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;search-button&#39;</span><span class="p">,</span> <span class="s1">&#39;n_clicks&#39;</span><span class="p">),</span>
-        <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">),</span>
         <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;upload&#39;</span><span class="p">,</span> <span class="s1">&#39;contents&#39;</span><span class="p">),</span>
-        <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;write-button&#39;</span><span class="p">,</span> <span class="s1">&#39;n_clicks&#39;</span><span class="p">),</span>
+        <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;save-button&#39;</span><span class="p">,</span> <span class="s1">&#39;n_clicks&#39;</span><span class="p">),</span>
     <span class="p">],</span>
     <span class="p">[</span><span class="n">State</span><span class="p">(</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)]</span>
 <span class="p">)</span>
@@ -313,14 +324,29 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        dict: Store data.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">store</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="p">{</span><span class="s1">&#39;/api/search/query/count&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>  <span class="c1"># type: Any</span>
-    <span class="n">config</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">APP</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>  <span class="c1"># type: Dict</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="p">{</span>
+        <span class="s1">&#39;/api/search/query/count&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s1">&#39;/config/query/count&#39;</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="p">}</span>  <span class="c1"># type: Any</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config</span>  <span class="c1"># type: Dict</span>
 
     <span class="n">input_</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">callback_context</span><span class="o">.</span><span class="n">triggered</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">element</span> <span class="o">=</span> <span class="n">input_</span><span class="p">[</span><span class="s1">&#39;prop_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">value</span> <span class="o">=</span> <span class="n">input_</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="n">element</span> <span class="o">==</span> <span class="s1">&#39;query&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">element</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;config-query&#39;</span><span class="p">,</span> <span class="s1">&#39;config-search-button&#39;</span><span class="p">]:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="ow">or</span> <span class="s1">&#39;select * from config&#39;</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;from config&#39;</span><span class="p">,</span> <span class="s1">&#39;from data&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;/config/query/count&#39;</span>
+        <span class="k">if</span> <span class="n">store</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">store</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sdt</span><span class="o">.</span><span class="n">query_dict</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">svt</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
+
+    <span class="k">elif</span> <span class="n">element</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="s1">&#39;search-button&#39;</span><span class="p">]:</span>
         <span class="c1"># needed to block input which is called twice on page load</span>
         <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;/api/search/query/count&#39;</span>
         <span class="k">if</span> <span class="n">store</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -349,10 +375,6 @@
             <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default_query&#39;</span><span class="p">]}</span>
         <span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">element</span> <span class="o">==</span> <span class="s1">&#39;search-button&#39;</span><span class="p">:</span>
-        <span class="n">svt</span><span class="o">.</span><span class="n">update_store</span><span class="p">(</span><span class="n">APP</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/search&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span>
-        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/search/query&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-
     <span class="k">elif</span> <span class="n">element</span> <span class="o">==</span> <span class="s1">&#39;upload&#39;</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">config</span> <span class="o">=</span> <span class="n">svt</span><span class="o">.</span><span class="n">parse_json_file_content</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
@@ -362,7 +384,7 @@
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
             <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">svt</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
 
-    <span class="k">elif</span> <span class="n">element</span> <span class="o">==</span> <span class="s1">&#39;write-button&#39;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">element</span> <span class="o">==</span> <span class="s1">&#39;save-button&#39;</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">config</span> <span class="o">=</span> <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span>
             <span class="n">config</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
@@ -422,17 +444,15 @@
 
 <div class="viewcode-block" id="on_config_update"><a class="viewcode-back" href="../../../server.html#shekels.server.app.on_config_update">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
     <span class="n">Output</span><span class="p">(</span><span class="s1">&#39;config-content&#39;</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">),</span>
-    <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="s1">&#39;modified_timestamp&#39;</span><span class="p">)],</span>
-    <span class="p">[</span><span class="n">State</span><span class="p">(</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)]</span>
+    <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)]</span>
 <span class="p">)</span>
 <span class="nd">@APP</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">memoize</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">on_config_update</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">store</span><span class="p">):</span>
-    <span class="c1"># type: (int, Dict[str, Any]) -&gt; flask.Response</span>
+<span class="k">def</span> <span class="nf">on_config_update</span><span class="p">(</span><span class="n">store</span><span class="p">):</span>
+    <span class="c1"># type: (Dict[str, Any]) -&gt; flask.Response</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Updates config card with config information from store.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        timestamp (int): Store modification timestamp.</span>
 <span class="sd">        store (dict): Store data.</span>
 
 <span class="sd">    Returns:</span>
@@ -488,7 +508,10 @@
         <span class="k">return</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span>
             <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;docs&#39;</span><span class="p">,</span>
             <span class="n">href</span><span class="o">=</span><span class="s1">&#39;https://thenewflesh.github.io/shekels/&#39;</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;monitor&#39;</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="k">return</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;monitor&#39;</span><span class="p">,</span> <span class="n">pathname</span><span class="o">=</span><span class="s1">&#39;/monitor&#39;</span><span class="p">)</span></div>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
