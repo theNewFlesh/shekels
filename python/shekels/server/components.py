@@ -406,9 +406,12 @@ def get_plots(data, plots):
                 className='plot plot-error',
                 style={'min-width': min_width},
                 children=html.Div(
+                    className='plot-error-container',
+                    children=html.Div(
                     className='plot-error-message',
                     children='no data found'
-                ),
+                    )
+                )
             )
         elems.append(fig)
     return elems

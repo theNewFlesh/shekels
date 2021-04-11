@@ -239,14 +239,19 @@ button:active {
 }
 
 .plot-error {
-    display: flex;
-    align-items: center;
-    color: {{ COLOR_SCHEME['red2'] }};
     min-height: 300px;
 }
 
+.plot-error-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: {{ COLOR_SCHEME['bg']}};
+}
+
 .plot-error-message {
-    flex-grow: 10;
+    color: {{ COLOR_SCHEME['red2'] }};
     font-size: 50px;
 }
 
