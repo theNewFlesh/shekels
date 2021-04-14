@@ -40,42 +40,6 @@ def test_get_app(dash_duo, serial):
 
 
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
-def test_solve_component_state():
-    # correct
-    store = {'/api/initialize': {}, '/api/update': {}, '/api/search': {}}
-    result = app.solve_component_state(store)
-    assert result is None
-
-    states = {
-        '/api/initialize': 'Please call init or update.',
-        '/api/update': 'Please call update.',
-        '/api/search': None,
-    }
-    keys = states.keys()
-    for key, expected in states.items():
-        # missing
-        store = dict(zip(keys, [{}] * len(keys)))
-        del store[key]
-        result = None
-        if expected is not None:
-            result = app \
-                .solve_component_state(store).children[-1].data[0]['value']
-        assert result == expected
-
-        # error
-        store[key] = {
-            'error': 'FooBarError',
-            'message': 'Not all foos are bars.',
-            'code': '500',
-            'traceback': 'foobar',
-            'args': ['foo', 'bar'],
-        }
-        result = app \
-            .solve_component_state(store).children[-1].data[0]['value']
-        assert result == 'FooBarError'
-
-
-@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_run():
     result = app.APP
     config_path = lbt.relative_path(

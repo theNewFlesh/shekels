@@ -408,8 +408,8 @@ def get_plots(data, plots):
                 children=html.Div(
                     className='plot-error-container',
                     children=html.Div(
-                    className='plot-error-message',
-                    children='no data found'
+                        className='plot-error-message',
+                        children='no data found'
                     )
                 )
             )

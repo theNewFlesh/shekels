@@ -159,3 +159,37 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
         store['pizza'] = 'error'
         result = svt.store_key_is_valid(store, 'pizza')
         self.assertTrue(result)
+
+    def test_solve_component_state(self):
+        # correct
+        store = {'/api/initialize': {}, '/api/update': {}, '/api/search': {}}
+        result = svt.solve_component_state(store)
+        self.assertIsNone(result)
+
+        states = {
+            '/api/initialize': 'Please call init or update.',
+            '/api/update': 'Please call update.',
+            '/api/search': None,
+        }
+        keys = states.keys()
+        for key, expected in states.items():
+            # missing
+            store = dict(zip(keys, [{}] * len(keys)))
+            del store[key]
+            result = None
+            if expected is not None:
+                result = svt \
+                    .solve_component_state(store).children[-1].data[0]['value']
+            self.assertEqual(result, expected)
+
+            # error
+            store[key] = {
+                'error': 'FooBarError',
+                'message': 'Not all foos are bars.',
+                'code': '500',
+                'traceback': 'foobar',
+                'args': ['foo', 'bar'],
+            }
+            result = svt \
+                .solve_component_state(store).children[-1].data[0]['value']
+            self.assertEqual(result, 'FooBarError')

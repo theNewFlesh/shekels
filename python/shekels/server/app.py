@@ -57,56 +57,6 @@ def get_app():
 APP = get_app()
 
 
-def solve_component_state(store, config=False):
-    # type (dict) -> Optional(html.Div)
-    '''
-    Solves what component to return given the state of the given store.
-
-    Returns a key value card component embedded with a relevant message or error
-    if a required key is not found in the store, or it contain a dictionary with
-    am "error" key in it. Those required keys are as follows:
-
-        * /config
-        * /api/initialize
-        * /api/update
-        * /api/search
-
-    Args:
-        store (dict): Dash store.
-        config (bool, optional): Whether the component is for the config tab.
-            Default: False.
-
-    Returns:
-        Div: Key value card if store values are not present or have errors,
-            otherwise, none.
-    '''
-    states = [
-        ['/config', None],
-        ['/api/initialize', 'Please call init or update.'],
-        ['/api/update', 'Please call update.'],
-        ['/api/search', None],
-    ]
-    if config:
-        states = states[:2]
-        states[1][1] = None
-    for key, message in states:
-        value = store.get(key)
-        if message is not None and value is None:
-            return svc.get_key_value_table(
-                {'action': message},
-                id_='status',
-                header='status',
-            )
-        elif isinstance(value, dict) and 'error' in value:
-            return svc.get_key_value_table(
-                value,
-                id_='error',
-                header='error',
-                key_order=['error', 'message', 'code', 'traceback'],
-            )
-    return None
-
-
 @APP.server.route('/static/<stylesheet>')
 def serve_stylesheet(stylesheet):
     # type: (str) -> flask.Response
@@ -247,7 +197,7 @@ def on_plots_update(store):
     Returns:
         list[dcc.Graph]: Plots.
     '''
-    comp = solve_component_state(store)
+    comp = svt.solve_component_state(store)
     if comp is not None:
         return comp
     plots = store.get('config', APP.api.config).get('plots', [])
@@ -270,7 +220,7 @@ def on_datatable_update(store):
     Returns:
         DataTable: Dash DataTable.
     '''
-    comp = solve_component_state(store)
+    comp = svt.solve_component_state(store)
     if comp is not None:
         return comp
     return svc.get_datatable(store['/api/search']['response'])
@@ -293,7 +243,7 @@ def on_config_update(store):
         flask.Response: Response.
     '''
     store['/config'] = store.get('/config', APP.api.config)
-    comp = solve_component_state(store, config=True)
+    comp = svt.solve_component_state(store, config=True)
     if comp is not None:
         return comp
     return svc.get_key_value_table(
