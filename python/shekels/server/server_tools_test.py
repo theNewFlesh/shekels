@@ -200,6 +200,7 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
 
         class Api:
             config = {
+                'default_query': 'select * from data',
                 'foo': 'bar',
                 'taco': 'pizza',
             }
@@ -216,6 +217,15 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
                     return flask.Response(
                         response=json_.dumps(dict(
                             message='Database initialized.',
+                            config=Api.config,
+                        )),
+                        mimetype='application/json'
+                    )
+
+                if endpoint == '/api/update':
+                    return flask.Response(
+                        response=json_.dumps(dict(
+                            message='Database updated.',
                             config=Api.config,
                         )),
                         mimetype='application/json'
@@ -320,3 +330,21 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
         expected = 'ValueError'
         self.assertEqual(result['/api/initialize']['error'], expected)
         self.assertEqual(result['/config']['error'], expected)
+
+    def test_update_event(self):
+        value = 'ignore me'
+        app = self.get_app()
+
+        store = {}
+        result = svt.update_event(value, store, app)
+        expected = {
+            '/api/update': {
+                'message': 'Database updated.',
+                'config': {
+                    'default_query': 'select * from data',
+                    'foo': 'bar', 'taco': 'pizza'
+                }
+            },
+            '/api/search': [{'foo': 'bar'}]
+        }
+        self.assertEqual(result, expected)

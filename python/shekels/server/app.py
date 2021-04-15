@@ -127,16 +127,8 @@ def on_event(*inputs):
 
     elif element == 'update-button':
         if store.get('/api/initialize') is None:
-            svt.update_store(APP.client, store, '/api/initialize', data=config)
-            if 'error' in store['/api/initialize']:
-                store['/config'] = store['/api/initialize']
-        svt.update_store(APP.client, store, '/api/update')
-        svt.update_store(
-            APP.client,
-            store,
-            '/api/search',
-            data={'query': config['default_query']}
-        )
+            store = svt.init_event(value, store, APP)
+        store = svt.update_event(value, store, APP)
 
     elif element == 'upload':
         try:
