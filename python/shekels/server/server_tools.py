@@ -229,3 +229,27 @@ def config_query_event(value, store, app):
         except Exception as e:
             store['/config'] = error_to_response(e).json
     return store
+
+
+def data_query_event(value, store, app):
+    # type: (str, dict, dash.Dash) -> dict
+    '''
+    Updates given store given a data query.
+
+    Args:
+        value (str): SQL query.
+        store (dict): Dash store.
+        app (dash.Dash): Dash app.
+
+    Returns:
+        dict: Modified store.
+    '''
+    # needed to block input which is called twice on page load
+    key = '/api/search/query/count'
+    store[key] = store.get(key, 0)
+    if store[key] < 1:
+        store[key] += 1
+    else:
+        update_store(app.client, store, '/api/search', data={'query': value})
+        store['/api/search/query'] = value
+    return store

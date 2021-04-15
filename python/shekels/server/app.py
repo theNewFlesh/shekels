@@ -17,7 +17,6 @@ import jsoncomment as jsonc
 
 from shekels.server.api import API
 import shekels.core.config as cfg
-import shekels.core.data_tools as sdt
 import shekels.server.components as svc
 import shekels.server.server_tools as svt
 # ------------------------------------------------------------------------------
@@ -121,15 +120,7 @@ def on_event(*inputs):
         store = svt.config_query_event(value, store, APP)
 
     elif element in ['query', 'search-button']:
-        # needed to block input which is called twice on page load
-        key = '/api/search/query/count'
-        if store[key] < 1:
-            store[key] += 1
-        else:
-            svt.update_store(
-                APP.client, store, '/api/search', data={'query': value}
-            )
-            store['/api/search/query'] = value
+        store = svt.data_query_event(value, store, APP)
 
     elif element == 'init-button':
         svt.update_store(APP.client, store, '/api/initialize', data=config)

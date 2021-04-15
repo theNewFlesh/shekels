@@ -232,3 +232,39 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
         result = svt.config_query_event(value, store, app)['/config']
         self.assertIn('error', result)
         self.assertEqual(result['error'], 'PandaSQLException')
+
+    def test_data_query_event(self):
+        json_ = json
+
+        class Client:
+            def post(self, endpoint, json=None):
+                return flask.Response(
+                    response=json_.dumps([{'foo': 'bar'}]),
+                    mimetype='application/json'
+                )
+
+        value = None
+        store = {}
+        app = dash.Dash(name='test')
+        app.client = Client()
+
+        # no query count
+        result = svt.data_query_event(value, store, app)
+        expected = {'/api/search/query/count': 1}
+        self.assertEqual(result, expected)
+
+        # query count = 0
+        store = {'/api/search/query/count': 0}
+        result = svt.data_query_event(value, store, app)
+        expected = {'/api/search/query/count': 1}
+        self.assertEqual(result, expected)
+
+        # query
+        value = "select * from config where key == 'foo'"
+        result = svt.data_query_event(value, store, app)
+        expected = {
+            '/api/search/query/count': 1,
+            '/api/search': [{'foo': 'bar'}],
+            '/api/search/query': value,
+        }
+        self.assertEqual(result, expected)
