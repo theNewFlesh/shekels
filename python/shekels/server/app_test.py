@@ -96,6 +96,7 @@ def test_on_event_update_button_no_init(dash_duo, run_app, serial):
     assert len(result) == 6
 
 
+@pytest.mark.flaky
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_on_event_update_button_no_init_error(dash_duo, run_app, serial):
     test_app, _ = run_app
@@ -110,6 +111,7 @@ def test_on_event_update_button_no_init_error(dash_duo, run_app, serial):
     assert result == 'DataError'
 
 
+@pytest.mark.flaky
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_on_event_search_button(dash_duo, run_app, serial):
     test_app, _ = run_app
@@ -234,6 +236,7 @@ def test_on_event_save_button_error(dash_duo, serial):
 
 
 # TABS--------------------------------------------------------------------------
+@pytest.mark.flaky
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_plots_update(dash_duo, run_app, serial):
     test_app, _ = run_app
@@ -259,6 +262,7 @@ def test_plots_update(dash_duo, run_app, serial):
     assert result == 6
 
 
+@pytest.mark.flaky
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_on_plots_update_error(dash_duo, run_app, serial):
     test_app, _ = run_app
