@@ -304,16 +304,17 @@ def test_datatable_update(dash_duo, run_app, serial):
 
 
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
-def test_on_plots_datatable_error(dash_duo, run_app, serial):
+def test_on_plots_datatable_error(dash_duo, run_app):
     test_app, _ = run_app
     test_app.api.config['columns'] = 99
     dash_duo.start_server(test_app)
 
     # click on data tab
     dash_duo.find_elements('#tabs .tab')[1].click()
-    time.sleep(0.1 + BUFFER)
+    time.sleep(1)
     dash_duo.wait_for_element('#key-value-table td:last-child > div').text
     dash_duo.find_elements('#init-button')[-1].click()
+    time.sleep(1)
     dash_duo.wait_for_element('#error')
     result = dash_duo.wait_for_element('#error tr td:last-child > div').text
     assert result == 'DataError'
