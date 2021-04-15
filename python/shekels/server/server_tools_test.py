@@ -195,7 +195,7 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
                 .solve_component_state(store).children[-1].data[0]['value']
             self.assertEqual(result, 'FooBarError')
 
-    def test_confiq_query_event(self):
+    def test_config_query_event(self):
         class Api:
             config = {
                 'foo': 'bar',

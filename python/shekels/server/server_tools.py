@@ -220,6 +220,7 @@ def config_query_event(value, store, app):
     value = re.sub('from config', 'from data', value, flags=re.I)
     key = '/config/query/count'
     store[key] = store.get(key, 0)
+    # needed to block input which is called twice on page load
     if store[key] < 1:
         store[key] += 1
     else:
