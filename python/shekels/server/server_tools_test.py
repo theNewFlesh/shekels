@@ -5,6 +5,7 @@ import re
 import unittest
 
 from dash.exceptions import PreventUpdate
+import dash
 import flask
 
 import shekels.server.server_tools as svt
@@ -193,3 +194,41 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
             result = svt \
                 .solve_component_state(store).children[-1].data[0]['value']
             self.assertEqual(result, 'FooBarError')
+
+    def test_confiq_query_event(self):
+        class Api:
+            config = {
+                'foo': 'bar',
+                'taco': 'pizza',
+            }
+
+        value = None
+        store = {}
+        app = dash.Dash(name='test')
+        app.api = Api()
+
+        # no query count
+        result = svt.config_query_event(value, store, app)
+        expected = {'/config/query/count': 1}
+        self.assertEqual(result, expected)
+
+        # query count = 0
+        store = {'/config/query/count': 0}
+        result = svt.config_query_event(value, store, app)
+        expected = {'/config/query/count': 1}
+        self.assertEqual(result, expected)
+
+        # good query
+        value = "select * from config where key == 'foo'"
+        result = svt.config_query_event(value, store, app)
+        expected = {
+            '/config': {'foo': 'bar'},
+            '/config/query/count': 1,
+        }
+        self.assertEqual(result, expected)
+
+        # bad query
+        value = 'bad query'
+        result = svt.config_query_event(value, store, app)['/config']
+        self.assertIn('error', result)
+        self.assertEqual(result['error'], 'PandaSQLException')

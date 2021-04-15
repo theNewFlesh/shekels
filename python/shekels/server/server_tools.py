@@ -5,14 +5,17 @@ from pprint import pformat
 import base64
 import json
 import os
+import re
 import traceback
 
 from dash.exceptions import PreventUpdate
+import dash
 import flask
 import jinja2
 import jsoncomment as jsonc
 import lunchbox.tools as lbt
 
+import shekels.core.data_tools as sdt
 import shekels.server.components as svc
 # ------------------------------------------------------------------------------
 
@@ -197,3 +200,31 @@ def solve_component_state(store, config=False):
                 key_order=['error', 'message', 'code', 'traceback'],
             )
     return None
+
+
+# EVENTS------------------------------------------------------------------------
+def config_query_event(value, store, app):
+    # type: (str, dict, dash.Dash) -> dict
+    '''
+    Updates given store given a config query.
+
+    Args:
+        value (str): SQL query.
+        store (dict): Dash store.
+        app (dash.Dash): Dash app.
+
+    Returns:
+        dict: Modified store.
+    '''
+    value = value or 'select * from config'
+    value = re.sub('from config', 'from data', value, flags=re.I)
+    key = '/config/query/count'
+    store[key] = store.get(key, 0)
+    if store[key] < 1:
+        store[key] += 1
+    else:
+        try:
+            store['/config'] = sdt.query_dict(app.api.config, value)
+        except Exception as e:
+            store['/config'] = error_to_response(e).json
+    return store

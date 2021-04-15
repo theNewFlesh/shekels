@@ -4,7 +4,6 @@ from copy import copy
 from pathlib import Path
 import json
 import os
-import re
 
 from dash.dependencies import Input, Output, State
 from flask_caching import Cache
