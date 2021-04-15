@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Any, Callable
 
 from collections import deque
 from copy import deepcopy
@@ -38,7 +38,7 @@ class EventListener:
         self.state = deque([deepcopy(store)], memory)  # type: deque
 
     def listen(self, event, callback):
-        # type: (str, Callable[[object, dict, dash.Dash], dict]) -> EventListener
+        # type: (str, Callable[[Any, dict, dash.Dash], dict]) -> EventListener
         '''
         Listen for given event and call given callback.
 

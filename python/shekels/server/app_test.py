@@ -14,7 +14,11 @@ import selenium.webdriver.common.keys as sek
 
 import shekels.server.api as api
 import shekels.server.app as app
+import shekels.server.event_listener as sev
 # ------------------------------------------------------------------------------
+
+
+BUFFER = 0.02
 
 
 # TODO: Find a way to make these tests less flakey in terms of webdriver delays
@@ -37,6 +41,7 @@ def test_get_app(dash_duo, serial):
     assert result.api is api.API
     assert isinstance(result.client, flask.testing.FlaskClient)
     assert isinstance(result.cache, flask_caching.Cache)
+    assert isinstance(result.event_listener, sev.EventListener)
 
 
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
@@ -71,7 +76,7 @@ def test_on_event_update_button(dash_duo, run_app, serial):
     # click update button
     dash_duo.find_elements('#update-button')[-1].click()
     dash_duo.wait_for_element('.js-plotly-plot')
-    time.sleep(0.01)
+    time.sleep(0.01 + BUFFER)
     result = len(dash_duo.find_elements('.dash-graph.plot'))
     assert result == 6
 
@@ -113,7 +118,7 @@ def test_on_event_search_button(dash_duo, run_app, serial):
     # default tab
     dash_duo.wait_for_element('#lower-content div')
     dash_duo.find_elements('#search-button')[-1].click()
-    time.sleep(0.01)
+    time.sleep(0.01 + BUFFER)
 
     # init message
     result = dash_duo.wait_for_element('#key-value-table td:last-child > div').text
@@ -121,7 +126,7 @@ def test_on_event_search_button(dash_duo, run_app, serial):
 
     # update message
     dash_duo.find_elements('#init-button')[-1].click()
-    time.sleep(0.04)
+    time.sleep(0.04 + BUFFER)
     dash_duo.find_elements('#search-button')[-1].click()
     result = dash_duo.wait_for_element('#key-value-table td:last-child > div').text
     assert result == 'Please call update.'
@@ -168,18 +173,18 @@ def test_on_event_save_button(dash_duo, serial):
 
         # click on config tab
         dash_duo.find_elements('#tabs .tab')[2].click()
-        time.sleep(0.1)
+        time.sleep(0.1 + BUFFER)
 
         # click init
         dash_duo.find_elements('#init-button')[-1].click()
-        time.sleep(0.1)
+        time.sleep(0.1 + BUFFER)
 
         # delete config
         os.remove(config_path)
 
         # save bad config
         dash_duo.find_elements('#save-button')[-1].click()
-        time.sleep(0.1)
+        time.sleep(0.1 + BUFFER)
 
         assert config_path.is_file()
         with open(config_path) as f:
@@ -209,18 +214,18 @@ def test_on_event_save_button_error(dash_duo, serial):
 
         # click on config tab
         dash_duo.find_elements('#tabs .tab')[2].click()
-        time.sleep(0.1)
+        time.sleep(0.1 + BUFFER)
 
         # click init
         dash_duo.find_elements('#init-button')[-1].click()
-        time.sleep(0.1)
+        time.sleep(0.1 + BUFFER)
 
         # delete config
         os.remove(config_path)
 
         # save bad config
         dash_duo.find_elements('#save-button')[-1].click()
-        time.sleep(0.1)
+        time.sleep(0.1 + BUFFER)
 
         dash_duo.wait_for_element('#error')
         assert not config_path.is_file()
@@ -244,7 +249,7 @@ def test_plots_update(dash_duo, run_app, serial):
 
     # update message
     dash_duo.find_elements('#init-button')[-1].click()
-    time.sleep(0.04)
+    time.sleep(0.04 + BUFFER)
     result = dash_duo.wait_for_element('#key-value-table td:last-child > div').text
     assert result == 'Please call update.'
 
@@ -284,7 +289,7 @@ def test_datatable_update(dash_duo, run_app, serial):
 
     # update message
     dash_duo.find_elements('#init-button')[-1].click()
-    time.sleep(0.04)
+    time.sleep(0.04 + BUFFER)
     result = dash_duo.wait_for_element('#key-value-table td:last-child > div').text
     assert result == 'Please call update.'
 
@@ -302,7 +307,7 @@ def test_on_plots_datatable_error(dash_duo, run_app, serial):
 
     # click on data tab
     dash_duo.find_elements('#tabs .tab')[1].click()
-    time.sleep(0.1)
+    time.sleep(0.1 + BUFFER)
     dash_duo.wait_for_element('#key-value-table td:last-child > div').text
     dash_duo.find_elements('#init-button')[-1].click()
     dash_duo.wait_for_element('#error')
@@ -317,7 +322,7 @@ def test_on_config_update(dash_duo, run_app, serial):
 
     # click on config tab
     dash_duo.find_elements('#tabs .tab')[2].click()
-    time.sleep(0.1)
+    time.sleep(0.1 + BUFFER)
     dash_duo.wait_for_element('#config-content')
     result = dash_duo.find_element('#lower-content div')
     assert result.get_property('id') == 'config-content'
@@ -335,7 +340,7 @@ def test_on_config_search(dash_duo, run_app, serial):
 
     # click on config tab
     dash_duo.find_elements('#tabs .tab')[2].click()
-    time.sleep(0.1)
+    time.sleep(0.1 + BUFFER)
     dash_duo.wait_for_element('#config-content')
 
     # init
@@ -347,7 +352,7 @@ def test_on_config_search(dash_duo, run_app, serial):
     query.send_keys(sek.Keys.BACK_SPACE)
     query.send_keys('select * from config where key ~ color')
     dash_duo.find_elements('#config-search-button')[-1].click()
-    time.sleep(0.1)
+    time.sleep(0.1 + BUFFER)
     result = dash_duo.find_elements('#key-value-table tr')
     assert len(result) == 38
 
@@ -370,7 +375,7 @@ def test_on_config_update_error(dash_duo, run_app, serial):
 
     # click on config tab and init button
     dash_duo.find_elements('#tabs .tab')[2].click()
-    time.sleep(0.1)
+    time.sleep(0.1 + BUFFER)
     dash_duo.find_elements('#init-button')[-1].click()
     dash_duo.wait_for_element('#error')
     result = dash_duo.wait_for_element('#error tr td:last-child > div').text

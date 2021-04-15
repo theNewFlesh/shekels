@@ -17,6 +17,7 @@ import jsoncomment as jsonc
 from shekels.server.api import API
 import shekels.core.config as cfg
 import shekels.server.components as svc
+import shekels.server.event_listener as sev
 import shekels.server.server_tools as svt
 # ------------------------------------------------------------------------------
 
@@ -48,6 +49,21 @@ def get_app():
     app.api = API
     app.client = flask_app.test_client()
     app.cache = Cache(flask_app, config={'CACHE_TYPE': 'SimpleCache'})
+
+    # register event listener
+    store = {
+        '/api/search/query/count': 0,
+        '/config/query/count': 0
+    }
+    app.event_listener = sev.EventListener(app, store) \
+        .listen('config-query', svt.config_query_event) \
+        .listen('config-search-button', svt.config_query_event) \
+        .listen('query', svt.data_query_event) \
+        .listen('search-button', svt.data_query_event) \
+        .listen('init-button', svt.init_event) \
+        .listen('update-button', svt.update_event) \
+        .listen('upload', svt.upload_event) \
+        .listen('save-button', svt.save_event)
     return app
 
 
@@ -105,35 +121,13 @@ def on_event(*inputs):
     Returns:
         dict: Store data.
     '''
-    store = inputs[-1] or {
-        '/api/search/query/count': 0,
-        '/config/query/count': 0
-    }  # type: Any
+    event = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
+    value = dash.callback_context.triggered[0]['value']
+    store = APP.event_listener.store
 
-    input_ = dash.callback_context.triggered[0]
-    element = input_['prop_id'].split('.')[0]
-    value = input_['value']
-
-    if element in ['config-query', 'config-search-button']:
-        store = svt.config_query_event(value, store, APP)
-
-    elif element in ['query', 'search-button']:
-        store = svt.data_query_event(value, store, APP)
-
-    elif element == 'init-button':
-        store = svt.init_event(value, store, APP)
-
-    elif element == 'update-button':
-        if store.get('/api/initialize') is None:
-            store = svt.init_event(value, store, APP)
-        store = svt.update_event(value, store, APP)
-
-    elif element == 'upload':
-        store = svt.upload_event(value, store, APP)
-
-    elif element == 'save-button':
-        store = svt.save_event(value, store, APP)
-
+    if event == 'update-button' and store.get('/api/initialize') is None:
+        APP.event_listener.emit('init-button', None)
+    store = APP.event_listener.emit(event, value).store
     return store
 
 
