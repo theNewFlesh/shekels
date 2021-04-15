@@ -1,5 +1,6 @@
 from pathlib import Path
 from tempfile import TemporaryDirectory
+import base64
 import json
 import re
 import unittest
@@ -7,7 +8,10 @@ import unittest
 from dash.exceptions import PreventUpdate
 import dash
 import flask
+import jsoncomment as jsonc
+import lunchbox.tools as lbt
 
+import shekels.core.config as cfg
 import shekels.server.server_tools as svt
 # ------------------------------------------------------------------------------
 
@@ -315,6 +319,7 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
         expected = {
             '/api/initialize': {
                 'config': {
+                    'default_query': 'select * from data',
                     'foo': 'bar',
                     'taco': 'pizza',
                 },
@@ -348,3 +353,34 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
             '/api/search': [{'foo': 'bar'}]
         }
         self.assertEqual(result, expected)
+
+    def test_upload_event(self):
+        app = self.get_app()
+
+        config_path = lbt \
+            .relative_path(__file__, '../../../resources/test_config.json')
+        with open(config_path) as f:
+            config = jsonc.JsonComment().load(f)
+
+        value = json.dumps(config)
+        value = base64.encodebytes(value.encode('utf-8')).decode('utf-8')
+        value = 'data:application/json;base64,' + value
+
+        store = {'some': 'value'}
+
+        # good config
+        result = svt.upload_event(value, store, app)
+        expected = {
+            'some': 'value',
+            '/config': cfg.Config(config).to_primitive()
+        }
+        self.assertEqual(result, expected)
+
+        # bad config
+        config['rogue'] = 'field'
+        value = json.dumps(config)
+        value = base64.encodebytes(value.encode('utf-8')).decode('utf-8')
+        value = 'data:application/json;base64,' + value
+
+        result = svt.upload_event(value, store, app)['/config']['error']
+        self.assertEqual(result, 'DataError')

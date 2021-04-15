@@ -131,13 +131,7 @@ def on_event(*inputs):
         store = svt.update_event(value, store, APP)
 
     elif element == 'upload':
-        try:
-            config = svt.parse_json_file_content(value)
-            config = cfg.Config(config)
-            config.validate()
-            store['/config'] = config.to_primitive()
-        except Exception as error:
-            store['/config'] = svt.error_to_response(error).json
+        store = svt.upload_event(value, store, APP)
 
     elif element == 'save-button':
         try:

@@ -15,6 +15,7 @@ import jinja2
 import jsoncomment as jsonc
 import lunchbox.tools as lbt
 
+import shekels.core.config as cfg
 import shekels.core.data_tools as sdt
 import shekels.server.components as svc
 # ------------------------------------------------------------------------------
@@ -87,12 +88,12 @@ def render_template(filename, parameters, directory='../../../templates'):
 
 
 def parse_json_file_content(raw_content):
-    # type: (bytes) -> Dict
+    # type: (str) -> Dict
     '''
     Parses JSON file content as supplied by HTML request.
 
     Args:
-        raw_content (bytes): Raw JSON file content.
+        raw_content (str): Raw JSON file content.
 
     Raises:
         ValueError: If header is invalid.
@@ -101,10 +102,10 @@ def parse_json_file_content(raw_content):
     Returns:
         dict: JSON content or reponse dict with error.
     '''
-    header, content = raw_content.split(',')  # type: ignore
-    temp = header.split('/')[-1].split(';')[0]  # type: ignore
+    header, content = raw_content.split(',')
+    temp = header.split('/')[-1].split(';')[0]  # type: str
     if temp != 'json':
-        msg = f'File header is not JSON. Header: {header}.'  # type: ignore
+        msg = f'File header is not JSON. Header: {header}.'
         raise ValueError(msg)
 
     output = base64.b64decode(content).decode('utf-8')
@@ -256,12 +257,12 @@ def data_query_event(value, store, app):
 
 
 def init_event(value, store, app):
-    # type: (str, dict, dash.Dash) -> dict
+    # type: (None, dict, dash.Dash) -> dict
     '''
     Initializes app database.
 
     Args:
-        value (str): Ignored.
+        value (None): Ignored.
         store (dict): Dash store.
         app (dash.Dash): Dash app.
 
@@ -275,12 +276,12 @@ def init_event(value, store, app):
 
 
 def update_event(value, store, app):
-    # type: (str, dict, dash.Dash) -> dict
+    # type: (None, dict, dash.Dash) -> dict
     '''
     Update app database.
 
     Args:
-        value (str): Ignored.
+        value (None): Ignored.
         store (dict): Dash store.
         app (dash.Dash): Dash app.
 
@@ -294,4 +295,27 @@ def update_event(value, store, app):
         '/api/search',
         data={'query': app.api.config['default_query']}
     )
+    return store
+
+
+def upload_event(value, store, app):
+    # type: (str, dict, dash.Dash) -> dict
+    '''
+    Uploads config to app store.
+
+    Args:
+        value (str): Config.
+        store (dict): Dash store.
+        app (dash.Dash): Dash app.
+
+    Returns:
+        dict: Modified store.
+    '''
+    try:
+        config = parse_json_file_content(value)
+        config = cfg.Config(config)
+        config.validate()
+        store['/config'] = config.to_primitive()
+    except Exception as error:
+        store['/config'] = error_to_response(error).json
     return store
