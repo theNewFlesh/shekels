@@ -195,6 +195,43 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
                 .solve_component_state(store).children[-1].data[0]['value']
             self.assertEqual(result, 'FooBarError')
 
+    def get_app(self):
+        json_ = json
+
+        class Api:
+            config = {
+                'foo': 'bar',
+                'taco': 'pizza',
+            }
+
+        class Client:
+            def __init__(self, error=False):
+                self.error = error
+
+            def post(self, endpoint, json=None):
+                if endpoint == '/api/initialize':
+                    if self.error:
+                        return svt.error_to_response(ValueError('foo'))
+
+                    return flask.Response(
+                        response=json_.dumps(dict(
+                            message='Database initialized.',
+                            config=Api.config,
+                        )),
+                        mimetype='application/json'
+                    )
+
+                if endpoint == '/api/search':
+                    return flask.Response(
+                        response=json_.dumps([{'foo': 'bar'}]),
+                        mimetype='application/json'
+                    )
+
+        app = dash.Dash(name='test')
+        app.api = Api()
+        app.client = Client()
+        return app
+
     def test_config_query_event(self):
         class Api:
             config = {
@@ -204,8 +241,7 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
 
         value = None
         store = {}
-        app = dash.Dash(name='test')
-        app.api = Api()
+        app = self.get_app()
 
         # no query count
         result = svt.config_query_event(value, store, app)
@@ -234,19 +270,9 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
         self.assertEqual(result['error'], 'PandaSQLException')
 
     def test_data_query_event(self):
-        json_ = json
-
-        class Client:
-            def post(self, endpoint, json=None):
-                return flask.Response(
-                    response=json_.dumps([{'foo': 'bar'}]),
-                    mimetype='application/json'
-                )
-
         value = None
         store = {}
-        app = dash.Dash(name='test')
-        app.client = Client()
+        app = self.get_app()
 
         # no query count
         result = svt.data_query_event(value, store, app)
@@ -268,3 +294,29 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
             '/api/search/query': value,
         }
         self.assertEqual(result, expected)
+
+    def test_init_event(self):
+        value = 'ignore me'
+        app = self.get_app()
+
+        # good config
+        store = {}
+        result = svt.init_event(value, store, app)
+        expected = {
+            '/api/initialize': {
+                'config': {
+                    'foo': 'bar',
+                    'taco': 'pizza',
+                },
+                'message': 'Database initialized.'
+            }
+        }
+        self.assertEqual(result, expected)
+
+        # bad config
+        app.client.error = True
+        store = {}
+        result = svt.init_event(value, store, app)
+        expected = 'ValueError'
+        self.assertEqual(result['/api/initialize']['error'], expected)
+        self.assertEqual(result['/config']['error'], expected)

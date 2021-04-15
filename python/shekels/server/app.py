@@ -123,9 +123,7 @@ def on_event(*inputs):
         store = svt.data_query_event(value, store, APP)
 
     elif element == 'init-button':
-        svt.update_store(APP.client, store, '/api/initialize', data=config)
-        if 'error' in store['/api/initialize']:
-            store['/config'] = store['/api/initialize']
+        store = svt.init_event(value, store, APP)
 
     elif element == 'update-button':
         if store.get('/api/initialize') is None:

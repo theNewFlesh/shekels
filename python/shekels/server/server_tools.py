@@ -253,3 +253,22 @@ def data_query_event(value, store, app):
         update_store(app.client, store, '/api/search', data={'query': value})
         store['/api/search/query'] = value
     return store
+
+
+def init_event(value, store, app):
+    # type: (str, dict, dash.Dash) -> dict
+    '''
+    Initializes app database.
+
+    Args:
+        value (str): Ignored.
+        store (dict): Dash store.
+        app (dash.Dash): Dash app.
+
+    Returns:
+        dict: Modified store.
+    '''
+    update_store(app.client, store, '/api/initialize', data=app.api.config)
+    if 'error' in store['/api/initialize']:
+        store['/config'] = store['/api/initialize']
+    return store
