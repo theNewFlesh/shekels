@@ -2,7 +2,6 @@ from typing import Any, Dict, List, Tuple, Union
 
 from copy import copy
 from pathlib import Path
-import json
 import os
 
 from dash.dependencies import Input, Output, State
@@ -110,7 +109,6 @@ def on_event(*inputs):
         '/api/search/query/count': 0,
         '/config/query/count': 0
     }  # type: Any
-    config = APP.api.config  # type: Dict
 
     input_ = dash.callback_context.triggered[0]
     element = input_['prop_id'].split('.')[0]
@@ -134,14 +132,7 @@ def on_event(*inputs):
         store = svt.upload_event(value, store, APP)
 
     elif element == 'save-button':
-        try:
-            config = store['/config']
-            config = cfg.Config(config)
-            config.validate()
-            with open(APP.api.config_path, 'w') as f:
-                json.dump(config.to_primitive(), f, indent=4, sort_keys=True)
-        except Exception as error:
-            store['/config'] = svt.error_to_response(error).json
+        store = svt.save_event(value, store, APP)
 
     return store
 

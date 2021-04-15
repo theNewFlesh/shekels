@@ -384,3 +384,46 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
 
         result = svt.upload_event(value, store, app)['/config']['error']
         self.assertEqual(result, 'DataError')
+
+    def test_save_event(self):
+        app = self.get_app()
+
+        config_path = lbt \
+            .relative_path(__file__, '../../../resources/test_config.json')
+        with open(config_path) as f:
+            config = jsonc.JsonComment().load(f)
+
+        store = {'/config': config}
+        value = json.dumps(config)
+        value = base64.encodebytes(value.encode('utf-8')).decode('utf-8')
+        value = 'data:application/json;base64,' + value
+
+        with TemporaryDirectory() as root:
+            config_path = Path(root, 'config.json')
+            app.api.config_path = config_path
+
+            result = svt.save_event(value, store, app)
+            import os
+            print(os.listdir(root))
+            self.assertTrue(config_path.is_file())
+
+            with open(config_path) as f:
+                result = json.load(f)
+            self.assertEqual(result, config)
+
+    def test_save_event_error(self):
+        app = self.get_app()
+
+        config_path = lbt \
+            .relative_path(__file__, '../../../resources/test_config.json')
+        with open(config_path) as f:
+            config = jsonc.JsonComment().load(f)
+
+        config['rogue'] = 'field'
+        store = {'/config': config}
+        value = json.dumps(config)
+        value = base64.encodebytes(value.encode('utf-8')).decode('utf-8')
+        value = 'data:application/json;base64,' + value
+
+        result = svt.save_event(value, store, app)['/config']['error']
+        self.assertEqual(result, 'DataError')

@@ -9,6 +9,7 @@ import re
 import traceback
 
 from dash.exceptions import PreventUpdate
+from schematics.exceptions import DataError
 import dash
 import flask
 import jinja2
@@ -317,5 +318,28 @@ def upload_event(value, store, app):
         config.validate()
         store['/config'] = config.to_primitive()
     except Exception as error:
+        store['/config'] = error_to_response(error).json
+    return store
+
+
+def save_event(value, store, app):
+    # type: (None, dict, dash.Dash) -> dict
+    '''
+    Save store config to app.api.config path.
+
+    Args:
+        value (None): Ignore me.
+        store (dict): Dash store.
+        app (dash.Dash): Dash app.
+
+    Returns:
+        dict: Modified store.
+    '''
+    try:
+        config = store.get('/config', app.api.config)
+        cfg.Config(config).validate()
+        with open(app.api.config_path, 'w') as f:
+            json.dump(config, f, indent=4, sort_keys=True)
+    except (Exception, DataError) as error:
         store['/config'] = error_to_response(error).json
     return store
