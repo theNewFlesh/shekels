@@ -118,16 +118,7 @@ def on_event(*inputs):
     value = input_['value']
 
     if element in ['config-query', 'config-search-button']:
-        value = value or 'select * from config'
-        value = re.sub('from config', 'from data', value, flags=re.I)
-        key = '/config/query/count'
-        if store[key] < 1:
-            store[key] += 1
-        else:
-            try:
-                store['/config'] = sdt.query_dict(config, value)
-            except Exception as e:
-                store['/config'] = svt.error_to_response(e).json
+        store = svt.config_query_event(value, store, APP)
 
     elif element in ['query', 'search-button']:
         # needed to block input which is called twice on page load
