@@ -220,16 +220,10 @@ def config_query_event(value, store, app):
     '''
     value = value or 'select * from config'
     value = re.sub('from config', 'from data', value, flags=re.I)
-    key = '/config/query/count'
-    store[key] = store.get(key, 0)
-    # needed to block input which is called twice on page load
-    if store[key] < 1:
-        store[key] += 1
-    else:
-        try:
-            store['/config'] = sdt.query_dict(app.api.config, value)
-        except Exception as e:
-            store['/config'] = error_to_response(e).json
+    try:
+        store['/config'] = sdt.query_dict(app.api.config, value)
+    except Exception as e:
+        store['/config'] = error_to_response(e).json
     return store
 
 
@@ -246,14 +240,8 @@ def data_query_event(value, store, app):
     Returns:
         dict: Modified store.
     '''
-    # needed to block input which is called twice on page load
-    key = '/api/search/query/count'
-    store[key] = store.get(key, 0)
-    if store[key] < 1:
-        store[key] += 1
-    else:
-        update_store(app.client, store, '/api/search', data={'query': value})
-        store['/api/search/query'] = value
+    update_store(app.client, store, '/api/search', data={'query': value})
+    store['/api/search/query'] = value
     return store
 
 
