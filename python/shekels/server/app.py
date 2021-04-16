@@ -51,11 +51,7 @@ def get_app():
     app.cache = Cache(flask_app, config={'CACHE_TYPE': 'SimpleCache'})
 
     # register event listener
-    store = {
-        '/api/search/query/count': 0,
-        '/config/query/count': 0
-    }
-    app.event_listener = sev.EventListener(app, store) \
+    app.event_listener = sev.EventListener(app, {}) \
         .listen('config-query', svt.config_query_event) \
         .listen('config-search-button', svt.config_query_event) \
         .listen('query', svt.data_query_event) \
@@ -264,6 +260,12 @@ def run(app, config_path, debug=False, test=False):
         config = jsonc.JsonComment().load(f)
     app.api.config = config
     app.api.config_path = config_path
+    store = {
+        '/api/search/query/count': 0,
+        '/config/query/count': 0
+    }
+    app.event_listener.state.clear()
+    app.event_listener.state.append(store)
     if not test:
         app.run_server(debug=debug, host='0.0.0.0', port=5014)  # pragma: no cover
 

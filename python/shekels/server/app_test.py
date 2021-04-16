@@ -18,9 +18,6 @@ import shekels.server.event_listener as sev
 # ------------------------------------------------------------------------------
 
 
-BUFFER = 0.02
-
-
 # TODO: Find a way to make these tests less flakey in terms of webdriver delays
 def write_config(root):
     config = dict(
@@ -34,7 +31,7 @@ def write_config(root):
 
 
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
-def test_get_app(dash_duo, serial):
+def test_get_app(dash_duo):
     result = app.get_app()
     dash_duo.start_server(result)
     assert isinstance(result, dash.Dash)
@@ -56,7 +53,7 @@ def test_run():
 
 
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
-def test_stylesheet(dash_duo, run_app, serial):
+def test_stylesheet(dash_duo, run_app):
     test_app, client = run_app
     dash_duo.start_server(test_app)
     result = client.get('/stylesheet/style.css').data.decode('utf-8')
@@ -64,25 +61,25 @@ def test_stylesheet(dash_duo, run_app, serial):
 
 
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
-def test_on_event_update_button(dash_duo, run_app, serial):
+def test_on_event_update_button(dash_duo, run_app):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
 
     # click init button
     dash_duo.wait_for_element('#lower-content div')
     dash_duo.find_elements('#init-button')[-1].click()
-    dash_duo.wait_for_element('#key-value-table td:last-child > div').text
+    dash_duo.wait_for_element('#key-value-table td:last-child > div')
 
     # click update button
     dash_duo.find_elements('#update-button')[-1].click()
     dash_duo.wait_for_element('.js-plotly-plot')
-    time.sleep(0.01 + BUFFER)
+    time.sleep(0.03)
     result = len(dash_duo.find_elements('.dash-graph.plot'))
     assert result == 6
 
 
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
-def test_on_event_update_button_no_init(dash_duo, run_app, serial):
+def test_on_event_update_button_no_init(dash_duo, run_app):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
 
@@ -96,9 +93,8 @@ def test_on_event_update_button_no_init(dash_duo, run_app, serial):
     assert len(result) == 6
 
 
-@pytest.mark.flaky
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
-def test_on_event_update_button_no_init_error(dash_duo, run_app, serial):
+def test_on_event_update_button_no_init_error(dash_duo, run_app):
     test_app, _ = run_app
     test_app.api.config['columns'] = 99
     dash_duo.start_server(test_app)
@@ -111,27 +107,30 @@ def test_on_event_update_button_no_init_error(dash_duo, run_app, serial):
     assert result == 'DataError'
 
 
-@pytest.mark.flaky
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
-def test_on_event_search_button(dash_duo, run_app, serial):
+def test_on_event_search_button(dash_duo, run_app):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
 
     # default tab
     dash_duo.wait_for_element('#lower-content div')
     dash_duo.find_elements('#search-button')[-1].click()
-    time.sleep(0.01 + BUFFER)
+    time.sleep(0.03)
 
     # init message
-    result = dash_duo.wait_for_element('#key-value-table td:last-child > div').text
-    assert result == 'Please call init or update.'
+    dash_duo.wait_for_text_to_equal(
+        '#key-value-table td:last-child > div',
+        'Please call init or update.',
+    )
 
     # update message
     dash_duo.find_elements('#init-button')[-1].click()
-    time.sleep(0.04 + BUFFER)
+    time.sleep(0.1)
     dash_duo.find_elements('#search-button')[-1].click()
-    result = dash_duo.wait_for_element('#key-value-table td:last-child > div').text
-    assert result == 'Please call update.'
+    dash_duo.wait_for_text_to_equal(
+        '#key-value-table td:last-child > div',
+        'Please call update.'
+    )
 
     # click update button
     dash_duo.find_elements('#update-button')[-1].click()
@@ -154,7 +153,7 @@ def test_on_event_search_button(dash_duo, run_app, serial):
 
 
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
-def test_on_event_save_button(dash_duo, serial):
+def test_on_event_save_button(dash_duo):
     with TemporaryDirectory() as root:
         test_config_path = lbt \
             .relative_path(__file__, '../../../resources/test_config.json')
@@ -175,18 +174,18 @@ def test_on_event_save_button(dash_duo, serial):
 
         # click on config tab
         dash_duo.find_elements('#tabs .tab')[2].click()
-        time.sleep(0.1 + BUFFER)
+        time.sleep(0.1)
 
         # click init
         dash_duo.find_elements('#init-button')[-1].click()
-        time.sleep(0.1 + BUFFER)
+        time.sleep(0.1)
 
         # delete config
         os.remove(config_path)
 
         # save bad config
         dash_duo.find_elements('#save-button')[-1].click()
-        time.sleep(0.1 + BUFFER)
+        time.sleep(0.1)
 
         assert config_path.is_file()
         with open(config_path) as f:
@@ -195,7 +194,7 @@ def test_on_event_save_button(dash_duo, serial):
 
 
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
-def test_on_event_save_button_error(dash_duo, serial):
+def test_on_event_save_button_error(dash_duo):
     with TemporaryDirectory() as root:
         test_config_path = lbt \
             .relative_path(__file__, '../../../resources/test_config.json')
@@ -216,18 +215,18 @@ def test_on_event_save_button_error(dash_duo, serial):
 
         # click on config tab
         dash_duo.find_elements('#tabs .tab')[2].click()
-        time.sleep(0.1 + BUFFER)
+        time.sleep(0.1)
 
         # click init
         dash_duo.find_elements('#init-button')[-1].click()
-        time.sleep(0.1 + BUFFER)
+        time.sleep(0.1)
 
         # delete config
         os.remove(config_path)
 
         # save bad config
         dash_duo.find_elements('#save-button')[-1].click()
-        time.sleep(0.1 + BUFFER)
+        time.sleep(0.1)
 
         dash_duo.wait_for_element('#error')
         assert not config_path.is_file()
@@ -236,9 +235,8 @@ def test_on_event_save_button_error(dash_duo, serial):
 
 
 # TABS--------------------------------------------------------------------------
-@pytest.mark.flaky
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
-def test_plots_update(dash_duo, run_app, serial):
+def test_plots_update(dash_duo, run_app):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
 
@@ -247,14 +245,18 @@ def test_plots_update(dash_duo, run_app, serial):
     assert result.get_property('id') == 'plots-content'
 
     # init message
-    result = dash_duo.wait_for_element('#key-value-table td:last-child > div').text
-    assert result == 'Please call init or update.'
+    dash_duo.wait_for_text_to_equal(
+        '#key-value-table td:last-child > div',
+        'Please call init or update.',
+    )
 
     # update message
     dash_duo.find_elements('#init-button')[-1].click()
-    time.sleep(0.04 + BUFFER)
-    result = dash_duo.wait_for_element('#key-value-table td:last-child > div').text
-    assert result == 'Please call update.'
+    time.sleep(0.06)
+    dash_duo.wait_for_text_to_equal(
+        '#key-value-table td:last-child > div',
+        'Please call update.',
+    )
 
     # content
     dash_duo.find_elements('#update-button')[-1].click()
@@ -262,14 +264,13 @@ def test_plots_update(dash_duo, run_app, serial):
     assert result == 6
 
 
-@pytest.mark.flaky
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
-def test_on_plots_update_error(dash_duo, run_app, serial):
+def test_on_plots_update_error(dash_duo, run_app):
     test_app, _ = run_app
     test_app.api.config['columns'] = 99
     dash_duo.start_server(test_app)
 
-    dash_duo.wait_for_element('#key-value-table td:last-child > div').text
+    dash_duo.wait_for_element('#key-value-table td:last-child > div')
     dash_duo.find_elements('#init-button')[-1].click()
     dash_duo.wait_for_element('#error')
     result = dash_duo.wait_for_element('#error tr td:last-child > div').text
@@ -277,7 +278,7 @@ def test_on_plots_update_error(dash_duo, run_app, serial):
 
 
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
-def test_datatable_update(dash_duo, run_app, serial):
+def test_datatable_update(dash_duo, run_app):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
 
@@ -293,9 +294,11 @@ def test_datatable_update(dash_duo, run_app, serial):
 
     # update message
     dash_duo.find_elements('#init-button')[-1].click()
-    time.sleep(0.04 + BUFFER)
-    result = dash_duo.wait_for_element('#key-value-table td:last-child > div').text
-    assert result == 'Please call update.'
+    time.sleep(0.1)
+    dash_duo.wait_for_text_to_equal(
+        '#key-value-table td:last-child > div',
+        'Please call update.',
+    )
 
     # content
     dash_duo.find_elements('#update-button')[-1].click()
@@ -312,7 +315,7 @@ def test_on_plots_datatable_error(dash_duo, run_app):
     # click on data tab
     dash_duo.find_elements('#tabs .tab')[1].click()
     time.sleep(1)
-    dash_duo.wait_for_element('#key-value-table td:last-child > div').text
+    dash_duo.wait_for_element('#key-value-table td:last-child > div')
     dash_duo.find_elements('#init-button')[-1].click()
     time.sleep(1)
     dash_duo.wait_for_element('#error')
@@ -321,31 +324,32 @@ def test_on_plots_datatable_error(dash_duo, run_app):
 
 
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
-def test_on_config_update(dash_duo, run_app, serial):
+def test_on_config_update(dash_duo, run_app):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
 
     # click on config tab
     dash_duo.find_elements('#tabs .tab')[2].click()
-    time.sleep(0.1 + BUFFER)
+    time.sleep(0.12)
     dash_duo.wait_for_element('#config-content')
     result = dash_duo.find_element('#lower-content div')
     assert result.get_property('id') == 'config-content'
 
     # content
     dash_duo.find_elements('#init-button')[-1].click()
+    time.sleep(0.1)
     result = dash_duo.find_elements('#key-value-table tr')
     assert len(result) == 117
 
 
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
-def test_on_config_search(dash_duo, run_app, serial):
+def test_on_config_search(dash_duo, run_app):
     test_app, _ = run_app
     dash_duo.start_server(test_app)
 
     # click on config tab
     dash_duo.find_elements('#tabs .tab')[2].click()
-    time.sleep(0.1 + BUFFER)
+    time.sleep(0.1)
     dash_duo.wait_for_element('#config-content')
 
     # init
@@ -357,7 +361,7 @@ def test_on_config_search(dash_duo, run_app, serial):
     query.send_keys(sek.Keys.BACK_SPACE)
     query.send_keys('select * from config where key ~ color')
     dash_duo.find_elements('#config-search-button')[-1].click()
-    time.sleep(0.1 + BUFFER)
+    time.sleep(0.1)
     result = dash_duo.find_elements('#key-value-table tr')
     assert len(result) == 38
 
@@ -373,14 +377,14 @@ def test_on_config_search(dash_duo, run_app, serial):
 
 
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
-def test_on_config_update_error(dash_duo, run_app, serial):
+def test_on_config_update_error(dash_duo, run_app):
     test_app, _ = run_app
     test_app.api.config['columns'] = 99
     dash_duo.start_server(test_app)
 
     # click on config tab and init button
     dash_duo.find_elements('#tabs .tab')[2].click()
-    time.sleep(0.1 + BUFFER)
+    time.sleep(0.1)
     dash_duo.find_elements('#init-button')[-1].click()
     dash_duo.wait_for_element('#error')
     result = dash_duo.wait_for_element('#error tr td:last-child > div').text

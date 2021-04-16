@@ -15,8 +15,6 @@ def pytest_setup_options():
     '''
     options = Options()
     options.add_argument('--no-sandbox')
-    # options.add_argument('--disable-gpu')
-    # options.binary_location = "/usr/bin/chromium-browser"
     return options
 
 
@@ -32,18 +30,3 @@ def run_app():
     logging.getLogger('werkzeug').setLevel(logging.ERROR)
     app.run(app.APP, config_path, debug=False, test=True)
     yield app.APP, app.APP.client
-
-
-@pytest.fixture(autouse=True)
-def serial(request):
-    '''
-    Pytest fixture that forces decorated tests to run in parallel.
-
-    Code copied from:
-    https://github.com/pytest-dev/pytest-xdist/issues/385
-    '''
-    if request.node.get_closest_marker("sequential"):
-        with FileLock("semaphore.lock"):
-            yield
-    else:
-        yield
