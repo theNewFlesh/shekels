@@ -257,14 +257,14 @@ def get_button(title):
     return html.Button(id=f'{title}-button', children=[title], n_clicks=0)
 
 
-def get_key_value_table(data, id_='', header='', editable=False, key_order=None):
+def get_key_value_table(data, id_='key-value', header='', editable=False, key_order=None):
     # type (dict, Optional(str), str, bool, Optional(List[str])) -> DataTable
     '''
     Gets a Dash DataTable element representing given dictionary.
 
     Args:
         data (dict): Dictionary.
-        id_ (str, optional): CSS id. Default: ''.
+        id_ (str, optional): CSS id. Default: 'key-value'.
         header (str, optional): Table header title. Default: ''.
         editable (bool, optional): Whether table is editable. Default: False.
         key_order (list[str], optional): Order in which keys will be displayed.
@@ -299,7 +299,7 @@ def get_key_value_table(data, id_='', header='', editable=False, key_order=None)
     table = dash_table.DataTable(
         data=data,
         columns=cols,
-        id='key-value-table',
+        id=f'{id_}-table',
         sort_action='native',
         sort_mode='multi',
         cell_selectable=editable,

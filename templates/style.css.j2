@@ -562,18 +562,24 @@ button:active {
 }
 
 #datatable .dash-spreadsheet,
-#key-value-table .dash-spreadsheet {
+#config-table .dash-spreadsheet,
+#status-table .dash-spreadsheet,
+#error-table .dash-spreadsheet {
     max-height: unset;
 }
 
 /* header */
 #datatable .row.row-0,
-#key-value-table .row.row-0 {
+#config-table .row.row-0,
+#status-table .row.row-0,
+#error-table .row.row-0 {
     min-height: 0px !important;
 }
 
 #datatable .dash-header,
-#key-value-table .dash-header {
+#config-table .dash-header,
+#status-table .dash-header,
+#error-table .dash-header {
     color: {{ COLOR_SCHEME['light2'] }};
     background: {{ COLOR_SCHEME['bg'] }};
     font-weight: bold;
@@ -586,7 +592,9 @@ button:active {
 
 /* body */
 #datatable .dt-table-container__row-1,
-#key-value-table .dt-table-container__row-1 {
+#config-table .dt-table-container__row-1,
+#status-table .dt-table-container__row-1,
+#error-table .dt-table-container__row-1 {
     z-index: 0;
     max-width: 100%;
     overflow-x: auto;
@@ -599,18 +607,24 @@ button:active {
 }
 
 #datatable tr:nth-child(even) td.dash-cell,
-#key-value-table tr:nth-child(even) td.dash-cell {
+#config-table tr:nth-child(even) td.dash-cell,
+#status-table tr:nth-child(even) td.dash-cell,
+#error-table tr:nth-child(even) td.dash-cell {
     background: {{ COLOR_SCHEME['bg'] }} !important;
 }
 
 #datatable tr:nth-child(odd) td.dash-cell,
-#key-value-table tr:nth-child(odd) td.dash-cell {
+#config-table tr:nth-child(odd) td.dash-cell,
+#status-table tr:nth-child(odd) td.dash-cell,
+#error-table tr:nth-child(odd) td.dash-cell {
     background: {{ COLOR_SCHEME['grey1'] }} !important;
 }
 
 /* cell */
 #datatable td.dash-cell,
-#key-value-table td.dash-cell {
+#config-table td.dash-cell,
+#status-table td.dash-cell,
+#error-table td.dash-cell {
     color: {{ COLOR_SCHEME['light2'] }};
     height: auto;
     width: auto;
@@ -623,20 +637,28 @@ button:active {
 }
 
 #datatable td.dash-cell.cell--selecte,
-#key-value-table td.dash-cell.cell--selected,
+#config-table td.dash-cell.cell--selected,
+#status-table td.dash-cell.cell--selected,
+#error-table td.dash-cell.cell--selected,
 #datatable td.dash-cell.cell--selected.focused,
-#key-value-table td.dash-cell.cell--selected.focused {
+#config-table td.dash-cell.cell--selected.focused,
+#status-table td.dash-cell.cell--selected.focused,
+#error-table td.dash-cell.cell--selected.focused {
     background: {{ COLOR_SCHEME['grey2'] }} !important;
 }
 
 #datatable .input-active,
-#key-value-table .input-active {
+#config-table .input-active,
+#status-table .input-active,
+#error-table .input-active {
     color: {{ COLOR_SCHEME['green2'] }} !important;
     text-align: left !important;
 }
 
 #datatable .dash-cell div.dash-cell-value,
-#key-value-table .dash-cell div.dash-cell-value {
+#config-table .dash-cell div.dash-cell-value,
+#status-table .dash-cell div.dash-cell-value,
+#error-table .dash-cell div.dash-cell-value {
     display: inline;
     white-space: inherit;
     overflow: inherit;
@@ -644,14 +666,18 @@ button:active {
 }
 
 #datatable .dash-cell.focused,
-#key-value-table .dash-cell.focused {
+#config-table .dash-cell.focused,
+#status-table .dash-cell.focused,
+#error-table .dash-cell.focused {
     background: {{ COLOR_SCHEME['grey2'] }} !important;
     color: {{ COLOR_SCHEME['green2'] }} !important;
     border: 0px solid {{ COLOR_SCHEME['bg'] }} !important;
 }
 
 #datatable .dash-filter input,
-#key-value-table .dash-filter input {
+#config-table .dash-filter input,
+#status-table .dash-filter input,
+#error-table .dash-filter input {
     color: {{ COLOR_SCHEME['green2'] }};
     padding: 0px 5px 0px 5px;
     border-left: 1px solid {{ COLOR_SCHEME['grey1'] }};
@@ -659,28 +685,38 @@ button:active {
 }
 
 #datatable .sort,
-#key-value-table .sort {
+#config-table .sort,
+#status-table .sort,
+#error-table .sort {
     color: {{ COLOR_SCHEME['green2'] }};
     transform: translateY(-6px);
 }
 
 #datatable .previous-page,
-#key-value-table .previous-page {
+#config-table .previous-page,
+#status-table .previous-page,
+#error-table .previous-page {
     border-right: 3px solid {{ COLOR_SCHEME['bg'] }};
 }
 
 #datatable .dash-delete-cell,
-#key-value-table .dash-delete-cell {
+#config-table .dash-delete-cell,
+#status-table .dash-delete-cell,
+#error-table .dash-delete-cell {
     color: {{ COLOR_SCHEME['green2'] }} !important;
 }
 
 #datatable .dash-delete-cell:hover,
-#key-value-table .dash-delete-cell:hover {
+#config-table .dash-delete-cell:hover,
+#status-table .dash-delete-cell:hover,
+#error-table .dash-delete-cell:hover {
     color: {{ COLOR_SCHEME['red2'] }} !important;
 }
 
 #datatable .dash-spreadsheet-container .dash-spreadsheet-inner table,
-#key-value-table .dash-spreadsheet-container .dash-spreadsheet-inner table {
+#config-table .dash-spreadsheet-container .dash-spreadsheet-inner table,
+#status-table .dash-spreadsheet-container .dash-spreadsheet-inner table,
+#error-table .dash-spreadsheet-container .dash-spreadsheet-inner table {
     border-collapse: collapse;
     font-family: monospace;
     --accent: transparent  !important;
@@ -697,12 +733,16 @@ button:active {
 
 /* paginator */
 #datatable .page-number,
-#key-value-table .page-number {
+#config-table .page-number,
+#status-table .page-number,
+#error-table .page-number {
     color: {{ COLOR_SCHEME['light1'] }};
 }
 
 #datatable input,
-#key-value-table input {
+#config-table input,
+#status-table input,
+#error-table input {
     color: {{ COLOR_SCHEME['green2'] }} !important;
     background: {{ COLOR_SCHEME['grey2'] }} !important;
     border: 0px !important;
@@ -711,13 +751,17 @@ button:active {
 }
 
 #datatable .previous-next-container button,
-#key-value-table .previous-next-container button {
+#config-table .previous-next-container button,
+#status-table .previous-next-container button,
+#error-table .previous-next-container button {
     color: {{ COLOR_SCHEME['light2'] }};
     background: {{ COLOR_SCHEME['grey1'] }};
 }
 
 #datatable .previous-next-container button:hover,
-#key-value-table .previous-next-container button:hover {
+#config-table .previous-next-container button:hover,
+#status-table .previous-next-container button:hover,
+#error-table .previous-next-container button:hover {
     color: {{ COLOR_SCHEME['green2'] }};
     background: {{ COLOR_SCHEME['grey2'] }};
 }
@@ -730,7 +774,9 @@ button:active {
     border-bottom: 2px solid {{ COLOR_SCHEME['green2'] }};
 }
 
-#key-value-table tr:first-child {
+#config-table tr:first-child,
+#status-table tr:first-child,
+#error-table tr:first-child {
     display: none;
 }
 
@@ -743,13 +789,19 @@ button:active {
     text-align: center;
 }
 
-#key-value-table td.dash-cell:first-child {
+#config-table td.dash-cell:first-child,
+#status-table td.dash-cell:first-child,
+#error-table td.dash-cell:first-child {
     color: {{ COLOR_SCHEME['light1'] }};
     border-right: 2px solid {{ COLOR_SCHEME['green2'] }} !important;
 }
 
-#key-value-table td.dash-cell:first-child,
-#key-value-table td.dash-cell:first-child .input-active {
+#config-table td.dash-cell:first-child,
+#config-table td.dash-cell:first-child .input-active,
+#status-table td.dash-cell:first-child,
+#status-table td.dash-cell:first-child .input-active,
+#error-table td.dash-cell:first-child,
+#error-table td.dash-cell:first-child .input-active {
     text-align: right !important;
 }
 

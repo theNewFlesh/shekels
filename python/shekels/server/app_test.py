@@ -68,7 +68,7 @@ def test_on_event_update_button(dash_duo, run_app):
     # click init button
     dash_duo.wait_for_element('#lower-content div')
     dash_duo.find_elements('#init-button')[-1].click()
-    dash_duo.wait_for_element('#key-value-table td:last-child > div')
+    dash_duo.wait_for_element('#status-table td:last-child > div')
 
     # click update button
     dash_duo.find_elements('#update-button')[-1].click()
@@ -119,7 +119,7 @@ def test_on_event_search_button(dash_duo, run_app):
 
     # init message
     dash_duo.wait_for_text_to_equal(
-        '#key-value-table td:last-child > div',
+        '#status-table td:last-child > div',
         'Please call init or update.',
     )
 
@@ -128,7 +128,7 @@ def test_on_event_search_button(dash_duo, run_app):
     time.sleep(0.1)
     dash_duo.find_elements('#search-button')[-1].click()
     dash_duo.wait_for_text_to_equal(
-        '#key-value-table td:last-child > div',
+        '#status-table td:last-child > div',
         'Please call update.'
     )
 
@@ -246,7 +246,7 @@ def test_plots_update(dash_duo, run_app):
 
     # init message
     dash_duo.wait_for_text_to_equal(
-        '#key-value-table td:last-child > div',
+        '#status-table td:last-child > div',
         'Please call init or update.',
     )
 
@@ -254,7 +254,7 @@ def test_plots_update(dash_duo, run_app):
     dash_duo.find_elements('#init-button')[-1].click()
     time.sleep(0.06)
     dash_duo.wait_for_text_to_equal(
-        '#key-value-table td:last-child > div',
+        '#status-table td:last-child > div',
         'Please call update.',
     )
 
@@ -270,7 +270,7 @@ def test_on_plots_update_error(dash_duo, run_app):
     test_app.api.config['columns'] = 99
     dash_duo.start_server(test_app)
 
-    dash_duo.wait_for_element('#key-value-table td:last-child > div')
+    dash_duo.wait_for_element('#status-table td:last-child > div')
     dash_duo.find_elements('#init-button')[-1].click()
     dash_duo.wait_for_element('#error')
     result = dash_duo.wait_for_element('#error tr td:last-child > div').text
@@ -285,19 +285,19 @@ def test_datatable_update(dash_duo, run_app):
     # click on data tab
     dash_duo.find_elements('#tabs .tab')[1].click()
     time.sleep(0.01)
-    dash_duo.wait_for_element('#key-value-table')
+    dash_duo.wait_for_element('#status-table')
     result = dash_duo.find_element('#lower-content div')
     assert result.get_property('id') == 'table-content'
 
     # init message
-    result = dash_duo.find_element('#key-value-table td:last-child > div').text
+    result = dash_duo.find_element('#status-table td:last-child > div').text
     assert result == 'Please call init or update.'
 
     # update message
     dash_duo.find_elements('#init-button')[-1].click()
     time.sleep(0.1)
     dash_duo.wait_for_text_to_equal(
-        '#key-value-table td:last-child > div',
+        '#status-table td:last-child > div',
         'Please call update.',
     )
 
@@ -316,7 +316,7 @@ def test_on_plots_datatable_error(dash_duo, run_app):
     # click on data tab
     dash_duo.find_elements('#tabs .tab')[1].click()
     time.sleep(1)
-    dash_duo.wait_for_element('#key-value-table td:last-child > div')
+    dash_duo.wait_for_element('#status-table td:last-child > div')
     dash_duo.find_elements('#init-button')[-1].click()
     time.sleep(1)
     dash_duo.wait_for_element('#error')
@@ -339,7 +339,7 @@ def test_on_config_update(dash_duo, run_app):
     # content
     dash_duo.find_elements('#init-button')[-1].click()
     time.sleep(0.1)
-    result = dash_duo.find_elements('#key-value-table tr')
+    result = dash_duo.find_elements('#config-table tr')
     assert len(result) == 117
 
 
@@ -363,7 +363,7 @@ def test_on_config_search(dash_duo, run_app):
     query.send_keys('select * from config where key ~ color')
     dash_duo.find_elements('#config-search-button')[-1].click()
     time.sleep(0.1)
-    result = dash_duo.find_elements('#key-value-table tr')
+    result = dash_duo.find_elements('#config-table tr')
     assert len(result) == 38
 
     # search error
