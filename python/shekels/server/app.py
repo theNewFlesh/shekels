@@ -220,15 +220,15 @@ def on_get_tab(tab, store):
     store = store or {}
 
     if tab == 'plots':
-        query = store.get('query', APP.api.config['default_query'])
+        query = store.get('/api/search/query', APP.api.config['default_query'])
         return svc.get_plots_tab(query)
 
     elif tab == 'data':
-        query = store.get('query', APP.api.config['default_query'])
+        query = store.get('/api/search/query', APP.api.config['default_query'])
         return svc.get_data_tab(query)
 
     elif tab == 'config':
-        config = store.get('config', APP.api.config)
+        config = store.get('/config', APP.api.config)
         return svc.get_config_tab(config)
 
     elif tab == 'api':  # pragma: no cover
