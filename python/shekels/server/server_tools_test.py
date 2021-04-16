@@ -377,8 +377,6 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
             app.api.config_path = config_path
 
             result = svt.save_event(value, store, app)
-            import os
-            print(os.listdir(root))
             self.assertTrue(config_path.is_file())
 
             with open(config_path) as f:
