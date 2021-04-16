@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.9.8
+                0.10.0
               </div>
             
           
@@ -168,9 +168,7 @@
 
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
 
 <span class="kn">from</span> <span class="nn">dash.dependencies</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">State</span>
 <span class="kn">from</span> <span class="nn">flask_caching</span> <span class="kn">import</span> <span class="n">Cache</span>
@@ -184,8 +182,8 @@
 
 <span class="kn">from</span> <span class="nn">shekels.server.api</span> <span class="kn">import</span> <span class="n">API</span>
 <span class="kn">import</span> <span class="nn">shekels.core.config</span> <span class="k">as</span> <span class="nn">cfg</span>
-<span class="kn">import</span> <span class="nn">shekels.core.data_tools</span> <span class="k">as</span> <span class="nn">sdt</span>
 <span class="kn">import</span> <span class="nn">shekels.server.components</span> <span class="k">as</span> <span class="nn">svc</span>
+<span class="kn">import</span> <span class="nn">shekels.server.event_listener</span> <span class="k">as</span> <span class="nn">sev</span>
 <span class="kn">import</span> <span class="nn">shekels.server.server_tools</span> <span class="k">as</span> <span class="nn">svt</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
@@ -217,60 +215,21 @@
     <span class="n">app</span><span class="o">.</span><span class="n">api</span> <span class="o">=</span> <span class="n">API</span>
     <span class="n">app</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">flask_app</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span>
     <span class="n">app</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="n">Cache</span><span class="p">(</span><span class="n">flask_app</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;CACHE_TYPE&#39;</span><span class="p">:</span> <span class="s1">&#39;SimpleCache&#39;</span><span class="p">})</span>
+
+    <span class="c1"># register event listener</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">event_listener</span> <span class="o">=</span> <span class="n">sev</span><span class="o">.</span><span class="n">EventListener</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="p">{})</span> \
+        <span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="s1">&#39;config-query&#39;</span><span class="p">,</span> <span class="n">svt</span><span class="o">.</span><span class="n">config_query_event</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="s1">&#39;config-search-button&#39;</span><span class="p">,</span> <span class="n">svt</span><span class="o">.</span><span class="n">config_query_event</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="n">svt</span><span class="o">.</span><span class="n">data_query_event</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="s1">&#39;search-button&#39;</span><span class="p">,</span> <span class="n">svt</span><span class="o">.</span><span class="n">data_query_event</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="s1">&#39;init-button&#39;</span><span class="p">,</span> <span class="n">svt</span><span class="o">.</span><span class="n">init_event</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="s1">&#39;update-button&#39;</span><span class="p">,</span> <span class="n">svt</span><span class="o">.</span><span class="n">update_event</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="s1">&#39;upload&#39;</span><span class="p">,</span> <span class="n">svt</span><span class="o">.</span><span class="n">upload_event</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="s1">&#39;save-button&#39;</span><span class="p">,</span> <span class="n">svt</span><span class="o">.</span><span class="n">save_event</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">app</span></div>
 
 
 <span class="n">APP</span> <span class="o">=</span> <span class="n">get_app</span><span class="p">()</span>
-
-
-<div class="viewcode-block" id="solve_component_state"><a class="viewcode-back" href="../../../server.html#shekels.server.app.solve_component_state">[docs]</a><span class="k">def</span> <span class="nf">solve_component_state</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="c1"># type (dict) -&gt; Optional(html.Div)</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Solves what component to return given the state of the given store.</span>
-
-<span class="sd">    Returns a key value card component embedded with a relevant message or error</span>
-<span class="sd">    if a required key is not found in the store, or it contain a dictionary with</span>
-<span class="sd">    am &quot;error&quot; key in it. Those required keys are as follows:</span>
-
-<span class="sd">        * /config</span>
-<span class="sd">        * /api/initialize</span>
-<span class="sd">        * /api/update</span>
-<span class="sd">        * /api/search</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        store (dict): Dash store.</span>
-<span class="sd">        config (bool, optional): Whether the component is for the config tab.</span>
-<span class="sd">            Default: False.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        Div: Key value card if store values are not present or have errors,</span>
-<span class="sd">            otherwise, none.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">states</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
-        <span class="p">[</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="s1">&#39;Please call init or update.&#39;</span><span class="p">],</span>
-        <span class="p">[</span><span class="s1">&#39;/api/update&#39;</span><span class="p">,</span> <span class="s1">&#39;Please call update.&#39;</span><span class="p">],</span>
-        <span class="p">[</span><span class="s1">&#39;/api/search&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
-    <span class="p">]</span>
-    <span class="k">if</span> <span class="n">config</span><span class="p">:</span>
-        <span class="n">states</span> <span class="o">=</span> <span class="n">states</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
-        <span class="n">states</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">message</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">svc</span><span class="o">.</span><span class="n">get_key_value_table</span><span class="p">(</span>
-                <span class="p">{</span><span class="s1">&#39;action&#39;</span><span class="p">:</span> <span class="n">message</span><span class="p">},</span>
-                <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">,</span>
-                <span class="n">header</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">svc</span><span class="o">.</span><span class="n">get_key_value_table</span><span class="p">(</span>
-                <span class="n">value</span><span class="p">,</span>
-                <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span>
-                <span class="n">header</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span>
-                <span class="n">key_order</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="s1">&#39;code&#39;</span><span class="p">,</span> <span class="s1">&#39;traceback&#39;</span><span class="p">],</span>
-            <span class="p">)</span>
-    <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="serve_stylesheet"><a class="viewcode-back" href="../../../server.html#shekels.server.app.serve_stylesheet">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/static/&lt;stylesheet&gt;&#39;</span><span class="p">)</span>
@@ -324,76 +283,13 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        dict: Store data.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">store</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="p">{</span>
-        <span class="s1">&#39;/api/search/query/count&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s1">&#39;/config/query/count&#39;</span><span class="p">:</span> <span class="mi">0</span>
-    <span class="p">}</span>  <span class="c1"># type: Any</span>
-    <span class="n">config</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config</span>  <span class="c1"># type: Dict</span>
+    <span class="n">event</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">callback_context</span><span class="o">.</span><span class="n">triggered</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;prop_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">callback_context</span><span class="o">.</span><span class="n">triggered</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">event_listener</span><span class="o">.</span><span class="n">store</span>
 
-    <span class="n">input_</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">callback_context</span><span class="o">.</span><span class="n">triggered</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">element</span> <span class="o">=</span> <span class="n">input_</span><span class="p">[</span><span class="s1">&#39;prop_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">value</span> <span class="o">=</span> <span class="n">input_</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
-
-    <span class="k">if</span> <span class="n">element</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;config-query&#39;</span><span class="p">,</span> <span class="s1">&#39;config-search-button&#39;</span><span class="p">]:</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="ow">or</span> <span class="s1">&#39;select * from config&#39;</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;from config&#39;</span><span class="p">,</span> <span class="s1">&#39;from data&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
-        <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;/config/query/count&#39;</span>
-        <span class="k">if</span> <span class="n">store</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">store</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sdt</span><span class="o">.</span><span class="n">query_dict</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">svt</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
-
-    <span class="k">elif</span> <span class="n">element</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="s1">&#39;search-button&#39;</span><span class="p">]:</span>
-        <span class="c1"># needed to block input which is called twice on page load</span>
-        <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;/api/search/query/count&#39;</span>
-        <span class="k">if</span> <span class="n">store</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">store</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">svt</span><span class="o">.</span><span class="n">update_store</span><span class="p">(</span>
-                <span class="n">APP</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/search&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">}</span>
-            <span class="p">)</span>
-            <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/search/query&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-
-    <span class="k">elif</span> <span class="n">element</span> <span class="o">==</span> <span class="s1">&#39;init-button&#39;</span><span class="p">:</span>
-        <span class="n">svt</span><span class="o">.</span><span class="n">update_store</span><span class="p">(</span><span class="n">APP</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">]:</span>
-            <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">]</span>
-
-    <span class="k">elif</span> <span class="n">element</span> <span class="o">==</span> <span class="s1">&#39;update-button&#39;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">svt</span><span class="o">.</span><span class="n">update_store</span><span class="p">(</span><span class="n">APP</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">]:</span>
-                <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">]</span>
-        <span class="n">svt</span><span class="o">.</span><span class="n">update_store</span><span class="p">(</span><span class="n">APP</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/update&#39;</span><span class="p">)</span>
-        <span class="n">svt</span><span class="o">.</span><span class="n">update_store</span><span class="p">(</span>
-            <span class="n">APP</span><span class="o">.</span><span class="n">client</span><span class="p">,</span>
-            <span class="n">store</span><span class="p">,</span>
-            <span class="s1">&#39;/api/search&#39;</span><span class="p">,</span>
-            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default_query&#39;</span><span class="p">]}</span>
-        <span class="p">)</span>
-
-    <span class="k">elif</span> <span class="n">element</span> <span class="o">==</span> <span class="s1">&#39;upload&#39;</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">config</span> <span class="o">=</span> <span class="n">svt</span><span class="o">.</span><span class="n">parse_json_file_content</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-            <span class="n">config</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
-            <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">to_primitive</span><span class="p">()</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-            <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">svt</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
-
-    <span class="k">elif</span> <span class="n">element</span> <span class="o">==</span> <span class="s1">&#39;save-button&#39;</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">config</span> <span class="o">=</span> <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span>
-            <span class="n">config</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">APP</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">to_primitive</span><span class="p">(),</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-            <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">svt</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
-
+    <span class="k">if</span> <span class="n">event</span> <span class="o">==</span> <span class="s1">&#39;update-button&#39;</span> <span class="ow">and</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">APP</span><span class="o">.</span><span class="n">event_listener</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="s1">&#39;init-button&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">event_listener</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">store</span>
     <span class="k">return</span> <span class="n">store</span></div>
 
 
@@ -413,7 +309,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        list[dcc.Graph]: Plots.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">comp</span> <span class="o">=</span> <span class="n">solve_component_state</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
+    <span class="n">comp</span> <span class="o">=</span> <span class="n">svt</span><span class="o">.</span><span class="n">solve_component_state</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">comp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">comp</span>
     <span class="n">plots</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">APP</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plots&#39;</span><span class="p">,</span> <span class="p">[])</span>
@@ -436,7 +332,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        DataTable: Dash DataTable.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">comp</span> <span class="o">=</span> <span class="n">solve_component_state</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
+    <span class="n">comp</span> <span class="o">=</span> <span class="n">svt</span><span class="o">.</span><span class="n">solve_component_state</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">comp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">comp</span>
     <span class="k">return</span> <span class="n">svc</span><span class="o">.</span><span class="n">get_datatable</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/search&#39;</span><span class="p">][</span><span class="s1">&#39;response&#39;</span><span class="p">])</span></div>
@@ -459,7 +355,7 @@
 <span class="sd">        flask.Response: Response.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/config&#39;</span><span class="p">,</span> <span class="n">APP</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
-    <span class="n">comp</span> <span class="o">=</span> <span class="n">solve_component_state</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">comp</span> <span class="o">=</span> <span class="n">svt</span><span class="o">.</span><span class="n">solve_component_state</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">comp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">comp</span>
     <span class="k">return</span> <span class="n">svc</span><span class="o">.</span><span class="n">get_key_value_table</span><span class="p">(</span>
@@ -530,6 +426,12 @@
         <span class="n">config</span> <span class="o">=</span> <span class="n">jsonc</span><span class="o">.</span><span class="n">JsonComment</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
     <span class="n">app</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config_path</span> <span class="o">=</span> <span class="n">config_path</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;/api/search/query/count&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s1">&#39;/config/query/count&#39;</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="p">}</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">event_listener</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">event_listener</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">test</span><span class="p">:</span>
         <span class="n">app</span><span class="o">.</span><span class="n">run_server</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5014</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span></div>
 

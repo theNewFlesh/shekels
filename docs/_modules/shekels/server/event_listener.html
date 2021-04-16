@@ -1,0 +1,300 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>shekels.server.event_listener &mdash; shekels  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> shekels
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.10.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../enforce.html">enforce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">shekels</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>shekels.server.event_listener</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for shekels.server.event_listener</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">lunchbox.enforce</span> <span class="kn">import</span> <span class="n">Enforce</span>
+<span class="kn">import</span> <span class="nn">dash</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="EventListener"><a class="viewcode-back" href="../../../server.html#shekels.server.event_listener.EventListener">[docs]</a><span class="k">class</span> <span class="nc">EventListener</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Listens for Dash app events and calls registered callbacks.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="EventListener.__init__"><a class="viewcode-back" href="../../../server.html#shekels.server.event_listener.EventListener.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="c1"># type: (dash.Dash, dict, int) -&gt; None</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Constructs EventListener.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            app (dash.Dash): Dash application instance.</span>
+<span class="sd">            store (dict): Dash store.</span>
+<span class="sd">            memory (int, optional): Number of state changes to remember.</span>
+<span class="sd">                Default: 10.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            EnforceError: If app is not an instance of dash.Dash.</span>
+<span class="sd">            EnforceError: If app is not an instance of dict.</span>
+<span class="sd">            EnforceError: If memory is less than 1.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">Enforce</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s1">&#39;instance of&#39;</span><span class="p">,</span> <span class="n">dash</span><span class="o">.</span><span class="n">Dash</span><span class="p">)</span>
+        <span class="n">Enforce</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="s1">&#39;instance of&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Memory must be greater or equal to </span><span class="si">{b}</span><span class="s1">. </span><span class="si">{a}</span><span class="s1"> &lt; </span><span class="si">{b}</span><span class="s1">.&#39;</span>
+        <span class="n">Enforce</span><span class="p">(</span><span class="n">memory</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+        <span class="c1"># ----------------------------------------------------------------------</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_app</span> <span class="o">=</span> <span class="n">app</span>  <span class="c1"># type: dash.Dash</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: dict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">store</span><span class="p">)],</span> <span class="n">memory</span><span class="p">)</span>  <span class="c1"># type: deque</span></div>
+
+<div class="viewcode-block" id="EventListener.listen"><a class="viewcode-back" href="../../../server.html#shekels.server.event_listener.EventListener.listen">[docs]</a>    <span class="k">def</span> <span class="nf">listen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+        <span class="c1"># type: (str, Callable[[Any, dict, dash.Dash], dict]) -&gt; EventListener</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Listen for given event and call given callback.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            event (str): Event name.</span>
+<span class="sd">            callback (function): Function of form (value, store, app) -&gt; store.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            EnforceError: If event is not a string.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            EventListener: self.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Event name must be a string. </span><span class="si">{a}</span><span class="s1"> is not a string.&#39;</span>
+        <span class="n">Enforce</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="s1">&#39;instance of&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="n">event</span><span class="p">]</span> <span class="o">=</span> <span class="n">callback</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="EventListener.emit"><a class="viewcode-back" href="../../../server.html#shekels.server.event_listener.EventListener.emit">[docs]</a>    <span class="k">def</span> <span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="c1"># type: (str, object) -&gt; EventListener</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Call a registered callback guven an event and value.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            event (str): Event name.</span>
+<span class="sd">            value (object): Value to be given to callback.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            EnforceError: If event is not a string.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            EventListener: self.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Event name must be a string. </span><span class="si">{a}</span><span class="s1"> is not a string.&#39;</span>
+        <span class="n">Enforce</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="s1">&#39;instance of&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
+            <span class="n">store</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="n">event</span><span class="p">](</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_app</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">store</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type () -&gt; dict</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        dict: Copy of last item in state.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Alex Braun &lt;TheNewFlesh@github.com&gt;.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
