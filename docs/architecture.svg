@@ -244,7 +244,7 @@
 <polygon fill="#a0d17b" stroke="#a0d17b" points="869.4164,-1220.4553 879.8964,-1218.8997 870.7337,-1213.5804 869.4164,-1220.4553"/>
 </g>
 <!-- shekels.enforce -->
-<g id="node21" class="node">
+<g id="node22" class="node">
 <title>shekels.enforce</title>
 <polygon fill="#343434" stroke="#343434" points="490,-347.3603 350,-347.3603 350,-311.3603 490,-311.3603 490,-347.3603"/>
 <text text-anchor="middle" x="420" y="-325.6603" font-family="Courier,monospace" font-size="14.00" fill="#a0d17b">shekels.enforce</text>
@@ -256,7 +256,7 @@
 <polygon fill="#a0d17b" stroke="#a0d17b" points="388.9647,-356.0278 395.2286,-347.483 385.0032,-350.2566 388.9647,-356.0278"/>
 </g>
 <!-- shekels.core -->
-<g id="node26" class="node">
+<g id="node25" class="node">
 <title>shekels.core</title>
 <polygon fill="#343434" stroke="#343434" points="478,-451.3603 362,-451.3603 362,-415.3603 478,-415.3603 478,-451.3603"/>
 <text text-anchor="middle" x="420" y="-429.6603" font-family="Courier,monospace" font-size="14.00" fill="#a0d17b">shekels.core</text>
@@ -267,47 +267,47 @@
 <path fill="none" stroke="#a0d17b" d="M181.6552,-433.3603C225.1194,-433.3603 297.9631,-433.3603 351.7047,-433.3603"/>
 <polygon fill="#a0d17b" stroke="#a0d17b" points="351.8445,-436.8604 361.8445,-433.3603 351.8444,-429.8604 351.8445,-436.8604"/>
 </g>
-<!-- dash -->
-<g id="node15" class="node">
-<title>dash</title>
-<polygon fill="#343434" stroke="#343434" points="973,-1117.3603 919,-1117.3603 919,-1081.3603 973,-1081.3603 973,-1117.3603"/>
-<text text-anchor="middle" x="946" y="-1095.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">dash</text>
-</g>
-<!-- dash&#45;&gt;shekels.server.app -->
-<g id="edge28" class="edge">
-<title>dash&#45;&gt;shekels.server.app</title>
-<path fill="none" stroke="#de958e" d="M973.319,-1100.108C1090.4802,-1102.1079 1558.8279,-1097.6885 1875,-913.3603 1916.2616,-889.3048 1953.0537,-847.182 1974.3188,-819.7845"/>
-<polygon fill="#de958e" stroke="#de958e" points="1977.1324,-821.8668 1980.4075,-811.7909 1971.5638,-817.6252 1977.1324,-821.8668"/>
-</g>
-<!-- dash&#45;&gt;shekels.server.components -->
-<g id="edge29" class="edge">
-<title>dash&#45;&gt;shekels.server.components</title>
-<path fill="none" stroke="#de958e" d="M973.2792,-1098.294C995.8076,-1096.1005 1027.4692,-1089.8341 1049,-1072.3603 1076.7797,-1049.815 1065.7636,-1030.5258 1085,-1000.3603 1117.2531,-949.7826 1162.2943,-896.2563 1189.452,-865.4301"/>
-<polygon fill="#de958e" stroke="#de958e" points="1192.2659,-867.5322 1196.2823,-857.7281 1187.0286,-862.8876 1192.2659,-867.5322"/>
-</g>
-<!-- dash&#45;&gt;shekels.server.event_listener -->
-<g id="edge30" class="edge">
-<title>dash&#45;&gt;shekels.server.event_listener</title>
-<path fill="none" stroke="#de958e" d="M973.0707,-1106.9644C1011.654,-1117.8024 1083.8939,-1138.0945 1139.063,-1153.5915"/>
-<polygon fill="#de958e" stroke="#de958e" points="1138.2308,-1156.9931 1148.8047,-1156.3279 1140.1238,-1150.2539 1138.2308,-1156.9931"/>
-</g>
-<!-- dash&#45;&gt;shekels.server.server_tools -->
-<g id="edge31" class="edge">
-<title>dash&#45;&gt;shekels.server.server_tools</title>
-<path fill="none" stroke="#de958e" d="M973.2394,-1095.4841C1041.9863,-1084.4886 1225.2703,-1047.5029 1341,-952.3603 1412.5934,-893.5026 1463.3832,-793.0609 1484.9521,-744.8154"/>
-<polygon fill="#de958e" stroke="#de958e" points="1488.1748,-746.1813 1488.9911,-735.6179 1481.7656,-743.3667 1488.1748,-746.1813"/>
-</g>
 <!-- dash.exceptions -->
-<g id="node16" class="node">
+<g id="node15" class="node">
 <title>dash.exceptions</title>
 <polygon fill="#343434" stroke="#343434" points="1283,-689.3603 1143,-689.3603 1143,-653.3603 1283,-653.3603 1283,-689.3603"/>
 <text text-anchor="middle" x="1213" y="-667.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">dash.exceptions</text>
 </g>
 <!-- dash.exceptions&#45;&gt;shekels.server.server_tools -->
-<g id="edge32" class="edge">
+<g id="edge28" class="edge">
 <title>dash.exceptions&#45;&gt;shekels.server.server_tools</title>
 <path fill="none" stroke="#de958e" d="M1283.0787,-682.7311C1310.8946,-687.2444 1343.7073,-692.5685 1375.1519,-697.6706"/>
 <polygon fill="#de958e" stroke="#de958e" points="1374.8736,-701.1712 1385.3051,-699.3181 1375.9948,-694.2615 1374.8736,-701.1712"/>
+</g>
+<!-- dash -->
+<g id="node16" class="node">
+<title>dash</title>
+<polygon fill="#343434" stroke="#343434" points="973,-1117.3603 919,-1117.3603 919,-1081.3603 973,-1081.3603 973,-1117.3603"/>
+<text text-anchor="middle" x="946" y="-1095.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">dash</text>
+</g>
+<!-- dash&#45;&gt;shekels.server.app -->
+<g id="edge29" class="edge">
+<title>dash&#45;&gt;shekels.server.app</title>
+<path fill="none" stroke="#de958e" d="M973.319,-1100.108C1090.4802,-1102.1079 1558.8279,-1097.6885 1875,-913.3603 1916.2616,-889.3048 1953.0537,-847.182 1974.3188,-819.7845"/>
+<polygon fill="#de958e" stroke="#de958e" points="1977.1324,-821.8668 1980.4075,-811.7909 1971.5638,-817.6252 1977.1324,-821.8668"/>
+</g>
+<!-- dash&#45;&gt;shekels.server.components -->
+<g id="edge30" class="edge">
+<title>dash&#45;&gt;shekels.server.components</title>
+<path fill="none" stroke="#de958e" d="M973.2792,-1098.294C995.8076,-1096.1005 1027.4692,-1089.8341 1049,-1072.3603 1076.7797,-1049.815 1065.7636,-1030.5258 1085,-1000.3603 1117.2531,-949.7826 1162.2943,-896.2563 1189.452,-865.4301"/>
+<polygon fill="#de958e" stroke="#de958e" points="1192.2659,-867.5322 1196.2823,-857.7281 1187.0286,-862.8876 1192.2659,-867.5322"/>
+</g>
+<!-- dash&#45;&gt;shekels.server.event_listener -->
+<g id="edge31" class="edge">
+<title>dash&#45;&gt;shekels.server.event_listener</title>
+<path fill="none" stroke="#de958e" d="M973.0707,-1106.9644C1011.654,-1117.8024 1083.8939,-1138.0945 1139.063,-1153.5915"/>
+<polygon fill="#de958e" stroke="#de958e" points="1138.2308,-1156.9931 1148.8047,-1156.3279 1140.1238,-1150.2539 1138.2308,-1156.9931"/>
+</g>
+<!-- dash&#45;&gt;shekels.server.server_tools -->
+<g id="edge32" class="edge">
+<title>dash&#45;&gt;shekels.server.server_tools</title>
+<path fill="none" stroke="#de958e" d="M973.2394,-1095.4841C1041.9863,-1084.4886 1225.2703,-1047.5029 1341,-952.3603 1412.5934,-893.5026 1463.3832,-793.0609 1484.9521,-744.8154"/>
+<polygon fill="#de958e" stroke="#de958e" points="1488.1748,-746.1813 1488.9911,-735.6179 1481.7656,-743.3667 1488.1748,-746.1813"/>
 </g>
 <!-- jinja2 -->
 <g id="node17" class="node">
@@ -351,22 +351,22 @@
 <path fill="none" stroke="#de958e" d="M975.0555,-659.7212C996.8467,-664.0471 1026.6417,-672.2881 1049,-687.3603 1069.951,-701.4838 1062.167,-720.5402 1085,-731.3603 1196.0684,-783.9933 1343.5716,-759.6089 1428.4624,-737.921"/>
 <polygon fill="#de958e" stroke="#de958e" points="1429.4563,-741.2789 1438.2453,-735.3626 1427.6851,-734.5067 1429.4563,-741.2789"/>
 </g>
-<!-- dash_core_components -->
+<!-- dash_table -->
 <g id="node19" class="node">
-<title>dash_core_components</title>
-<polygon fill="#343434" stroke="#343434" points="1037,-1063.3603 855,-1063.3603 855,-1027.3603 1037,-1027.3603 1037,-1063.3603"/>
-<text text-anchor="middle" x="946" y="-1041.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">dash_core_components</text>
+<title>dash_table</title>
+<polygon fill="#343434" stroke="#343434" points="995.5,-1063.3603 896.5,-1063.3603 896.5,-1027.3603 995.5,-1027.3603 995.5,-1063.3603"/>
+<text text-anchor="middle" x="946" y="-1041.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">dash_table</text>
 </g>
-<!-- dash_core_components&#45;&gt;shekels.server.app -->
+<!-- dash_table&#45;&gt;shekels.server.app -->
 <g id="edge38" class="edge">
-<title>dash_core_components&#45;&gt;shekels.server.app</title>
-<path fill="none" stroke="#de958e" d="M1037.0578,-1038.5293C1206.9879,-1023.4352 1581.7406,-979.0079 1875,-864.3603 1905.6999,-852.3584 1937.592,-832.7785 1960.5472,-817.2171"/>
+<title>dash_table&#45;&gt;shekels.server.app</title>
+<path fill="none" stroke="#de958e" d="M995.59,-1041.9815C1137.3616,-1031.0136 1554.7677,-989.5528 1875,-864.3603 1905.6999,-852.3584 1937.592,-832.7785 1960.5472,-817.2171"/>
 <polygon fill="#de958e" stroke="#de958e" points="1962.6356,-820.0286 1968.8863,-811.474 1958.6652,-814.2635 1962.6356,-820.0286"/>
 </g>
-<!-- dash_core_components&#45;&gt;shekels.server.components -->
+<!-- dash_table&#45;&gt;shekels.server.components -->
 <g id="edge39" class="edge">
-<title>dash_core_components&#45;&gt;shekels.server.components</title>
-<path fill="none" stroke="#de958e" d="M1031.1001,-1027.3176C1037.3388,-1024.7183 1043.3805,-1021.7497 1049,-1018.3603 1114.3209,-978.9617 1169.2526,-905.801 1195.8353,-866.3102"/>
+<title>dash_table&#45;&gt;shekels.server.components</title>
+<path fill="none" stroke="#de958e" d="M995.7083,-1038.317C1013.4149,-1034.3019 1032.9329,-1028.0512 1049,-1018.3603 1114.3209,-978.9617 1169.2526,-905.801 1195.8353,-866.3102"/>
 <polygon fill="#de958e" stroke="#de958e" points="1199.069,-867.7663 1201.6728,-857.4964 1193.2329,-863.901 1199.069,-867.7663"/>
 </g>
 <!-- schematics.models -->
@@ -381,281 +381,281 @@
 <path fill="none" stroke="#de958e" d="M498.7634,-850.5711C525.1406,-853.3209 554.8536,-856.4184 582.4322,-859.2934"/>
 <polygon fill="#de958e" stroke="#de958e" points="582.177,-862.7856 592.486,-860.3414 582.9028,-855.8234 582.177,-862.7856"/>
 </g>
-<!-- shekels.enforce&#45;&gt;shekels.enforce.enforce_tools -->
-<g id="edge41" class="edge">
-<title>shekels.enforce&#45;&gt;shekels.enforce.enforce_tools</title>
-<path fill="none" stroke="#a0d17b" d="M490.0891,-315.8296C516.3555,-310.7588 546.785,-304.8844 575.4464,-299.3513"/>
-<polygon fill="#a0d17b" stroke="#a0d17b" points="576.3455,-302.7425 585.5008,-297.4103 575.0186,-295.8694 576.3455,-302.7425"/>
-</g>
-<!-- pandas -->
-<g id="node22" class="node">
-<title>pandas</title>
-<polygon fill="#343434" stroke="#343434" points="453,-159.3603 387,-159.3603 387,-123.3603 453,-123.3603 453,-159.3603"/>
-<text text-anchor="middle" x="420" y="-137.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">pandas</text>
-</g>
-<!-- pandas&#45;&gt;shekels.core.data_tools -->
-<g id="edge42" class="edge">
-<title>pandas&#45;&gt;shekels.core.data_tools</title>
-<path fill="none" stroke="#de958e" d="M445.7726,-159.4392C471.282,-176.4105 512.0547,-201.1128 551,-214.3603 659.8968,-251.4021 708.462,-193.0232 807,-252.3603 871.2573,-291.0544 914.9956,-371.8813 934.4844,-414.2009"/>
-<polygon fill="#de958e" stroke="#de958e" points="931.3047,-415.6639 938.5955,-423.3512 937.6899,-412.7951 931.3047,-415.6639"/>
-</g>
-<!-- pandas&#45;&gt;shekels.core.database -->
-<g id="edge43" class="edge">
-<title>pandas&#45;&gt;shekels.core.database</title>
-<path fill="none" stroke="#de958e" d="M435.0263,-123.1018C457.2555,-97.6946 501.6324,-52.8318 551,-35.3603 658.2588,2.5993 707.3553,19.5608 807,-35.3603 833.241,-49.8235 817.9892,-75.8607 843,-92.3603 920.3981,-143.4196 982.2177,-61.0357 1049,-125.3603 1108.0739,-182.2601 1028.8672,-246.5571 1085,-306.3603 1091.7154,-313.5147 1099.7489,-319.2287 1108.4744,-323.7837"/>
-<polygon fill="#de958e" stroke="#de958e" points="1107.2488,-327.0738 1117.7917,-328.1226 1110.204,-320.7282 1107.2488,-327.0738"/>
-</g>
-<!-- pandas&#45;&gt;shekels.enforce.enforce_tools -->
-<g id="edge44" class="edge">
-<title>pandas&#45;&gt;shekels.enforce.enforce_tools</title>
-<path fill="none" stroke="#de958e" d="M437.2849,-159.618C460.7908,-183.3665 505.1842,-224.51 551,-247.3603 559.1288,-251.4145 567.8107,-254.9805 576.6793,-258.1123"/>
-<polygon fill="#de958e" stroke="#de958e" points="575.7649,-261.4968 586.3586,-261.3427 577.981,-254.8569 575.7649,-261.4968"/>
-</g>
-<!-- pandas&#45;&gt;shekels.server.components -->
-<g id="edge45" class="edge">
-<title>pandas&#45;&gt;shekels.server.components</title>
-<path fill="none" stroke="#de958e" d="M453.1459,-127.3827C522.7315,-100.3082 687.4708,-48.2649 807,-106.3603 963.5742,-182.4608 981.8441,-253.7463 1049,-414.3603 1098.0808,-531.7448 1031.7758,-582.7954 1085,-698.3603 1107.0907,-746.3256 1151.4445,-789.3267 1181.6803,-814.8859"/>
-<polygon fill="#de958e" stroke="#de958e" points="1179.4917,-817.6178 1189.4219,-821.3112 1183.9623,-812.2313 1179.4917,-817.6178"/>
-</g>
-<!-- lunchbox.enforce -->
-<g id="node23" class="node">
-<title>lunchbox.enforce</title>
-<polygon fill="#343434" stroke="#343434" points="494.5,-573.3603 345.5,-573.3603 345.5,-537.3603 494.5,-537.3603 494.5,-573.3603"/>
-<text text-anchor="middle" x="420" y="-551.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">lunchbox.enforce</text>
-</g>
-<!-- lunchbox.enforce&#45;&gt;shekels.core.data_tools -->
-<g id="edge46" class="edge">
-<title>lunchbox.enforce&#45;&gt;shekels.core.data_tools</title>
-<path fill="none" stroke="#de958e" d="M494.6865,-550.157C590.6864,-542.7379 751.5973,-527.624 807,-506.3603 825.1862,-499.3804 825.8006,-490.5056 843,-481.3603 855.539,-474.6929 869.4396,-468.5367 882.8655,-463.1535"/>
-<polygon fill="#de958e" stroke="#de958e" points="884.4927,-466.2753 892.5315,-459.374 881.9436,-459.756 884.4927,-466.2753"/>
-</g>
-<!-- lunchbox.enforce&#45;&gt;shekels.enforce.enforce_tools -->
-<g id="edge47" class="edge">
-<title>lunchbox.enforce&#45;&gt;shekels.enforce.enforce_tools</title>
-<path fill="none" stroke="#de958e" d="M444.9121,-537.0848C466.7102,-519.7545 497.5424,-491.7527 515,-460.3603 549.1616,-398.9304 500.7601,-355.5191 551,-306.3603 551.9588,-305.4222 552.9414,-304.5129 553.9463,-303.6318"/>
-<polygon fill="#de958e" stroke="#de958e" points="556.2527,-306.2739 562.0604,-297.4127 551.9944,-300.7181 556.2527,-306.2739"/>
-</g>
-<!-- lunchbox.enforce&#45;&gt;shekels.server.components -->
-<g id="edge48" class="edge">
-<title>lunchbox.enforce&#45;&gt;shekels.server.components</title>
-<path fill="none" stroke="#de958e" d="M465.7805,-573.4024C483.5924,-582.5719 502.6484,-595.42 515,-612.3603 556.4114,-669.1559 498.3225,-719.8229 551,-766.3603 561.4257,-775.5708 1035.1784,-817.7821 1049,-819.3603 1062.6445,-820.9182 1076.9218,-822.593 1091.118,-824.2864"/>
-<polygon fill="#de958e" stroke="#de958e" points="1091.0851,-827.8074 1101.4304,-825.5214 1091.9175,-820.8571 1091.0851,-827.8074"/>
-</g>
-<!-- lunchbox.enforce&#45;&gt;shekels.server.event_listener -->
-<g id="edge49" class="edge">
-<title>lunchbox.enforce&#45;&gt;shekels.server.event_listener</title>
-<path fill="none" stroke="#de958e" d="M468.1486,-573.5503C485.6543,-582.5796 503.857,-595.2867 515,-612.3603 584.5381,-718.9084 492.0386,-783.6145 551,-896.3603 631.939,-1051.1316 681.2496,-1093.4657 843,-1159.3603 915.6429,-1188.9539 1003.0886,-1193.7458 1074.7256,-1190.655"/>
-<polygon fill="#de958e" stroke="#de958e" points="1074.9078,-1194.1504 1084.7258,-1190.1683 1074.5675,-1187.1586 1074.9078,-1194.1504"/>
-</g>
 <!-- dash_html_components -->
-<g id="node24" class="node">
+<g id="node21" class="node">
 <title>dash_html_components</title>
 <polygon fill="#343434" stroke="#343434" points="1037,-879.3603 855,-879.3603 855,-843.3603 1037,-843.3603 1037,-879.3603"/>
 <text text-anchor="middle" x="946" y="-857.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">dash_html_components</text>
 </g>
 <!-- dash_html_components&#45;&gt;shekels.server.components -->
-<g id="edge50" class="edge">
+<g id="edge41" class="edge">
 <title>dash_html_components&#45;&gt;shekels.server.components</title>
 <path fill="none" stroke="#de958e" d="M1037.1395,-853.8507C1054.6022,-852.4118 1073.1438,-850.884 1091.3869,-849.3808"/>
 <polygon fill="#de958e" stroke="#de958e" points="1091.8038,-852.8584 1101.4825,-848.549 1091.2289,-845.8821 1091.8038,-852.8584"/>
 </g>
+<!-- shekels.enforce&#45;&gt;shekels.enforce.enforce_tools -->
+<g id="edge42" class="edge">
+<title>shekels.enforce&#45;&gt;shekels.enforce.enforce_tools</title>
+<path fill="none" stroke="#a0d17b" d="M490.0891,-315.8296C516.3555,-310.7588 546.785,-304.8844 575.4464,-299.3513"/>
+<polygon fill="#a0d17b" stroke="#a0d17b" points="576.3455,-302.7425 585.5008,-297.4103 575.0186,-295.8694 576.3455,-302.7425"/>
+</g>
 <!-- numpy -->
-<g id="node25" class="node">
+<g id="node23" class="node">
 <title>numpy</title>
 <polygon fill="#343434" stroke="#343434" points="708,-205.3603 650,-205.3603 650,-169.3603 708,-169.3603 708,-205.3603"/>
 <text text-anchor="middle" x="679" y="-183.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">numpy</text>
 </g>
 <!-- numpy&#45;&gt;shekels.core.data_tools -->
-<g id="edge51" class="edge">
+<g id="edge43" class="edge">
 <title>numpy&#45;&gt;shekels.core.data_tools</title>
 <path fill="none" stroke="#de958e" d="M708.0383,-188.4877C735.8227,-190.8868 777.7174,-198.0913 807,-219.3603 876.2398,-269.6516 918.7964,-365.9723 936.4832,-413.4702"/>
 <polygon fill="#de958e" stroke="#de958e" points="933.2757,-414.8922 939.9755,-423.0997 939.8563,-412.5055 933.2757,-414.8922"/>
 </g>
 <!-- numpy&#45;&gt;shekels.core.database -->
-<g id="edge52" class="edge">
+<g id="edge44" class="edge">
 <title>numpy&#45;&gt;shekels.core.database</title>
 <path fill="none" stroke="#de958e" d="M708.1191,-194.0713C734.1561,-200.2068 773.2935,-209.7624 807,-219.3603 931.7731,-254.8892 960.2269,-272.8314 1085,-308.3603 1098.6933,-312.2594 1113.2829,-316.1516 1127.5263,-319.8103"/>
 <polygon fill="#de958e" stroke="#de958e" points="1126.7621,-323.2273 1137.3165,-322.3032 1128.4894,-316.4438 1126.7621,-323.2273"/>
 </g>
-<!-- shekels.core&#45;&gt;shekels.core.config -->
-<g id="edge53" class="edge">
-<title>shekels.core&#45;&gt;shekels.core.config</title>
-<path fill="none" stroke="#a0d17b" d="M445.9466,-451.6519C468.1186,-468.795 498.9092,-496.5069 515,-528.3603 563.2365,-623.8494 497.6889,-673.6086 551,-766.3603 570.7729,-800.7615 606.8525,-828.1895 635.6783,-846.0648"/>
-<polygon fill="#a0d17b" stroke="#a0d17b" points="633.9943,-849.1364 644.3653,-851.3027 637.6088,-843.1418 633.9943,-849.1364"/>
-</g>
-<!-- shekels.core&#45;&gt;shekels.core.data_tools -->
-<g id="edge54" class="edge">
-<title>shekels.core&#45;&gt;shekels.core.data_tools</title>
-<path fill="none" stroke="#a0d17b" d="M478.0482,-434.2431C563.1596,-435.5376 723.5088,-437.9764 832.5262,-439.6344"/>
-<polygon fill="#a0d17b" stroke="#a0d17b" points="832.5302,-443.1348 842.5823,-439.7874 832.6367,-436.1356 832.5302,-443.1348"/>
-</g>
-<!-- shekels.core&#45;&gt;shekels.core.database -->
-<g id="edge55" class="edge">
-<title>shekels.core&#45;&gt;shekels.core.database</title>
-<path fill="none" stroke="#a0d17b" d="M453.19,-415.3105C474.4428,-401.9277 500.6404,-381.6539 515,-356.3603 570.4218,-258.738 466.1537,-179.8639 551,-106.3603 636.9956,-31.861 696.5598,-79.0044 807,-106.3603 824.561,-110.7101 826.9082,-117.0921 843,-125.3603 934.0471,-172.1412 977.7583,-154.8575 1049,-228.3603 1075.573,-255.7766 1055.7733,-281.7924 1085,-306.3603 1092.0443,-312.2817 1100.0147,-317.1827 1108.4494,-321.2375"/>
-<polygon fill="#a0d17b" stroke="#a0d17b" points="1107.1979,-324.5103 1117.7622,-325.3136 1110.0046,-318.0976 1107.1979,-324.5103"/>
-</g>
 <!-- schematics.types -->
-<g id="node27" class="node">
+<g id="node24" class="node">
 <title>schematics.types</title>
 <polygon fill="#343434" stroke="#343434" points="494.5,-914.3603 345.5,-914.3603 345.5,-878.3603 494.5,-878.3603 494.5,-914.3603"/>
 <text text-anchor="middle" x="420" y="-892.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">schematics.types</text>
 </g>
 <!-- schematics.types&#45;&gt;shekels.core.config -->
-<g id="edge56" class="edge">
+<g id="edge45" class="edge">
 <title>schematics.types&#45;&gt;shekels.core.config</title>
 <path fill="none" stroke="#de958e" d="M494.5661,-888.587C521.8367,-885.7441 553.0969,-882.4853 582.0386,-879.4682"/>
 <polygon fill="#de958e" stroke="#de958e" points="582.5854,-882.9303 592.1686,-878.4122 581.8596,-875.968 582.5854,-882.9303"/>
 </g>
-<!-- cufflinks -->
-<g id="node28" class="node">
-<title>cufflinks</title>
-<polygon fill="#343434" stroke="#343434" points="724.5,-497.3603 633.5,-497.3603 633.5,-461.3603 724.5,-461.3603 724.5,-497.3603"/>
-<text text-anchor="middle" x="679" y="-475.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">cufflinks</text>
+<!-- shekels.core&#45;&gt;shekels.core.config -->
+<g id="edge46" class="edge">
+<title>shekels.core&#45;&gt;shekels.core.config</title>
+<path fill="none" stroke="#a0d17b" d="M445.9466,-451.6519C468.1186,-468.795 498.9092,-496.5069 515,-528.3603 563.2365,-623.8494 497.6889,-673.6086 551,-766.3603 570.7729,-800.7615 606.8525,-828.1895 635.6783,-846.0648"/>
+<polygon fill="#a0d17b" stroke="#a0d17b" points="633.9943,-849.1364 644.3653,-851.3027 637.6088,-843.1418 633.9943,-849.1364"/>
 </g>
-<!-- cufflinks&#45;&gt;shekels.core.data_tools -->
-<g id="edge57" class="edge">
-<title>cufflinks&#45;&gt;shekels.core.data_tools</title>
-<path fill="none" stroke="#de958e" d="M724.5956,-472.871C754.4014,-468.629 794.7311,-462.8892 832.8046,-457.4705"/>
-<polygon fill="#de958e" stroke="#de958e" points="833.5413,-460.901 842.9484,-456.0268 832.555,-453.9708 833.5413,-460.901"/>
+<!-- shekels.core&#45;&gt;shekels.core.data_tools -->
+<g id="edge47" class="edge">
+<title>shekels.core&#45;&gt;shekels.core.data_tools</title>
+<path fill="none" stroke="#a0d17b" d="M478.0482,-434.2431C563.1596,-435.5376 723.5088,-437.9764 832.5262,-439.6344"/>
+<polygon fill="#a0d17b" stroke="#a0d17b" points="832.5302,-443.1348 842.5823,-439.7874 832.6367,-436.1356 832.5302,-443.1348"/>
 </g>
-<!-- dash_table -->
-<g id="node29" class="node">
-<title>dash_table</title>
-<polygon fill="#343434" stroke="#343434" points="995.5,-1009.3603 896.5,-1009.3603 896.5,-973.3603 995.5,-973.3603 995.5,-1009.3603"/>
-<text text-anchor="middle" x="946" y="-987.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">dash_table</text>
-</g>
-<!-- dash_table&#45;&gt;shekels.server.app -->
-<g id="edge58" class="edge">
-<title>dash_table&#45;&gt;shekels.server.app</title>
-<path fill="none" stroke="#de958e" d="M995.7508,-984.6618C1135.4148,-965.4223 1542.6095,-906.3421 1875,-828.3603 1892.1089,-824.3464 1910.4029,-819.3173 1927.3713,-814.3337"/>
-<polygon fill="#de958e" stroke="#de958e" points="1928.6031,-817.619 1937.19,-811.4128 1926.6071,-810.9095 1928.6031,-817.619"/>
-</g>
-<!-- dash_table&#45;&gt;shekels.server.components -->
-<g id="edge59" class="edge">
-<title>dash_table&#45;&gt;shekels.server.components</title>
-<path fill="none" stroke="#de958e" d="M977.6769,-973.327C1026.2532,-945.6731 1119.1121,-892.8096 1172.5094,-862.4111"/>
-<polygon fill="#de958e" stroke="#de958e" points="1174.4055,-865.3592 1181.3643,-857.3701 1170.9423,-859.2759 1174.4055,-865.3592"/>
-</g>
-<!-- lunchbox.tools -->
-<g id="node30" class="node">
-<title>lunchbox.tools</title>
-<polygon fill="#343434" stroke="#343434" points="745,-757.3603 613,-757.3603 613,-721.3603 745,-721.3603 745,-757.3603"/>
-<text text-anchor="middle" x="679" y="-735.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">lunchbox.tools</text>
-</g>
-<!-- lunchbox.tools&#45;&gt;shekels.core.data_tools -->
-<g id="edge60" class="edge">
-<title>lunchbox.tools&#45;&gt;shekels.core.data_tools</title>
-<path fill="none" stroke="#de958e" d="M745.2624,-739.2588C767.4677,-735.9283 790.6973,-728.335 807,-712.3603 857.5139,-662.8626 810.5201,-620.1833 843,-557.3603 861.4469,-521.6801 893.3584,-488.2026 916.7852,-466.4713"/>
-<polygon fill="#de958e" stroke="#de958e" points="919.3331,-468.8849 924.3729,-459.5656 914.6215,-463.708 919.3331,-468.8849"/>
-</g>
-<!-- lunchbox.tools&#45;&gt;shekels.server.components -->
-<g id="edge61" class="edge">
-<title>lunchbox.tools&#45;&gt;shekels.server.components</title>
-<path fill="none" stroke="#de958e" d="M745.32,-728.4723C822.764,-719.0581 952.5386,-713.7626 1049,-763.3603 1071.4707,-774.914 1063.6601,-793.8315 1085,-807.3603 1091.0517,-811.1968 1097.5356,-814.5736 1104.2557,-817.5456"/>
-<polygon fill="#de958e" stroke="#de958e" points="1102.9671,-820.8 1113.5476,-821.3527 1105.6211,-814.3226 1102.9671,-820.8"/>
-</g>
-<!-- lunchbox.tools&#45;&gt;shekels.server.server_tools -->
-<g id="edge62" class="edge">
-<title>lunchbox.tools&#45;&gt;shekels.server.server_tools</title>
-<path fill="none" stroke="#de958e" d="M745.0915,-737.3848C766.7665,-733.813 789.7027,-726.5464 807,-712.3603 838.4061,-686.6031 809.0909,-650.7198 843,-628.3603 919.4343,-577.9598 970.846,-580.6699 1049,-628.3603 1078.8634,-646.5832 1055.5649,-679.4533 1085,-698.3603 1130.1677,-727.3727 1263.8746,-728.8918 1366.7436,-725.1859"/>
-<polygon fill="#de958e" stroke="#de958e" points="1367.0534,-728.6768 1376.9131,-724.7992 1366.7873,-721.6818 1367.0534,-728.6768"/>
+<!-- shekels.core&#45;&gt;shekels.core.database -->
+<g id="edge48" class="edge">
+<title>shekels.core&#45;&gt;shekels.core.database</title>
+<path fill="none" stroke="#a0d17b" d="M453.19,-415.3105C474.4428,-401.9277 500.6404,-381.6539 515,-356.3603 570.4218,-258.738 466.1537,-179.8639 551,-106.3603 636.9956,-31.861 696.5598,-79.0044 807,-106.3603 824.561,-110.7101 826.9082,-117.0921 843,-125.3603 934.0471,-172.1412 977.7583,-154.8575 1049,-228.3603 1075.573,-255.7766 1055.7733,-281.7924 1085,-306.3603 1092.0443,-312.2817 1100.0147,-317.1827 1108.4494,-321.2375"/>
+<polygon fill="#a0d17b" stroke="#a0d17b" points="1107.1979,-324.5103 1117.7622,-325.3136 1110.0046,-318.0976 1107.1979,-324.5103"/>
 </g>
 <!-- pandasql -->
-<g id="node31" class="node">
+<g id="node26" class="node">
 <title>pandasql</title>
 <polygon fill="#343434" stroke="#343434" points="720.5,-151.3603 637.5,-151.3603 637.5,-115.3603 720.5,-115.3603 720.5,-151.3603"/>
 <text text-anchor="middle" x="679" y="-129.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">pandasql</text>
 </g>
 <!-- pandasql&#45;&gt;shekels.core.data_tools -->
-<g id="edge63" class="edge">
+<g id="edge49" class="edge">
 <title>pandasql&#45;&gt;shekels.core.data_tools</title>
 <path fill="none" stroke="#de958e" d="M720.5216,-132.8262C747.7686,-134.539 782.7195,-140.9036 807,-160.3603 837.1101,-184.4885 826.2323,-204.6093 843,-239.3603 873.437,-302.4406 911.3187,-375.4115 931.5948,-414.0549"/>
 <polygon fill="#de958e" stroke="#de958e" points="928.6048,-415.8891 936.3551,-423.1129 934.8012,-412.6327 928.6048,-415.8891"/>
 </g>
 <!-- pandasql&#45;&gt;shekels.server.api -->
-<g id="edge64" class="edge">
+<g id="edge50" class="edge">
 <title>pandasql&#45;&gt;shekels.server.api</title>
 <path fill="none" stroke="#de958e" d="M701.164,-115.3347C731.1723,-92.2102 787.3904,-53.3037 843,-38.3603 931.4188,-14.6004 962.4282,-8.5652 1049,-38.3603 1204.6905,-91.9437 1233.2367,-141.8702 1341,-266.3603 1362.1065,-290.7429 1350.5064,-310.9731 1377,-329.3603 1465.4192,-390.7251 1538.1756,-294.0167 1616,-368.3603 1672.1597,-422.0081 1599.0937,-482.5014 1652,-539.3603 1657.5947,-545.3729 1664.2364,-550.282 1671.4497,-554.2865"/>
 <polygon fill="#de958e" stroke="#de958e" points="1670.3357,-557.638 1680.8563,-558.8901 1673.4128,-551.3505 1670.3357,-557.638"/>
 </g>
-<!-- schematics.exceptions -->
-<g id="node32" class="node">
-<title>schematics.exceptions</title>
-<polygon fill="#343434" stroke="#343434" points="515,-657.3603 325,-657.3603 325,-621.3603 515,-621.3603 515,-657.3603"/>
-<text text-anchor="middle" x="420" y="-635.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">schematics.exceptions</text>
+<!-- lunchbox.tools -->
+<g id="node27" class="node">
+<title>lunchbox.tools</title>
+<polygon fill="#343434" stroke="#343434" points="745,-757.3603 613,-757.3603 613,-721.3603 745,-721.3603 745,-757.3603"/>
+<text text-anchor="middle" x="679" y="-735.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">lunchbox.tools</text>
 </g>
-<!-- schematics.exceptions&#45;&gt;shekels.core.config -->
-<g id="edge65" class="edge">
-<title>schematics.exceptions&#45;&gt;shekels.core.config</title>
-<path fill="none" stroke="#de958e" d="M426.6319,-657.3924C442.0216,-696.6232 484.0361,-789.9937 551,-837.3603 560.5695,-844.1292 571.4277,-849.4707 582.677,-853.6848"/>
-<polygon fill="#de958e" stroke="#de958e" points="581.604,-857.017 592.1987,-856.9662 583.8847,-850.399 581.604,-857.017"/>
+<!-- lunchbox.tools&#45;&gt;shekels.core.data_tools -->
+<g id="edge51" class="edge">
+<title>lunchbox.tools&#45;&gt;shekels.core.data_tools</title>
+<path fill="none" stroke="#de958e" d="M745.2624,-739.2588C767.4677,-735.9283 790.6973,-728.335 807,-712.3603 857.5139,-662.8626 810.5201,-620.1833 843,-557.3603 861.4469,-521.6801 893.3584,-488.2026 916.7852,-466.4713"/>
+<polygon fill="#de958e" stroke="#de958e" points="919.3331,-468.8849 924.3729,-459.5656 914.6215,-463.708 919.3331,-468.8849"/>
 </g>
-<!-- schematics.exceptions&#45;&gt;shekels.core.data_tools -->
-<g id="edge66" class="edge">
-<title>schematics.exceptions&#45;&gt;shekels.core.data_tools</title>
-<path fill="none" stroke="#de958e" d="M459.426,-621.3549C485.0705,-610.2359 519.4855,-596.4129 551,-587.3603 662.1832,-555.4226 711.673,-605.8927 807,-540.3603 832.3137,-522.9584 819.4398,-501.0713 843,-481.3603 851.3358,-474.3863 861.0269,-468.54 871.065,-463.6639"/>
-<polygon fill="#de958e" stroke="#de958e" points="872.6895,-466.7704 880.3524,-459.454 869.7994,-460.3948 872.6895,-466.7704"/>
+<!-- lunchbox.tools&#45;&gt;shekels.server.components -->
+<g id="edge52" class="edge">
+<title>lunchbox.tools&#45;&gt;shekels.server.components</title>
+<path fill="none" stroke="#de958e" d="M745.32,-728.4723C822.764,-719.0581 952.5386,-713.7626 1049,-763.3603 1071.4707,-774.914 1063.6601,-793.8315 1085,-807.3603 1091.0517,-811.1968 1097.5356,-814.5736 1104.2557,-817.5456"/>
+<polygon fill="#de958e" stroke="#de958e" points="1102.9671,-820.8 1113.5476,-821.3527 1105.6211,-814.3226 1102.9671,-820.8"/>
 </g>
-<!-- schematics.exceptions&#45;&gt;shekels.server.api -->
-<g id="edge67" class="edge">
-<title>schematics.exceptions&#45;&gt;shekels.server.api</title>
-<path fill="none" stroke="#de958e" d="M515.0802,-621.4602C527.1575,-619.3281 539.3593,-617.243 551,-615.3603 914.5568,-556.5599 1008.8196,-557.974 1377,-549.3603 1483.1932,-546.8758 1510.0687,-541.5038 1616,-549.3603 1633.7553,-550.6771 1652.6146,-552.8739 1670.7038,-555.3829"/>
-<polygon fill="#de958e" stroke="#de958e" points="1670.2678,-558.8561 1680.6622,-556.8053 1671.2576,-551.9264 1670.2678,-558.8561"/>
+<!-- lunchbox.tools&#45;&gt;shekels.server.server_tools -->
+<g id="edge53" class="edge">
+<title>lunchbox.tools&#45;&gt;shekels.server.server_tools</title>
+<path fill="none" stroke="#de958e" d="M745.0915,-737.3848C766.7665,-733.813 789.7027,-726.5464 807,-712.3603 838.4061,-686.6031 809.0909,-650.7198 843,-628.3603 919.4343,-577.9598 970.846,-580.6699 1049,-628.3603 1078.8634,-646.5832 1055.5649,-679.4533 1085,-698.3603 1130.1677,-727.3727 1263.8746,-728.8918 1366.7436,-725.1859"/>
+<polygon fill="#de958e" stroke="#de958e" points="1367.0534,-728.6768 1376.9131,-724.7992 1366.7873,-721.6818 1367.0534,-728.6768"/>
 </g>
-<!-- schematics.exceptions&#45;&gt;shekels.server.components -->
-<g id="edge68" class="edge">
-<title>schematics.exceptions&#45;&gt;shekels.server.components</title>
-<path fill="none" stroke="#de958e" d="M428.4171,-657.3908C445.7309,-692.121 488.9851,-767.6606 551,-799.3603 574.5946,-811.421 906.66,-826.8232 1091.2942,-834.5223"/>
-<polygon fill="#de958e" stroke="#de958e" points="1091.1961,-838.0212 1101.3328,-834.9394 1091.4867,-831.0272 1091.1961,-838.0212"/>
+<!-- dash_core_components -->
+<g id="node28" class="node">
+<title>dash_core_components</title>
+<polygon fill="#343434" stroke="#343434" points="1037,-1009.3603 855,-1009.3603 855,-973.3603 1037,-973.3603 1037,-1009.3603"/>
+<text text-anchor="middle" x="946" y="-987.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">dash_core_components</text>
 </g>
-<!-- schematics.exceptions&#45;&gt;shekels.server.server_tools -->
-<g id="edge69" class="edge">
-<title>schematics.exceptions&#45;&gt;shekels.server.server_tools</title>
-<path fill="none" stroke="#de958e" d="M515.1237,-648.7696C595.5297,-653.1806 712.3936,-651.1314 807,-615.3603 825.9598,-608.1915 823.8274,-593.9386 843,-587.3603 881.4345,-574.1731 1303.0368,-576.6074 1341,-590.3603 1396.9556,-610.6313 1447.443,-660.3567 1474.8652,-691.2293"/>
-<polygon fill="#de958e" stroke="#de958e" points="1472.444,-693.7784 1481.6516,-699.0197 1477.7221,-689.1805 1472.444,-693.7784"/>
+<!-- dash_core_components&#45;&gt;shekels.server.app -->
+<g id="edge54" class="edge">
+<title>dash_core_components&#45;&gt;shekels.server.app</title>
+<path fill="none" stroke="#de958e" d="M1037.0259,-978.8948C1204.2031,-955.2261 1570.9065,-899.7034 1875,-828.3603 1892.1089,-824.3464 1910.4029,-819.3173 1927.3713,-814.3337"/>
+<polygon fill="#de958e" stroke="#de958e" points="1928.6031,-817.619 1937.19,-811.4128 1926.6071,-810.9095 1928.6031,-817.619"/>
+</g>
+<!-- dash_core_components&#45;&gt;shekels.server.components -->
+<g id="edge55" class="edge">
+<title>dash_core_components&#45;&gt;shekels.server.components</title>
+<path fill="none" stroke="#de958e" d="M977.6769,-973.327C1026.2532,-945.6731 1119.1121,-892.8096 1172.5094,-862.4111"/>
+<polygon fill="#de958e" stroke="#de958e" points="1174.4055,-865.3592 1181.3643,-857.3701 1170.9423,-859.2759 1174.4055,-865.3592"/>
+</g>
+<!-- pandas -->
+<g id="node29" class="node">
+<title>pandas</title>
+<polygon fill="#343434" stroke="#343434" points="453,-159.3603 387,-159.3603 387,-123.3603 453,-123.3603 453,-159.3603"/>
+<text text-anchor="middle" x="420" y="-137.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">pandas</text>
+</g>
+<!-- pandas&#45;&gt;shekels.core.data_tools -->
+<g id="edge56" class="edge">
+<title>pandas&#45;&gt;shekels.core.data_tools</title>
+<path fill="none" stroke="#de958e" d="M445.7726,-159.4392C471.282,-176.4105 512.0547,-201.1128 551,-214.3603 659.8968,-251.4021 708.462,-193.0232 807,-252.3603 871.2573,-291.0544 914.9956,-371.8813 934.4844,-414.2009"/>
+<polygon fill="#de958e" stroke="#de958e" points="931.3047,-415.6639 938.5955,-423.3512 937.6899,-412.7951 931.3047,-415.6639"/>
+</g>
+<!-- pandas&#45;&gt;shekels.core.database -->
+<g id="edge57" class="edge">
+<title>pandas&#45;&gt;shekels.core.database</title>
+<path fill="none" stroke="#de958e" d="M435.0263,-123.1018C457.2555,-97.6946 501.6324,-52.8318 551,-35.3603 658.2588,2.5993 707.3553,19.5608 807,-35.3603 833.241,-49.8235 817.9892,-75.8607 843,-92.3603 920.3981,-143.4196 982.2177,-61.0357 1049,-125.3603 1108.0739,-182.2601 1028.8672,-246.5571 1085,-306.3603 1091.7154,-313.5147 1099.7489,-319.2287 1108.4744,-323.7837"/>
+<polygon fill="#de958e" stroke="#de958e" points="1107.2488,-327.0738 1117.7917,-328.1226 1110.204,-320.7282 1107.2488,-327.0738"/>
+</g>
+<!-- pandas&#45;&gt;shekels.enforce.enforce_tools -->
+<g id="edge58" class="edge">
+<title>pandas&#45;&gt;shekels.enforce.enforce_tools</title>
+<path fill="none" stroke="#de958e" d="M437.2849,-159.618C460.7908,-183.3665 505.1842,-224.51 551,-247.3603 559.1288,-251.4145 567.8107,-254.9805 576.6793,-258.1123"/>
+<polygon fill="#de958e" stroke="#de958e" points="575.7649,-261.4968 586.3586,-261.3427 577.981,-254.8569 575.7649,-261.4968"/>
+</g>
+<!-- pandas&#45;&gt;shekels.server.components -->
+<g id="edge59" class="edge">
+<title>pandas&#45;&gt;shekels.server.components</title>
+<path fill="none" stroke="#de958e" d="M453.1459,-127.3827C522.7315,-100.3082 687.4708,-48.2649 807,-106.3603 963.5742,-182.4608 981.8441,-253.7463 1049,-414.3603 1098.0808,-531.7448 1031.7758,-582.7954 1085,-698.3603 1107.0907,-746.3256 1151.4445,-789.3267 1181.6803,-814.8859"/>
+<polygon fill="#de958e" stroke="#de958e" points="1179.4917,-817.6178 1189.4219,-821.3112 1183.9623,-812.2313 1179.4917,-817.6178"/>
 </g>
 <!-- webcolors -->
-<g id="node33" class="node">
+<g id="node30" class="node">
 <title>webcolors</title>
-<polygon fill="#343434" stroke="#343434" points="724.5,-405.3603 633.5,-405.3603 633.5,-369.3603 724.5,-369.3603 724.5,-405.3603"/>
-<text text-anchor="middle" x="679" y="-383.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">webcolors</text>
+<polygon fill="#343434" stroke="#343434" points="724.5,-497.3603 633.5,-497.3603 633.5,-461.3603 724.5,-461.3603 724.5,-497.3603"/>
+<text text-anchor="middle" x="679" y="-475.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">webcolors</text>
 </g>
 <!-- webcolors&#45;&gt;shekels.core.data_tools -->
-<g id="edge70" class="edge">
+<g id="edge60" class="edge">
 <title>webcolors&#45;&gt;shekels.core.data_tools</title>
-<path fill="none" stroke="#de958e" d="M724.5956,-396.5819C758.1023,-403.3585 804.9084,-412.8249 846.8581,-421.3091"/>
-<polygon fill="#de958e" stroke="#de958e" points="846.3488,-424.7769 856.8442,-423.3288 847.7365,-417.9158 846.3488,-424.7769"/>
+<path fill="none" stroke="#de958e" d="M724.5956,-472.871C754.4014,-468.629 794.7311,-462.8892 832.8046,-457.4705"/>
+<polygon fill="#de958e" stroke="#de958e" points="833.5413,-460.901 842.9484,-456.0268 832.555,-453.9708 833.5413,-460.901"/>
 </g>
-<!-- pyparsing -->
-<g id="node34" class="node">
-<title>pyparsing</title>
-<polygon fill="#343434" stroke="#343434" points="724.5,-351.3603 633.5,-351.3603 633.5,-315.3603 724.5,-315.3603 724.5,-351.3603"/>
-<text text-anchor="middle" x="679" y="-329.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">pyparsing</text>
+<!-- lunchbox.enforce -->
+<g id="node31" class="node">
+<title>lunchbox.enforce</title>
+<polygon fill="#343434" stroke="#343434" points="494.5,-573.3603 345.5,-573.3603 345.5,-537.3603 494.5,-537.3603 494.5,-573.3603"/>
+<text text-anchor="middle" x="420" y="-551.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">lunchbox.enforce</text>
 </g>
-<!-- pyparsing&#45;&gt;shekels.core.data_tools -->
-<g id="edge71" class="edge">
-<title>pyparsing&#45;&gt;shekels.core.data_tools</title>
-<path fill="none" stroke="#de958e" d="M724.7387,-339.3669C749.6198,-343.5307 780.6151,-350.1945 807,-360.3603 845.0985,-375.0391 885.0094,-399.365 912.2406,-417.5345"/>
-<polygon fill="#de958e" stroke="#de958e" points="910.3731,-420.4967 920.618,-423.1973 914.2933,-414.6974 910.3731,-420.4967"/>
+<!-- lunchbox.enforce&#45;&gt;shekels.core.data_tools -->
+<g id="edge61" class="edge">
+<title>lunchbox.enforce&#45;&gt;shekels.core.data_tools</title>
+<path fill="none" stroke="#de958e" d="M494.6865,-550.157C590.6864,-542.7379 751.5973,-527.624 807,-506.3603 825.1862,-499.3804 825.8006,-490.5056 843,-481.3603 855.539,-474.6929 869.4396,-468.5367 882.8655,-463.1535"/>
+<polygon fill="#de958e" stroke="#de958e" points="884.4927,-466.2753 892.5315,-459.374 881.9436,-459.756 884.4927,-466.2753"/>
+</g>
+<!-- lunchbox.enforce&#45;&gt;shekels.enforce.enforce_tools -->
+<g id="edge62" class="edge">
+<title>lunchbox.enforce&#45;&gt;shekels.enforce.enforce_tools</title>
+<path fill="none" stroke="#de958e" d="M444.9121,-537.0848C466.7102,-519.7545 497.5424,-491.7527 515,-460.3603 549.1616,-398.9304 500.7601,-355.5191 551,-306.3603 551.9588,-305.4222 552.9414,-304.5129 553.9463,-303.6318"/>
+<polygon fill="#de958e" stroke="#de958e" points="556.2527,-306.2739 562.0604,-297.4127 551.9944,-300.7181 556.2527,-306.2739"/>
+</g>
+<!-- lunchbox.enforce&#45;&gt;shekels.server.components -->
+<g id="edge63" class="edge">
+<title>lunchbox.enforce&#45;&gt;shekels.server.components</title>
+<path fill="none" stroke="#de958e" d="M465.7805,-573.4024C483.5924,-582.5719 502.6484,-595.42 515,-612.3603 556.4114,-669.1559 498.3225,-719.8229 551,-766.3603 561.4257,-775.5708 1035.1784,-817.7821 1049,-819.3603 1062.6445,-820.9182 1076.9218,-822.593 1091.118,-824.2864"/>
+<polygon fill="#de958e" stroke="#de958e" points="1091.0851,-827.8074 1101.4304,-825.5214 1091.9175,-820.8571 1091.0851,-827.8074"/>
+</g>
+<!-- lunchbox.enforce&#45;&gt;shekels.server.event_listener -->
+<g id="edge64" class="edge">
+<title>lunchbox.enforce&#45;&gt;shekels.server.event_listener</title>
+<path fill="none" stroke="#de958e" d="M468.1486,-573.5503C485.6543,-582.5796 503.857,-595.2867 515,-612.3603 584.5381,-718.9084 492.0386,-783.6145 551,-896.3603 631.939,-1051.1316 681.2496,-1093.4657 843,-1159.3603 915.6429,-1188.9539 1003.0886,-1193.7458 1074.7256,-1190.655"/>
+<polygon fill="#de958e" stroke="#de958e" points="1074.9078,-1194.1504 1084.7258,-1190.1683 1074.5675,-1187.1586 1074.9078,-1194.1504"/>
 </g>
 <!-- rolling_pin.blob_etl -->
-<g id="node35" class="node">
+<g id="node32" class="node">
 <title>rolling_pin.blob_etl</title>
 <polygon fill="#343434" stroke="#343434" points="770,-703.3603 588,-703.3603 588,-667.3603 770,-667.3603 770,-703.3603"/>
 <text text-anchor="middle" x="679" y="-681.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">rolling_pin.blob_etl</text>
 </g>
 <!-- rolling_pin.blob_etl&#45;&gt;shekels.core.data_tools -->
-<g id="edge72" class="edge">
+<g id="edge65" class="edge">
 <title>rolling_pin.blob_etl&#45;&gt;shekels.core.data_tools</title>
 <path fill="none" stroke="#de958e" d="M701.6259,-667.1176C727.5444,-646.027 771.0666,-610.0176 807,-577.3603 848.1076,-540.0004 893.7913,-494.4863 921.189,-466.7314"/>
 <polygon fill="#de958e" stroke="#de958e" points="923.8901,-468.9767 928.4126,-459.3956 918.9023,-464.0652 923.8901,-468.9767"/>
 </g>
 <!-- rolling_pin.blob_etl&#45;&gt;shekels.server.components -->
-<g id="edge73" class="edge">
+<g id="edge66" class="edge">
 <title>rolling_pin.blob_etl&#45;&gt;shekels.server.components</title>
 <path fill="none" stroke="#de958e" d="M770.2578,-682.5972C865.3512,-681.5477 1006.3446,-685.7153 1049,-717.3603 1083.5995,-743.0288 1052.5441,-779.0298 1085,-807.3603 1088.7398,-810.6248 1092.7638,-813.5658 1096.997,-816.2149"/>
 <polygon fill="#de958e" stroke="#de958e" points="1095.524,-819.402 1105.956,-821.2524 1098.9548,-813.3004 1095.524,-819.402"/>
+</g>
+<!-- schematics.exceptions -->
+<g id="node33" class="node">
+<title>schematics.exceptions</title>
+<polygon fill="#343434" stroke="#343434" points="515,-657.3603 325,-657.3603 325,-621.3603 515,-621.3603 515,-657.3603"/>
+<text text-anchor="middle" x="420" y="-635.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">schematics.exceptions</text>
+</g>
+<!-- schematics.exceptions&#45;&gt;shekels.core.config -->
+<g id="edge67" class="edge">
+<title>schematics.exceptions&#45;&gt;shekels.core.config</title>
+<path fill="none" stroke="#de958e" d="M426.6319,-657.3924C442.0216,-696.6232 484.0361,-789.9937 551,-837.3603 560.5695,-844.1292 571.4277,-849.4707 582.677,-853.6848"/>
+<polygon fill="#de958e" stroke="#de958e" points="581.604,-857.017 592.1987,-856.9662 583.8847,-850.399 581.604,-857.017"/>
+</g>
+<!-- schematics.exceptions&#45;&gt;shekels.core.data_tools -->
+<g id="edge68" class="edge">
+<title>schematics.exceptions&#45;&gt;shekels.core.data_tools</title>
+<path fill="none" stroke="#de958e" d="M459.426,-621.3549C485.0705,-610.2359 519.4855,-596.4129 551,-587.3603 662.1832,-555.4226 711.673,-605.8927 807,-540.3603 832.3137,-522.9584 819.4398,-501.0713 843,-481.3603 851.3358,-474.3863 861.0269,-468.54 871.065,-463.6639"/>
+<polygon fill="#de958e" stroke="#de958e" points="872.6895,-466.7704 880.3524,-459.454 869.7994,-460.3948 872.6895,-466.7704"/>
+</g>
+<!-- schematics.exceptions&#45;&gt;shekels.server.api -->
+<g id="edge69" class="edge">
+<title>schematics.exceptions&#45;&gt;shekels.server.api</title>
+<path fill="none" stroke="#de958e" d="M515.0802,-621.4602C527.1575,-619.3281 539.3593,-617.243 551,-615.3603 914.5568,-556.5599 1008.8196,-557.974 1377,-549.3603 1483.1932,-546.8758 1510.0687,-541.5038 1616,-549.3603 1633.7553,-550.6771 1652.6146,-552.8739 1670.7038,-555.3829"/>
+<polygon fill="#de958e" stroke="#de958e" points="1670.2678,-558.8561 1680.6622,-556.8053 1671.2576,-551.9264 1670.2678,-558.8561"/>
+</g>
+<!-- schematics.exceptions&#45;&gt;shekels.server.components -->
+<g id="edge70" class="edge">
+<title>schematics.exceptions&#45;&gt;shekels.server.components</title>
+<path fill="none" stroke="#de958e" d="M428.4171,-657.3908C445.7309,-692.121 488.9851,-767.6606 551,-799.3603 574.5946,-811.421 906.66,-826.8232 1091.2942,-834.5223"/>
+<polygon fill="#de958e" stroke="#de958e" points="1091.1961,-838.0212 1101.3328,-834.9394 1091.4867,-831.0272 1091.1961,-838.0212"/>
+</g>
+<!-- schematics.exceptions&#45;&gt;shekels.server.server_tools -->
+<g id="edge71" class="edge">
+<title>schematics.exceptions&#45;&gt;shekels.server.server_tools</title>
+<path fill="none" stroke="#de958e" d="M515.1237,-648.7696C595.5297,-653.1806 712.3936,-651.1314 807,-615.3603 825.9598,-608.1915 823.8274,-593.9386 843,-587.3603 881.4345,-574.1731 1303.0368,-576.6074 1341,-590.3603 1396.9556,-610.6313 1447.443,-660.3567 1474.8652,-691.2293"/>
+<polygon fill="#de958e" stroke="#de958e" points="1472.444,-693.7784 1481.6516,-699.0197 1477.7221,-689.1805 1472.444,-693.7784"/>
+</g>
+<!-- cufflinks -->
+<g id="node34" class="node">
+<title>cufflinks</title>
+<polygon fill="#343434" stroke="#343434" points="724.5,-405.3603 633.5,-405.3603 633.5,-369.3603 724.5,-369.3603 724.5,-405.3603"/>
+<text text-anchor="middle" x="679" y="-383.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">cufflinks</text>
+</g>
+<!-- cufflinks&#45;&gt;shekels.core.data_tools -->
+<g id="edge72" class="edge">
+<title>cufflinks&#45;&gt;shekels.core.data_tools</title>
+<path fill="none" stroke="#de958e" d="M724.5956,-396.5819C758.1023,-403.3585 804.9084,-412.8249 846.8581,-421.3091"/>
+<polygon fill="#de958e" stroke="#de958e" points="846.3488,-424.7769 856.8442,-423.3288 847.7365,-417.9158 846.3488,-424.7769"/>
+</g>
+<!-- pyparsing -->
+<g id="node35" class="node">
+<title>pyparsing</title>
+<polygon fill="#343434" stroke="#343434" points="724.5,-351.3603 633.5,-351.3603 633.5,-315.3603 724.5,-315.3603 724.5,-351.3603"/>
+<text text-anchor="middle" x="679" y="-329.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">pyparsing</text>
+</g>
+<!-- pyparsing&#45;&gt;shekels.core.data_tools -->
+<g id="edge73" class="edge">
+<title>pyparsing&#45;&gt;shekels.core.data_tools</title>
+<path fill="none" stroke="#de958e" d="M724.7387,-339.3669C749.6198,-343.5307 780.6151,-350.1945 807,-360.3603 845.0985,-375.0391 885.0094,-399.365 912.2406,-417.5345"/>
+<polygon fill="#de958e" stroke="#de958e" points="910.3731,-420.4967 920.618,-423.1973 914.2933,-414.6974 910.3731,-420.4967"/>
 </g>
 <!-- jsoncomment -->
 <g id="node36" class="node">
@@ -705,17 +705,11 @@
 <path fill="none" stroke="#de958e" d="M1864.5978,-174.5138C1868.3399,-177.1128 1871.8357,-180.0479 1875,-183.3603 1956.7734,-268.9593 1985.4304,-656.0977 1991.9447,-764.8612"/>
 <polygon fill="#de958e" stroke="#de958e" points="1988.463,-765.2791 1992.5387,-775.0586 1995.4511,-764.872 1988.463,-765.2791"/>
 </g>
-<!-- filelock -->
-<g id="node39" class="node">
-<title>filelock</title>
-<polygon fill="#343434" stroke="#343434" points="186,-505.3603 103,-505.3603 103,-469.3603 186,-469.3603 186,-505.3603"/>
-<text text-anchor="middle" x="144.5" y="-483.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">filelock</text>
-</g>
 <!-- selenium.webdriver.chrome.options -->
-<g id="node40" class="node">
+<g id="node39" class="node">
 <title>selenium.webdriver.chrome.options</title>
-<polygon fill="#343434" stroke="#343434" points="289,-559.3603 0,-559.3603 0,-523.3603 289,-523.3603 289,-559.3603"/>
-<text text-anchor="middle" x="144.5" y="-537.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">selenium.webdriver.chrome.options</text>
+<polygon fill="#343434" stroke="#343434" points="289,-505.3603 0,-505.3603 0,-469.3603 289,-469.3603 289,-505.3603"/>
+<text text-anchor="middle" x="144.5" y="-483.6603" font-family="Courier,monospace" font-size="14.00" fill="#de958e">selenium.webdriver.chrome.options</text>
 </g>
 </g>
 </svg>

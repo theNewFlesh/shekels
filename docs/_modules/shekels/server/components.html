@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.9.8
+                0.10.2
               </div>
             
           
@@ -572,9 +572,12 @@
                 <span class="n">className</span><span class="o">=</span><span class="s1">&#39;plot plot-error&#39;</span><span class="p">,</span>
                 <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;min-width&#39;</span><span class="p">:</span> <span class="n">min_width</span><span class="p">},</span>
                 <span class="n">children</span><span class="o">=</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
-                    <span class="n">className</span><span class="o">=</span><span class="s1">&#39;plot-error-message&#39;</span><span class="p">,</span>
-                    <span class="n">children</span><span class="o">=</span><span class="s1">&#39;no data found&#39;</span>
-                <span class="p">),</span>
+                    <span class="n">className</span><span class="o">=</span><span class="s1">&#39;plot-error-container&#39;</span><span class="p">,</span>
+                    <span class="n">children</span><span class="o">=</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;plot-error-message&#39;</span><span class="p">,</span>
+                        <span class="n">children</span><span class="o">=</span><span class="s1">&#39;no data found&#39;</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
             <span class="p">)</span>
         <span class="n">elems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">elems</span></div>

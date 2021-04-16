@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.9.3
+                0.10.2
               </div>
             
           
@@ -171,13 +171,20 @@
 <span class="kn">import</span> <span class="nn">base64</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
 
 <span class="kn">from</span> <span class="nn">dash.exceptions</span> <span class="kn">import</span> <span class="n">PreventUpdate</span>
+<span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">DataError</span>
+<span class="kn">import</span> <span class="nn">dash</span>
 <span class="kn">import</span> <span class="nn">flask</span>
 <span class="kn">import</span> <span class="nn">jinja2</span>
 <span class="kn">import</span> <span class="nn">jsoncomment</span> <span class="k">as</span> <span class="nn">jsonc</span>
 <span class="kn">import</span> <span class="nn">lunchbox.tools</span> <span class="k">as</span> <span class="nn">lbt</span>
+
+<span class="kn">import</span> <span class="nn">shekels.core.config</span> <span class="k">as</span> <span class="nn">cfg</span>
+<span class="kn">import</span> <span class="nn">shekels.core.data_tools</span> <span class="k">as</span> <span class="nn">sdt</span>
+<span class="kn">import</span> <span class="nn">shekels.server.components</span> <span class="k">as</span> <span class="nn">svc</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
@@ -248,12 +255,12 @@
 
 
 <div class="viewcode-block" id="parse_json_file_content"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.parse_json_file_content">[docs]</a><span class="k">def</span> <span class="nf">parse_json_file_content</span><span class="p">(</span><span class="n">raw_content</span><span class="p">):</span>
-    <span class="c1"># type: (bytes) -&gt; Dict</span>
+    <span class="c1"># type: (str) -&gt; Dict</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Parses JSON file content as supplied by HTML request.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        raw_content (bytes): Raw JSON file content.</span>
+<span class="sd">        raw_content (str): Raw JSON file content.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If header is invalid.</span>
@@ -262,10 +269,10 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        dict: JSON content or reponse dict with error.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">header</span><span class="p">,</span> <span class="n">content</span> <span class="o">=</span> <span class="n">raw_content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-    <span class="n">temp</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
+    <span class="n">header</span><span class="p">,</span> <span class="n">content</span> <span class="o">=</span> <span class="n">raw_content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># type: str</span>
     <span class="k">if</span> <span class="n">temp</span> <span class="o">!=</span> <span class="s1">&#39;json&#39;</span><span class="p">:</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;File header is not JSON. Header: </span><span class="si">{</span><span class="n">header</span><span class="si">}</span><span class="s1">.&#39;</span>  <span class="c1"># type: ignore</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;File header is not JSON. Header: </span><span class="si">{</span><span class="n">header</span><span class="si">}</span><span class="s1">.&#39;</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="n">output</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
@@ -311,6 +318,185 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="solve_component_state"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.solve_component_state">[docs]</a><span class="k">def</span> <span class="nf">solve_component_state</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="c1"># type (dict) -&gt; Optional(html.Div)</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Solves what component to return given the state of the given store.</span>
+
+<span class="sd">    Returns a key value card component embedded with a relevant message or error</span>
+<span class="sd">    if a required key is not found in the store, or it contain a dictionary with</span>
+<span class="sd">    am &quot;error&quot; key in it. Those required keys are as follows:</span>
+
+<span class="sd">        * /config</span>
+<span class="sd">        * /api/initialize</span>
+<span class="sd">        * /api/update</span>
+<span class="sd">        * /api/search</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        store (dict): Dash store.</span>
+<span class="sd">        config (bool, optional): Whether the component is for the config tab.</span>
+<span class="sd">            Default: False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Div: Key value card if store values are not present or have errors,</span>
+<span class="sd">            otherwise, none.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">states</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="s1">&#39;Please call init or update.&#39;</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;/api/update&#39;</span><span class="p">,</span> <span class="s1">&#39;Please call update.&#39;</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;/api/search&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="n">config</span><span class="p">:</span>
+        <span class="n">states</span> <span class="o">=</span> <span class="n">states</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">states</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">message</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">svc</span><span class="o">.</span><span class="n">get_key_value_table</span><span class="p">(</span>
+                <span class="p">{</span><span class="s1">&#39;action&#39;</span><span class="p">:</span> <span class="n">message</span><span class="p">},</span>
+                <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">,</span>
+                <span class="n">header</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">svc</span><span class="o">.</span><span class="n">get_key_value_table</span><span class="p">(</span>
+                <span class="n">value</span><span class="p">,</span>
+                <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span>
+                <span class="n">header</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span>
+                <span class="n">key_order</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="s1">&#39;code&#39;</span><span class="p">,</span> <span class="s1">&#39;traceback&#39;</span><span class="p">],</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<span class="c1"># EVENTS------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="config_query_event"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.config_query_event">[docs]</a><span class="k">def</span> <span class="nf">config_query_event</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
+    <span class="c1"># type: (str, dict, dash.Dash) -&gt; dict</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Updates given store given a config query.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value (str): SQL query.</span>
+<span class="sd">        store (dict): Dash store.</span>
+<span class="sd">        app (dash.Dash): Dash app.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Modified store.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="ow">or</span> <span class="s1">&#39;select * from config&#39;</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;from config&#39;</span><span class="p">,</span> <span class="s1">&#39;from data&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sdt</span><span class="o">.</span><span class="n">query_dict</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
+    <span class="k">return</span> <span class="n">store</span></div>
+
+
+<div class="viewcode-block" id="data_query_event"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.data_query_event">[docs]</a><span class="k">def</span> <span class="nf">data_query_event</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
+    <span class="c1"># type: (str, dict, dash.Dash) -&gt; dict</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Updates given store given a data query.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value (str): SQL query.</span>
+<span class="sd">        store (dict): Dash store.</span>
+<span class="sd">        app (dash.Dash): Dash app.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Modified store.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">update_store</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/search&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span>
+    <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/search/query&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">return</span> <span class="n">store</span></div>
+
+
+<div class="viewcode-block" id="init_event"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.init_event">[docs]</a><span class="k">def</span> <span class="nf">init_event</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
+    <span class="c1"># type: (None, dict, dash.Dash) -&gt; dict</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Initializes app database.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value (None): Ignored.</span>
+<span class="sd">        store (dict): Dash store.</span>
+<span class="sd">        app (dash.Dash): Dash app.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Modified store.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">update_store</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">]:</span>
+        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">store</span></div>
+
+
+<div class="viewcode-block" id="update_event"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.update_event">[docs]</a><span class="k">def</span> <span class="nf">update_event</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
+    <span class="c1"># type: (None, dict, dash.Dash) -&gt; dict</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Update app database.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value (None): Ignored.</span>
+<span class="sd">        store (dict): Dash store.</span>
+<span class="sd">        app (dash.Dash): Dash app.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Modified store.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">update_store</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/update&#39;</span><span class="p">)</span>
+    <span class="n">update_store</span><span class="p">(</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">client</span><span class="p">,</span>
+        <span class="n">store</span><span class="p">,</span>
+        <span class="s1">&#39;/api/search&#39;</span><span class="p">,</span>
+        <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">app</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;default_query&#39;</span><span class="p">]}</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">store</span></div>
+
+
+<div class="viewcode-block" id="upload_event"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.upload_event">[docs]</a><span class="k">def</span> <span class="nf">upload_event</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
+    <span class="c1"># type: (str, dict, dash.Dash) -&gt; dict</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Uploads config to app store.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value (str): Config.</span>
+<span class="sd">        store (dict): Dash store.</span>
+<span class="sd">        app (dash.Dash): Dash app.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Modified store.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">parse_json_file_content</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">to_primitive</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
+    <span class="k">return</span> <span class="n">store</span></div>
+
+
+<div class="viewcode-block" id="save_event"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.save_event">[docs]</a><span class="k">def</span> <span class="nf">save_event</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
+    <span class="c1"># type: (None, dict, dash.Dash) -&gt; dict</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Save store config to app.api.config path.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value (None): Ignore me.</span>
+<span class="sd">        store (dict): Dash store.</span>
+<span class="sd">        app (dash.Dash): Dash app.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Modified store.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/config&#39;</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">Config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="n">DataError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
+    <span class="k">return</span> <span class="n">store</span></div>
 </pre></div>
 
            </div>
