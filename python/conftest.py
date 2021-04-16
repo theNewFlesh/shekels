@@ -1,4 +1,3 @@
-from filelock import FileLock
 import logging
 
 from selenium.webdriver.chrome.options import Options

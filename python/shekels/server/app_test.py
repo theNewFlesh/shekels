@@ -219,7 +219,7 @@ def test_on_event_save_button_error(dash_duo):
 
         # click init
         dash_duo.find_elements('#init-button')[-1].click()
-        time.sleep(0.1)
+        time.sleep(0.12)
 
         # delete config
         os.remove(config_path)
@@ -284,6 +284,7 @@ def test_datatable_update(dash_duo, run_app):
 
     # click on data tab
     dash_duo.find_elements('#tabs .tab')[1].click()
+    time.sleep(0.01)
     dash_duo.wait_for_element('#key-value-table')
     result = dash_duo.find_element('#lower-content div')
     assert result.get_property('id') == 'table-content'
