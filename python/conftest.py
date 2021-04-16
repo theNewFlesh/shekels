@@ -1,4 +1,5 @@
 from filelock import FileLock
+import logging
 
 from selenium.webdriver.chrome.options import Options
 import lunchbox.tools as lbt
@@ -19,7 +20,7 @@ def pytest_setup_options():
     return options
 
 
-@pytest.fixture
+@pytest.fixture(scope='function')
 def run_app():
     '''
     Pytest fixture used to run shekels Dash app.
@@ -28,8 +29,9 @@ def run_app():
     config_path = lbt \
         .relative_path(__file__, '../resources/test_config.json') \
         .as_posix()
-    app.run(app.APP, config_path, debug=True, test=True)
-    return app.APP, app.APP.client
+    logging.getLogger('werkzeug').setLevel(logging.ERROR)
+    app.run(app.APP, config_path, debug=False, test=True)
+    yield app.APP, app.APP.client
 
 
 @pytest.fixture(autouse=True)
