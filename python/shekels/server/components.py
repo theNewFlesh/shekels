@@ -185,6 +185,7 @@ def get_dummy_elements():
     '''
     return [
         dcc.Input(className='dummy', id='config-query', value=None),
+        dcc.Input(className='dummy', id='config-table', value=None),
         dcc.Input(className='dummy', id='query', value=None),
         html.Div(className='dummy', id='config-search-button', n_clicks=None),
         html.Div(className='dummy', id='search-button', n_clicks=None),

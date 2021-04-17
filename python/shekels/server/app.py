@@ -54,6 +54,7 @@ def get_app():
     app.event_listener = sev.EventListener(app, {}) \
         .listen('config-query', svt.config_query_event) \
         .listen('config-search-button', svt.config_query_event) \
+        .listen('config-table', svt.config_edit_event) \
         .listen('query', svt.data_query_event) \
         .listen('search-button', svt.data_query_event) \
         .listen('init-button', svt.init_event) \
@@ -97,6 +98,7 @@ def serve_stylesheet(stylesheet):
     [
         Input('config-query', 'value'),
         Input('config-search-button', 'n_clicks'),
+        Input('config-table', 'data'),
         Input('query', 'value'),
         Input('init-button', 'n_clicks'),
         Input('update-button', 'n_clicks'),

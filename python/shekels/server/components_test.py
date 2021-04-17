@@ -172,6 +172,7 @@ class ComponentsTests(unittest.TestCase):
         result = set([x.id for x in result])
         expected = {
             'config-query',
+            'config-table',
             'query',
             'config-search-button',
             'search-button',
