@@ -18,18 +18,6 @@ import shekels.server.event_listener as sev
 # ------------------------------------------------------------------------------
 
 
-# TODO: Find a way to make these tests less flakey in terms of webdriver delays
-def write_config(root):
-    config = dict(
-        data_path='/foo/bar.baz',
-        columns=['foo', 'bar'],
-    )
-    config_path = Path(root, 'config.json').as_posix()
-    with open(config_path, 'w') as f:
-        json.dump(config, f)
-    return config_path
-
-
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_get_app(dash_duo):
     result = app.get_app()
