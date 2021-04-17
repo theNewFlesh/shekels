@@ -1,5 +1,6 @@
 from typing import Any, Dict
 
+from copy import deepcopy
 from pathlib import Path
 from pprint import pformat
 import base64
@@ -15,6 +16,7 @@ import flask
 import jinja2
 import jsoncomment as jsonc
 import lunchbox.tools as lbt
+import rolling_pin.blob_etl as rpb
 
 import shekels.core.config as cfg
 import shekels.core.data_tools as sdt
@@ -224,6 +226,32 @@ def config_query_event(value, store, app):
         store['/config'] = sdt.query_dict(app.api.config, value)
     except Exception as e:
         store['/config'] = error_to_response(e).json
+    return store
+
+
+def config_edit_event(value, store, app):
+    # type: (dict, dict, dash.Dash) -> dict
+    '''
+    Saves given edits to store.
+
+    Args:
+        value (dict): Config table.
+        store (dict): Dash store.
+        app (dash.Dash): Dash app.
+
+    Returns:
+        dict: Modified store.
+    '''
+    store['/config/edit'] = store.get('/config/edit', [])
+    store['/config/edit'].append(value)
+
+    # edits = store.get('config/edit', [])
+    # config = deepcopy(app.api.config)
+    # config.update(store['/config'])
+    # config = rpb.BlobETL(config).to_flat_dict()
+    # del config[old['key']]
+    # config[new['key']] = new['value']
+    # config = rpb.BlobETL(config).to_dict()
     return store
 
 

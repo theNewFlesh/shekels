@@ -258,7 +258,9 @@ def get_button(title):
     return html.Button(id=f'{title}-button', children=[title], n_clicks=0)
 
 
-def get_key_value_table(data, id_='key-value', header='', editable=False, key_order=None):
+def get_key_value_table(
+    data, id_='key-value', header='', editable=False, key_order=None
+):
     # type (dict, Optional(str), str, bool, Optional(List[str])) -> DataTable
     '''
     Gets a Dash DataTable element representing given dictionary.
@@ -299,6 +301,7 @@ def get_key_value_table(data, id_='key-value', header='', editable=False, key_or
 
     table = dash_table.DataTable(
         data=data,
+        data_previous=data,
         columns=cols,
         id=f'{id_}-table',
         sort_action='native',

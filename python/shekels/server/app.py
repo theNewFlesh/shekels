@@ -106,7 +106,7 @@ def serve_stylesheet(stylesheet):
         Input('upload', 'contents'),
         Input('save-button', 'n_clicks'),
     ],
-    [State('store', 'data')]
+    [State('config-table', 'data_previous')]
 )
 def on_event(*inputs):
     # type: (Tuple[Any, ...]) -> Dict[str, Any]
@@ -122,6 +122,9 @@ def on_event(*inputs):
     event = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
     value = dash.callback_context.triggered[0]['value']
     store = APP.event_listener.store
+
+    if event == 'config-table':
+        value = dict(new=value[0], old=inputs[-1][0])
 
     if event == 'update-button' and store.get('/api/initialize') is None:
         APP.event_listener.emit('init-button', None)
@@ -194,8 +197,10 @@ def on_config_update(store):
     comp = svt.solve_component_state(store, config=True)
     if comp is not None:
         return comp
+
+    store['/config/search'] = store.get('/config/search', store['/config'])
     return svc.get_key_value_table(
-        store['/config'],
+        store['/config/search'],
         id_='config',
         header='config',
         editable=True,
