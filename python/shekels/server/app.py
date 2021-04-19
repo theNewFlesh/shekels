@@ -180,7 +180,7 @@ def on_datatable_update(store):
 def on_config_update(store):
     # type: (Dict[str, Any]) -> flask.Response
     '''
-    Updates config card with config information from store.
+    Updates config table with config information from store.
 
     Args:
         store (dict): Store data.

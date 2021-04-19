@@ -159,7 +159,7 @@ def solve_component_state(store, config=False):
     '''
     Solves what component to return given the state of the given store.
 
-    Returns a key value card component embedded with a relevant message or error
+    Returns a key value table component embedded with a relevant message or error
     if a required key is not found in the store, or it contain a dictionary with
     am "error" key in it. Those required keys are as follows:
 
@@ -174,7 +174,7 @@ def solve_component_state(store, config=False):
             Default: False.
 
     Returns:
-        Div: Key value card if store values are not present or have errors,
+        Div: Key value table if store values are not present or have errors,
             otherwise, none.
     '''
     states = [
