@@ -25,6 +25,14 @@ components
     :undoc-members:
     :show-inheritance:
 
+event_listener
+----------
+.. automodule:: shekels.server.event_listener
+    :members:
+    :private-members:
+    :undoc-members:
+    :show-inheritance:
+
 server_tools
 ------------
 .. automodule:: shekels.server.server_tools

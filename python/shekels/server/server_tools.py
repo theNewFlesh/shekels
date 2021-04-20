@@ -5,13 +5,20 @@ from pprint import pformat
 import base64
 import json
 import os
+import re
 import traceback
 
 from dash.exceptions import PreventUpdate
+from schematics.exceptions import DataError
+import dash
 import flask
 import jinja2
 import jsoncomment as jsonc
 import lunchbox.tools as lbt
+
+import shekels.core.config as cfg
+import shekels.core.data_tools as sdt
+import shekels.server.components as svc
 # ------------------------------------------------------------------------------
 
 
@@ -82,12 +89,12 @@ def render_template(filename, parameters, directory='../../../templates'):
 
 
 def parse_json_file_content(raw_content):
-    # type: (bytes) -> Dict
+    # type: (str) -> Dict
     '''
     Parses JSON file content as supplied by HTML request.
 
     Args:
-        raw_content (bytes): Raw JSON file content.
+        raw_content (str): Raw JSON file content.
 
     Raises:
         ValueError: If header is invalid.
@@ -96,10 +103,10 @@ def parse_json_file_content(raw_content):
     Returns:
         dict: JSON content or reponse dict with error.
     '''
-    header, content = raw_content.split(',')  # type: ignore
-    temp = header.split('/')[-1].split(';')[0]  # type: ignore
+    header, content = raw_content.split(',')
+    temp = header.split('/')[-1].split(';')[0]  # type: str
     if temp != 'json':
-        msg = f'File header is not JSON. Header: {header}.'  # type: ignore
+        msg = f'File header is not JSON. Header: {header}.'
         raise ValueError(msg)
 
     output = base64.b64decode(content).decode('utf-8')
@@ -145,3 +152,182 @@ def store_key_is_valid(store, key):
     if isinstance(value, dict) and 'error' in value:
         return False
     return True
+
+
+def solve_component_state(store, config=False):
+    # type (dict) -> Optional(html.Div)
+    '''
+    Solves what component to return given the state of the given store.
+
+    Returns a key value table component embedded with a relevant message or error
+    if a required key is not found in the store, or it contain a dictionary with
+    am "error" key in it. Those required keys are as follows:
+
+        * /config
+        * /api/initialize
+        * /api/update
+        * /api/search
+
+    Args:
+        store (dict): Dash store.
+        config (bool, optional): Whether the component is for the config tab.
+            Default: False.
+
+    Returns:
+        Div: Key value table if store values are not present or have errors,
+            otherwise, none.
+    '''
+    states = [
+        ['/config', None],
+        ['/api/initialize', 'Please call init or update.'],
+        ['/api/update', 'Please call update.'],
+        ['/api/search', None],
+    ]
+    if config:
+        states = states[:2]
+        states[1][1] = None
+    for key, message in states:
+        value = store.get(key)
+        if message is not None and value is None:
+            return svc.get_key_value_table(
+                {'action': message},
+                id_='status',
+                header='status',
+            )
+        elif isinstance(value, dict) and 'error' in value:
+            return svc.get_key_value_table(
+                value,
+                id_='error',
+                header='error',
+                key_order=['error', 'message', 'code', 'traceback'],
+            )
+    return None
+
+
+# EVENTS------------------------------------------------------------------------
+def config_query_event(value, store, app):
+    # type: (str, dict, dash.Dash) -> dict
+    '''
+    Updates given store given a config query.
+
+    Args:
+        value (str): SQL query.
+        store (dict): Dash store.
+        app (dash.Dash): Dash app.
+
+    Returns:
+        dict: Modified store.
+    '''
+    value = value or 'select * from config'
+    value = re.sub('from config', 'from data', value, flags=re.I)
+    try:
+        store['/config'] = sdt.query_dict(app.api.config, value)
+    except Exception as e:
+        store['/config'] = error_to_response(e).json
+    return store
+
+
+def data_query_event(value, store, app):
+    # type: (str, dict, dash.Dash) -> dict
+    '''
+    Updates given store given a data query.
+
+    Args:
+        value (str): SQL query.
+        store (dict): Dash store.
+        app (dash.Dash): Dash app.
+
+    Returns:
+        dict: Modified store.
+    '''
+    update_store(app.client, store, '/api/search', data={'query': value})
+    store['/api/search/query'] = value
+    return store
+
+
+def init_event(value, store, app):
+    # type: (None, dict, dash.Dash) -> dict
+    '''
+    Initializes app database.
+
+    Args:
+        value (None): Ignored.
+        store (dict): Dash store.
+        app (dash.Dash): Dash app.
+
+    Returns:
+        dict: Modified store.
+    '''
+    update_store(app.client, store, '/api/initialize', data=app.api.config)
+    if 'error' in store['/api/initialize']:
+        store['/config'] = store['/api/initialize']
+    return store
+
+
+def update_event(value, store, app):
+    # type: (None, dict, dash.Dash) -> dict
+    '''
+    Update app database.
+
+    Args:
+        value (None): Ignored.
+        store (dict): Dash store.
+        app (dash.Dash): Dash app.
+
+    Returns:
+        dict: Modified store.
+    '''
+    update_store(app.client, store, '/api/update')
+    update_store(
+        app.client,
+        store,
+        '/api/search',
+        data={'query': app.api.config['default_query']}
+    )
+    return store
+
+
+def upload_event(value, store, app):
+    # type: (str, dict, dash.Dash) -> dict
+    '''
+    Uploads config to app store.
+
+    Args:
+        value (str): Config.
+        store (dict): Dash store.
+        app (dash.Dash): Dash app.
+
+    Returns:
+        dict: Modified store.
+    '''
+    try:
+        config = parse_json_file_content(value)
+        config = cfg.Config(config)
+        config.validate()
+        store['/config'] = config.to_primitive()
+    except Exception as error:
+        store['/config'] = error_to_response(error).json
+    return store
+
+
+def save_event(value, store, app):
+    # type: (None, dict, dash.Dash) -> dict
+    '''
+    Save store config to app.api.config path.
+
+    Args:
+        value (None): Ignore me.
+        store (dict): Dash store.
+        app (dash.Dash): Dash app.
+
+    Returns:
+        dict: Modified store.
+    '''
+    try:
+        config = store.get('/config', app.api.config)
+        cfg.Config(config).validate()
+        with open(app.api.config_path, 'w') as f:
+            json.dump(config, f, indent=4, sort_keys=True)
+    except (Exception, DataError) as error:
+        store['/config'] = error_to_response(error).json
+    return store

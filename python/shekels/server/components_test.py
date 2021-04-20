@@ -160,11 +160,11 @@ class ComponentsTests(unittest.TestCase):
             "figure": {"kind": "bar"}
         }
         # DataError
-        result = svc.get_plots(data, [good, bad])[1].children.children
+        result = svc.get_plots(data, [good, bad])[1].children.children.children
         self.assertEqual(result, 'no data found')
 
         # EnforceError
-        result = svc.get_plots([], [good, good])[1].children.children
+        result = svc.get_plots([], [good, good])[1].children.children.children
         self.assertEqual(result, 'no data found')
 
     def test_get_dummy_elements(self):
@@ -178,7 +178,7 @@ class ComponentsTests(unittest.TestCase):
             'init-button',
             'update-button',
             'upload',
-            'write-button',
+            'save-button',
         }
         self.assertEqual(result, expected)
 

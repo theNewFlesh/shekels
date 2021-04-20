@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.9.7
+                0.10.2
               </div>
             
           
@@ -101,6 +101,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-shekels.server.api">api</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-shekels.server.app">app</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-shekels.server.components">components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#event-listener">event_listener</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-shekels.server.server_tools">server_tools</a></li>
 </ul>
 </li>
@@ -482,42 +483,6 @@
 </dl>
 </dd></dl>
 
-<dl class="py function">
-<dt id="shekels.server.app.solve_component_state">
-<code class="sig-prename descclassname"><span class="pre">shekels.server.app.</span></code><code class="sig-name descname"><span class="pre">solve_component_state</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">store</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/server/app.html#solve_component_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.app.solve_component_state" title="Permalink to this definition">¶</a></dt>
-<dd><p>Solves what component to return given the state of the given store.</p>
-<p>Returns a key value card component embedded with a relevant message or error
-if a required key is not found in the store, or it contain a dictionary with
-am “error” key in it. Those required keys are as follows:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>/config</p></li>
-<li><p>/api/initialize</p></li>
-<li><p>/api/update</p></li>
-<li><p>/api/search</p></li>
-</ul>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>store</strong> (<em>dict</em>) – Dash store.</p></li>
-<li><p><strong>config</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the component is for the config tab.
-Default: False.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>Key value card if store values are not present or have errors,</dt><dd><p>otherwise, none.</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Div</p>
-</dd>
-</dl>
-</dd></dl>
-
 </div>
 <div class="section" id="module-shekels.server.components">
 <span id="components"></span><h2>components<a class="headerlink" href="#module-shekels.server.components" title="Permalink to this headline">¶</a></h2>
@@ -739,8 +704,135 @@ Assumes dict element has all columns of table as keys.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="event-listener">
+<h2>event_listener<a class="headerlink" href="#event-listener" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-shekels.server.event_listener"></span><dl class="py class">
+<dt id="shekels.server.event_listener.EventListener">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">shekels.server.event_listener.</span></code><code class="sig-name descname"><span class="pre">EventListener</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dash.dash.Dash</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/server/event_listener.html#EventListener"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.event_listener.EventListener" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Listens for Dash app events and calls registered callbacks.</p>
+<dl class="py method">
+<dt id="shekels.server.event_listener.EventListener.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dash.dash.Dash</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/shekels/server/event_listener.html#EventListener.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.event_listener.EventListener.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs EventListener.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>app</strong> (<em>dash.Dash</em>) – Dash application instance.</p></li>
+<li><p><strong>store</strong> (<em>dict</em>) – Dash store.</p></li>
+<li><p><strong>memory</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of state changes to remember.
+Default: 10.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>EnforceError</strong> – If app is not an instance of dash.Dash.</p></li>
+<li><p><strong>EnforceError</strong> – If app is not an instance of dict.</p></li>
+<li><p><strong>EnforceError</strong> – If memory is less than 1.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shekels.server.event_listener.EventListener.emit">
+<code class="sig-name descname"><span class="pre">emit</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#shekels.server.event_listener.EventListener" title="shekels.server.event_listener.EventListener"><span class="pre">shekels.server.event_listener.EventListener</span></a><a class="reference internal" href="_modules/shekels/server/event_listener.html#EventListener.emit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.event_listener.EventListener.emit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call a registered callback guven an event and value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event</strong> (<em>str</em>) – Event name.</p></li>
+<li><p><strong>value</strong> (<em>object</em>) – Value to be given to callback.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>EnforceError</strong> – If event is not a string.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#shekels.server.event_listener.EventListener" title="shekels.server.event_listener.EventListener">EventListener</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shekels.server.event_listener.EventListener.listen">
+<code class="sig-name descname"><span class="pre">listen</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span> </span><span class="pre">dict</span><span class="p"><span class="pre">,</span> </span><span class="pre">dash.dash.Dash</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#shekels.server.event_listener.EventListener" title="shekels.server.event_listener.EventListener"><span class="pre">shekels.server.event_listener.EventListener</span></a><a class="reference internal" href="_modules/shekels/server/event_listener.html#EventListener.listen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.event_listener.EventListener.listen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Listen for given event and call given callback.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event</strong> (<em>str</em>) – Event name.</p></li>
+<li><p><strong>callback</strong> (<em>function</em>) – Function of form (value, store, app) -&gt; store.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>EnforceError</strong> – If event is not a string.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#shekels.server.event_listener.EventListener" title="shekels.server.event_listener.EventListener">EventListener</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="shekels.server.event_listener.EventListener.store">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">store</span></code><a class="headerlink" href="#shekels.server.event_listener.EventListener.store" title="Permalink to this definition">¶</a></dt>
+<dd><p>dict: Copy of last item in state.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-shekels.server.server_tools">
 <span id="server-tools"></span><h2>server_tools<a class="headerlink" href="#module-shekels.server.server_tools" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="shekels.server.server_tools.config_query_event">
+<code class="sig-prename descclassname"><span class="pre">shekels.server.server_tools.</span></code><code class="sig-name descname"><span class="pre">config_query_event</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dash.dash.Dash</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="reference internal" href="_modules/shekels/server/server_tools.html#config_query_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.server_tools.config_query_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates given store given a config query.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>str</em>) – SQL query.</p></li>
+<li><p><strong>store</strong> (<em>dict</em>) – Dash store.</p></li>
+<li><p><strong>app</strong> (<em>dash.Dash</em>) – Dash app.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Modified store.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="shekels.server.server_tools.data_query_event">
+<code class="sig-prename descclassname"><span class="pre">shekels.server.server_tools.</span></code><code class="sig-name descname"><span class="pre">data_query_event</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dash.dash.Dash</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="reference internal" href="_modules/shekels/server/server_tools.html#data_query_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.server_tools.data_query_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates given store given a data query.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>str</em>) – SQL query.</p></li>
+<li><p><strong>store</strong> (<em>dict</em>) – Dash store.</p></li>
+<li><p><strong>app</strong> (<em>dash.Dash</em>) – Dash app.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Modified store.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt id="shekels.server.server_tools.error_to_response">
 <code class="sig-prename descclassname"><span class="pre">shekels.server.server_tools.</span></code><code class="sig-name descname"><span class="pre">error_to_response</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Exception</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">flask.wrappers.Response</span><a class="reference internal" href="_modules/shekels/server/server_tools.html#error_to_response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.server_tools.error_to_response" title="Permalink to this definition">¶</a></dt>
@@ -759,12 +851,33 @@ Assumes dict element has all columns of table as keys.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="shekels.server.server_tools.init_event">
+<code class="sig-prename descclassname"><span class="pre">shekels.server.server_tools.</span></code><code class="sig-name descname"><span class="pre">init_event</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dash.dash.Dash</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="reference internal" href="_modules/shekels/server/server_tools.html#init_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.server_tools.init_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes app database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>None</em>) – Ignored.</p></li>
+<li><p><strong>store</strong> (<em>dict</em>) – Dash store.</p></li>
+<li><p><strong>app</strong> (<em>dash.Dash</em>) – Dash app.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Modified store.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="shekels.server.server_tools.parse_json_file_content">
-<code class="sig-prename descclassname"><span class="pre">shekels.server.server_tools.</span></code><code class="sig-name descname"><span class="pre">parse_json_file_content</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_content</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="_modules/shekels/server/server_tools.html#parse_json_file_content"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.server_tools.parse_json_file_content" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">shekels.server.server_tools.</span></code><code class="sig-name descname"><span class="pre">parse_json_file_content</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_content</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="_modules/shekels/server/server_tools.html#parse_json_file_content"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.server_tools.parse_json_file_content" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses JSON file content as supplied by HTML request.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>raw_content</strong> (<em>bytes</em>) – Raw JSON file content.</p>
+<dd class="field-odd"><p><strong>raw_content</strong> (<em>str</em>) – Raw JSON file content.</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
@@ -804,6 +917,63 @@ Default: ‘../../../templates’.</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt id="shekels.server.server_tools.save_event">
+<code class="sig-prename descclassname"><span class="pre">shekels.server.server_tools.</span></code><code class="sig-name descname"><span class="pre">save_event</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dash.dash.Dash</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="reference internal" href="_modules/shekels/server/server_tools.html#save_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.server_tools.save_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save store config to app.api.config path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>None</em>) – Ignore me.</p></li>
+<li><p><strong>store</strong> (<em>dict</em>) – Dash store.</p></li>
+<li><p><strong>app</strong> (<em>dash.Dash</em>) – Dash app.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Modified store.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="shekels.server.server_tools.solve_component_state">
+<code class="sig-prename descclassname"><span class="pre">shekels.server.server_tools.</span></code><code class="sig-name descname"><span class="pre">solve_component_state</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">store</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/server/server_tools.html#solve_component_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.server_tools.solve_component_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solves what component to return given the state of the given store.</p>
+<p>Returns a key value card component embedded with a relevant message or error
+if a required key is not found in the store, or it contain a dictionary with
+am “error” key in it. Those required keys are as follows:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>/config</p></li>
+<li><p>/api/initialize</p></li>
+<li><p>/api/update</p></li>
+<li><p>/api/search</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>store</strong> (<em>dict</em>) – Dash store.</p></li>
+<li><p><strong>config</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the component is for the config tab.
+Default: False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Key value card if store values are not present or have errors,</dt><dd><p>otherwise, none.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Div</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="shekels.server.server_tools.store_key_is_valid">
 <code class="sig-prename descclassname"><span class="pre">shekels.server.server_tools.</span></code><code class="sig-name descname"><span class="pre">store_key_is_valid</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">bool</span><a class="reference internal" href="_modules/shekels/server/server_tools.html#store_key_is_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.server_tools.store_key_is_valid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determines if given key is in store and does not have an error.</p>
@@ -827,6 +997,27 @@ Default: ‘../../../templates’.</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt id="shekels.server.server_tools.update_event">
+<code class="sig-prename descclassname"><span class="pre">shekels.server.server_tools.</span></code><code class="sig-name descname"><span class="pre">update_event</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dash.dash.Dash</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="reference internal" href="_modules/shekels/server/server_tools.html#update_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.server_tools.update_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update app database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>None</em>) – Ignored.</p></li>
+<li><p><strong>store</strong> (<em>dict</em>) – Dash store.</p></li>
+<li><p><strong>app</strong> (<em>dash.Dash</em>) – Dash app.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Modified store.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="shekels.server.server_tools.update_store">
 <code class="sig-prename descclassname"><span class="pre">shekels.server.server_tools.</span></code><code class="sig-name descname"><span class="pre">update_store</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/server/server_tools.html#update_store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.server_tools.update_store" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates store with data from given endpoint.
@@ -839,6 +1030,27 @@ Makes a post call to endpoint with client.</p>
 <li><p><strong>endpoint</strong> (<em>str</em>) – API endpoint.</p></li>
 <li><p><strong>data</strong> (<em>dict</em><em>, </em><em>optional</em>) – Data to be provided to endpoint request.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="shekels.server.server_tools.upload_event">
+<code class="sig-prename descclassname"><span class="pre">shekels.server.server_tools.</span></code><code class="sig-name descname"><span class="pre">upload_event</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dash.dash.Dash</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="reference internal" href="_modules/shekels/server/server_tools.html#upload_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.server.server_tools.upload_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uploads config to app store.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>str</em>) – Config.</p></li>
+<li><p><strong>store</strong> (<em>dict</em>) – Dash store.</p></li>
+<li><p><strong>app</strong> (<em>dash.Dash</em>) – Dash app.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Modified store.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>

@@ -121,6 +121,11 @@ button:active {
     color: {{ COLOR_SCHEME['cyan2'] }};
 }
 
+#save-button {
+    height: 27px !important;
+    color: {{ COLOR_SCHEME['red2'] }};
+}
+
 /* Tabs */
 .tabs {
     z-index: 1;
@@ -234,295 +239,25 @@ button:active {
 }
 
 .plot-error {
-    display: flex;
-    align-items: center;
-    color: {{ COLOR_SCHEME['red2'] }};
     min-height: 300px;
 }
 
+.plot-error-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: {{ COLOR_SCHEME['bg']}};
+}
+
 .plot-error-message {
-    flex-grow: 10;
+    color: {{ COLOR_SCHEME['red2'] }};
     font-size: 50px;
 }
 
 .column-header--sort {
     color: {{ COLOR_SCHEME['green2'] }} !important;
     padding-right: 4px;
-}
-
-/* RangeSlider */
-#rangeslider-container {
-    background: {{ COLOR_SCHEME['grey1'] }};
-    flex-grow: 3;
-    min-width: 200px;
-}
-
-#rangeslider-row {
-    display: flex;
-    justify-content: space-between;
-    padding-left: 2px;
-    padding-right: 2px;
-    font-size: 11px;
-}
-
-.rangeslider-span {
-    color: {{ COLOR_SCHEME['light1'] }};
-}
-
-.rangeslider-span-handle {
-    color: {{ COLOR_SCHEME['green2'] }};
-}
-
-#rangeslider {
-    padding-left: 6px;
-    padding-right: 8px;
-}
-
-#rangeslider .rc-slider-handle {
-    background: {{ COLOR_SCHEME['green2'] }};
-    border: 0px;
-    height: 10px;
-    width: 10px;
-    margin-top: -3.5px;
-    margin-left: -3.5px;
-}
-
-#rangeslider .rc-slider-dot {
-    display: none;
-}
-
-#rangeslider .rc-slider-track {
-    background: {{ COLOR_SCHEME['light1'] }};
-}
-
-#rangeslider .rc-slider-rail {
-    background: {{ COLOR_SCHEME['grey2'] }};
-}
-
-/* DatePicker */
-.DateInput_input,
-.DateRangePickerInput {
-    background: {{ COLOR_SCHEME['grey1'] }};
-    font-size: 13px;
-    height: 27px;
-    border-bottom-width: 0px;
-}
-
-.DateInput_input__focused {
-    background: {{ COLOR_SCHEME['grey2'] }};
-    border: 0px;
-}
-
-.DateRangePickerInput__withBorder {
-    border: 0px;
-}
-
-.DateRangePickerInput_arrow {
-    background: {{ COLOR_SCHEME['grey1'] }};
-    padding-left: 2px;
-    padding-right: 2px;
-}
-
-.DateRangePickerInput_arrow_svg {
-    fill: {{ COLOR_SCHEME['grey2'] }};
-}
-
-.DateInput {
-    background: {{ COLOR_SCHEME['grey1'] }};
-    width: 75px;
-    padding-left: 4px;
-    padding-right: 4px;
-}
-
-.DateInput:first-child {
-    padding-right: 0px;
-}
-
-.DateInput:last-child {
-    padding-right: 4px;
-}
-
-.DateInput:hover,
-.DateInput:active,
-.DateInput:focus,
-.DateInput:focus-within {
-    background: {{ COLOR_SCHEME['grey2'] }};
-}
-
-#startDate,
-#endDate {
-    color: {{ COLOR_SCHEME['light1'] }};
-    padding: 0px 0px 0px 0px;
-}
-
-#startDate:hover,
-#startDate:focus,
-#startDate:active,
-#endDate:hover,
-#endDate:focus,
-#endDate:active {
-    background: {{ COLOR_SCHEME['grey2'] }};
-    color: {{ COLOR_SCHEME['green2'] }};
-    height: 27px;
-}
-
-/* Calendar */
-.DayPicker_focusRegion,
-.CalendarMonthGrid,
-.CalendarMonth,
-.CalendarMonth_table {
-    background: {{ COLOR_SCHEME['grey1'] }};
-    color: {{ COLOR_SCHEME['light1'] }};
-}
-
-.CalendarDay {
-    background: {{ COLOR_SCHEME['bg'] }};
-    color: {{ COLOR_SCHEME['light1'] }};
-    border-color: {{ COLOR_SCHEME['grey1'] }};
-}
-
-.CalendarDay__default:hover {
-    background: {{ COLOR_SCHEME['grey2'] }};
-    color: {{ COLOR_SCHEME['green2'] }};
-    border: 0px;
-}
-
-.CalendarDay__selected,
-.CalendarDay__selected_span {
-    background: {{ COLOR_SCHEME['green2'] }};
-    color: {{ COLOR_SCHEME['grey2'] }};
-    border-color: {{ COLOR_SCHEME['grey1'] }};
-}
-
-.CalendarDay__selected:hover {
-    background: {{ COLOR_SCHEME['grey2'] }};
-    color: {{ COLOR_SCHEME['green2'] }};
-}
-
-.DayPicker {
-    background: {{ COLOR_SCHEME['grey1'] }};
-}
-
-.DayPickerNavigation_button {
-    background: {{ COLOR_SCHEME['grey1'] }};
-    border: 0px;
-    border-radius: 0px;
-}
-
-.DayPickerNavigation_button:hover {
-    background: {{ COLOR_SCHEME['grey2'] }};
-    border: 0px;
-    border-radius: 0px;
-}
-
-.DayPickerNavigation_svg__horizontal {
-    fill: {{ COLOR_SCHEME['light1'] }};
-}
-
-.DayPickerNavigation_svg__horizontal:hover {
-    fill: {{ COLOR_SCHEME['green2'] }};
-}
-
-.DayPickerKeyboardShortcuts_buttonReset:before {
-    border-right-color: {{ COLOR_SCHEME['light1'] }};
-}
-
-#datepicker .DayPickerKeyboardShortcuts_show__bottomRight:hover::before {
-    border-right-color: {{ COLOR_SCHEME['green2'] }};
-}
-
-.DayPickerKeyboardShortcuts_showSpan {
-    color: {{ COLOR_SCHEME['grey1'] }};
-}
-
-.CalendarMonth_caption strong {
-    color: {{ COLOR_SCHEME['light1'] }};
-    font-family: {{ FONT_FAMILY }};
-}
-
-.DayPicker_weekHeader_li small {
-    color: {{ COLOR_SCHEME['light1'] }};
-    font-family: {{ FONT_FAMILY }};
-}
-
-.DateInput_fangShape {
-    fill: {{ COLOR_SCHEME['green2'] }};
-    border: 0px;
-}
-
-#datepicker button {
-    background: {{ COLOR_SCHEME['grey1'] }};
-}
-
-/* Dropdown */
-.Select-clear-zone {
-    display: none !important;
-}
-
-.Select-menu,
-#dropdown > div > div.Select-menu-outer {
-    background: {{ COLOR_SCHEME['grey1'] }};
-    color: {{ COLOR_SCHEME['light1'] }};
-    border: 0px;
-    outline: none;
-    width: 110px;
-}
-
-#dropdown .Select-control .Select-value .Select-value-label {
-    color: {{ COLOR_SCHEME['light1'] }};
-}
-
-#dropdown .Select-value,
-#dropdown .Select-input,
-#dropdown .Select-control,
-#dropdown .Select-placeholder {
-    height: 26px !important;
-    line-height: 26px !important;
-}
-
-.Select-input > input {
-    padding: 0px 0px 0px 0px !important;
-}
-
-#react-select-2--value > div.Select-value {
-    border-color: {{ COLOR_SCHEME['green2'] }};
-}
-
-.Select-value-label,
-.Select-value-icon {
-    background: {{ COLOR_SCHEME['grey1'] }};
-    color: {{ COLOR_SCHEME['green2'] }};
-}
-
-#dropdown .Select {
-    font-size: medium !important;
-}
-
-#dropdown .Select-value-icon {
-    border-right: 1px solid {{ COLOR_SCHEME['green2'] }};
-}
-
-#dropdown .Select-value-icon:hover {
-    background: {{ COLOR_SCHEME['grey1'] }};
-    color: {{ COLOR_SCHEME['red2'] }};
-}
-
-#react-select-2--value > div.Select-placeholder {
-    color: {{ COLOR_SCHEME['light1'] }};
-}
-
-#react-select-2--list {
-    color: {{ COLOR_SCHEME['light1'] }};
-}
-
-#dropdown .VirtualizedSelectOption,
-#dropdown .VirtualizedSelectFocusedOption {
-    font-weight: normal !important;
-}
-
-#dropdown .VirtualizedSelectFocusedOption {
-    background: {{ COLOR_SCHEME['grey2'] }};
-    color: {{ COLOR_SCHEME['green2'] }};
 }
 
 /* ScrollBar */
@@ -552,18 +287,24 @@ button:active {
 }
 
 #datatable .dash-spreadsheet,
-#key-value-table .dash-spreadsheet {
+#config-table .dash-spreadsheet,
+#status-table .dash-spreadsheet,
+#error-table .dash-spreadsheet {
     max-height: unset;
 }
 
 /* header */
 #datatable .row.row-0,
-#key-value-table .row.row-0 {
+#config-table .row.row-0,
+#status-table .row.row-0,
+#error-table .row.row-0 {
     min-height: 0px !important;
 }
 
 #datatable .dash-header,
-#key-value-table .dash-header {
+#config-table .dash-header,
+#status-table .dash-header,
+#error-table .dash-header {
     color: {{ COLOR_SCHEME['light2'] }};
     background: {{ COLOR_SCHEME['bg'] }};
     font-weight: bold;
@@ -576,7 +317,9 @@ button:active {
 
 /* body */
 #datatable .dt-table-container__row-1,
-#key-value-table .dt-table-container__row-1 {
+#config-table .dt-table-container__row-1,
+#status-table .dt-table-container__row-1,
+#error-table .dt-table-container__row-1 {
     z-index: 0;
     max-width: 100%;
     overflow-x: auto;
@@ -589,18 +332,24 @@ button:active {
 }
 
 #datatable tr:nth-child(even) td.dash-cell,
-#key-value-table tr:nth-child(even) td.dash-cell {
+#config-table tr:nth-child(even) td.dash-cell,
+#status-table tr:nth-child(even) td.dash-cell,
+#error-table tr:nth-child(even) td.dash-cell {
     background: {{ COLOR_SCHEME['bg'] }} !important;
 }
 
 #datatable tr:nth-child(odd) td.dash-cell,
-#key-value-table tr:nth-child(odd) td.dash-cell {
+#config-table tr:nth-child(odd) td.dash-cell,
+#status-table tr:nth-child(odd) td.dash-cell,
+#error-table tr:nth-child(odd) td.dash-cell {
     background: {{ COLOR_SCHEME['grey1'] }} !important;
 }
 
 /* cell */
 #datatable td.dash-cell,
-#key-value-table td.dash-cell {
+#config-table td.dash-cell,
+#status-table td.dash-cell,
+#error-table td.dash-cell {
     color: {{ COLOR_SCHEME['light2'] }};
     height: auto;
     width: auto;
@@ -613,20 +362,28 @@ button:active {
 }
 
 #datatable td.dash-cell.cell--selecte,
-#key-value-table td.dash-cell.cell--selected,
+#config-table td.dash-cell.cell--selected,
+#status-table td.dash-cell.cell--selected,
+#error-table td.dash-cell.cell--selected,
 #datatable td.dash-cell.cell--selected.focused,
-#key-value-table td.dash-cell.cell--selected.focused {
+#config-table td.dash-cell.cell--selected.focused,
+#status-table td.dash-cell.cell--selected.focused,
+#error-table td.dash-cell.cell--selected.focused {
     background: {{ COLOR_SCHEME['grey2'] }} !important;
 }
 
 #datatable .input-active,
-#key-value-table .input-active {
+#config-table .input-active,
+#status-table .input-active,
+#error-table .input-active {
     color: {{ COLOR_SCHEME['green2'] }} !important;
     text-align: left !important;
 }
 
 #datatable .dash-cell div.dash-cell-value,
-#key-value-table .dash-cell div.dash-cell-value {
+#config-table .dash-cell div.dash-cell-value,
+#status-table .dash-cell div.dash-cell-value,
+#error-table .dash-cell div.dash-cell-value {
     display: inline;
     white-space: inherit;
     overflow: inherit;
@@ -634,14 +391,18 @@ button:active {
 }
 
 #datatable .dash-cell.focused,
-#key-value-table .dash-cell.focused {
+#config-table .dash-cell.focused,
+#status-table .dash-cell.focused,
+#error-table .dash-cell.focused {
     background: {{ COLOR_SCHEME['grey2'] }} !important;
     color: {{ COLOR_SCHEME['green2'] }} !important;
     border: 0px solid {{ COLOR_SCHEME['bg'] }} !important;
 }
 
 #datatable .dash-filter input,
-#key-value-table .dash-filter input {
+#config-table .dash-filter input,
+#status-table .dash-filter input,
+#error-table .dash-filter input {
     color: {{ COLOR_SCHEME['green2'] }};
     padding: 0px 5px 0px 5px;
     border-left: 1px solid {{ COLOR_SCHEME['grey1'] }};
@@ -649,28 +410,38 @@ button:active {
 }
 
 #datatable .sort,
-#key-value-table .sort {
+#config-table .sort,
+#status-table .sort,
+#error-table .sort {
     color: {{ COLOR_SCHEME['green2'] }};
     transform: translateY(-6px);
 }
 
 #datatable .previous-page,
-#key-value-table .previous-page {
+#config-table .previous-page,
+#status-table .previous-page,
+#error-table .previous-page {
     border-right: 3px solid {{ COLOR_SCHEME['bg'] }};
 }
 
 #datatable .dash-delete-cell,
-#key-value-table .dash-delete-cell {
+#config-table .dash-delete-cell,
+#status-table .dash-delete-cell,
+#error-table .dash-delete-cell {
     color: {{ COLOR_SCHEME['green2'] }} !important;
 }
 
 #datatable .dash-delete-cell:hover,
-#key-value-table .dash-delete-cell:hover {
+#config-table .dash-delete-cell:hover,
+#status-table .dash-delete-cell:hover,
+#error-table .dash-delete-cell:hover {
     color: {{ COLOR_SCHEME['red2'] }} !important;
 }
 
 #datatable .dash-spreadsheet-container .dash-spreadsheet-inner table,
-#key-value-table .dash-spreadsheet-container .dash-spreadsheet-inner table {
+#config-table .dash-spreadsheet-container .dash-spreadsheet-inner table,
+#status-table .dash-spreadsheet-container .dash-spreadsheet-inner table,
+#error-table .dash-spreadsheet-container .dash-spreadsheet-inner table {
     border-collapse: collapse;
     font-family: monospace;
     --accent: transparent  !important;
@@ -687,12 +458,16 @@ button:active {
 
 /* paginator */
 #datatable .page-number,
-#key-value-table .page-number {
+#config-table .page-number,
+#status-table .page-number,
+#error-table .page-number {
     color: {{ COLOR_SCHEME['light1'] }};
 }
 
 #datatable input,
-#key-value-table input {
+#config-table input,
+#status-table input,
+#error-table input {
     color: {{ COLOR_SCHEME['green2'] }} !important;
     background: {{ COLOR_SCHEME['grey2'] }} !important;
     border: 0px !important;
@@ -701,13 +476,17 @@ button:active {
 }
 
 #datatable .previous-next-container button,
-#key-value-table .previous-next-container button {
+#config-table .previous-next-container button,
+#status-table .previous-next-container button,
+#error-table .previous-next-container button {
     color: {{ COLOR_SCHEME['light2'] }};
     background: {{ COLOR_SCHEME['grey1'] }};
 }
 
 #datatable .previous-next-container button:hover,
-#key-value-table .previous-next-container button:hover {
+#config-table .previous-next-container button:hover,
+#status-table .previous-next-container button:hover,
+#error-table .previous-next-container button:hover {
     color: {{ COLOR_SCHEME['green2'] }};
     background: {{ COLOR_SCHEME['grey2'] }};
 }
@@ -720,7 +499,9 @@ button:active {
     border-bottom: 2px solid {{ COLOR_SCHEME['green2'] }};
 }
 
-#key-value-table tr:first-child {
+#config-table tr:first-child,
+#status-table tr:first-child,
+#error-table tr:first-child {
     display: none;
 }
 
@@ -733,13 +514,19 @@ button:active {
     text-align: center;
 }
 
-#key-value-table td.dash-cell:first-child {
+#config-table td.dash-cell:first-child,
+#status-table td.dash-cell:first-child,
+#error-table td.dash-cell:first-child {
     color: {{ COLOR_SCHEME['light1'] }};
     border-right: 2px solid {{ COLOR_SCHEME['green2'] }} !important;
 }
 
-#key-value-table td.dash-cell:first-child,
-#key-value-table td.dash-cell:first-child .input-active {
+#config-table td.dash-cell:first-child,
+#config-table td.dash-cell:first-child .input-active,
+#status-table td.dash-cell:first-child,
+#status-table td.dash-cell:first-child .input-active,
+#error-table td.dash-cell:first-child,
+#error-table td.dash-cell:first-child .input-active {
     text-align: right !important;
 }
 

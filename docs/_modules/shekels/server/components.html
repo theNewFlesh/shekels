@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.9.7
+                0.10.2
               </div>
             
           
@@ -176,6 +176,7 @@
 <span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="k">as</span> <span class="nn">html</span>
 <span class="kn">import</span> <span class="nn">dash_table</span>
 <span class="kn">import</span> <span class="nn">flask</span>
+<span class="kn">import</span> <span class="nn">lunchbox.tools</span> <span class="k">as</span> <span class="nn">lbt</span>
 <span class="kn">import</span> <span class="nn">rolling_pin.blob_etl</span> <span class="k">as</span> <span class="nn">rpb</span>
 
 <span class="kn">import</span> <span class="nn">shekels.core.config</span> <span class="k">as</span> <span class="nn">cfg</span>
@@ -201,18 +202,12 @@
 
     <span class="n">store</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="n">storage_type</span><span class="o">=</span><span class="n">storage_type</span><span class="p">)</span>
 
+    <span class="n">icon</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;icon&#39;</span><span class="p">,</span> <span class="n">src</span><span class="o">=</span><span class="s1">&#39;/assets/icon.svg&#39;</span><span class="p">)</span>
     <span class="n">tabs</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Tabs</span><span class="p">(</span>
         <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;tabs&#39;</span><span class="p">,</span>
         <span class="n">className</span><span class="o">=</span><span class="s1">&#39;tabs&#39;</span><span class="p">,</span>
         <span class="n">value</span><span class="o">=</span><span class="s1">&#39;plots&#39;</span><span class="p">,</span>
         <span class="n">children</span><span class="o">=</span><span class="p">[</span>
-            <span class="n">dcc</span><span class="o">.</span><span class="n">Tab</span><span class="p">(</span>
-                <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;logo&#39;</span><span class="p">,</span>
-                <span class="n">className</span><span class="o">=</span><span class="s1">&#39;tab&#39;</span><span class="p">,</span>
-                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$HEKELS&#39;</span><span class="p">,</span>
-                <span class="n">value</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
-                <span class="n">disabled</span><span class="o">=</span><span class="kc">True</span>
-            <span class="p">),</span>
             <span class="n">dcc</span><span class="o">.</span><span class="n">Tab</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;tab&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;plots&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s1">&#39;plots&#39;</span><span class="p">),</span>
             <span class="n">dcc</span><span class="o">.</span><span class="n">Tab</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;tab&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">),</span>
             <span class="n">dcc</span><span class="o">.</span><span class="n">Tab</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;tab&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">),</span>
@@ -221,6 +216,8 @@
             <span class="n">dcc</span><span class="o">.</span><span class="n">Tab</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;tab&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;monitor&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s1">&#39;monitor&#39;</span><span class="p">),</span>
         <span class="p">],</span>
     <span class="p">)</span>
+    <span class="n">tabs</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;tabs-container&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">icon</span><span class="p">,</span> <span class="n">tabs</span><span class="p">])</span>
+
     <span class="n">content</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Loading</span><span class="p">(</span>
         <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;content&quot;</span><span class="p">,</span>
         <span class="n">className</span><span class="o">=</span><span class="s1">&#39;content&#39;</span><span class="p">,</span>
@@ -228,11 +225,13 @@
         <span class="n">fullscreen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
 
+    <span class="n">assets</span> <span class="o">=</span> <span class="n">lbt</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s2">&quot;../../../resources&quot;</span><span class="p">)</span>
     <span class="n">app</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">Dash</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;$hekels&#39;</span><span class="p">,</span>
-        <span class="n">title</span><span class="o">=</span><span class="s1">&#39;$hekels&#39;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Shekels&#39;</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Shekels&#39;</span><span class="p">,</span>
         <span class="n">server</span><span class="o">=</span><span class="n">server</span><span class="p">,</span>
         <span class="n">external_stylesheets</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;/static/style.css&#39;</span><span class="p">],</span>
+        <span class="n">assets_folder</span><span class="o">=</span><span class="n">assets</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;layout&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">store</span><span class="p">,</span> <span class="n">tabs</span><span class="p">,</span> <span class="n">content</span><span class="p">])</span>
     <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;suppress_callback_exceptions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
@@ -358,7 +357,7 @@
         <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;init-button&#39;</span><span class="p">,</span> <span class="n">n_clicks</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
         <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;update-button&#39;</span><span class="p">,</span> <span class="n">n_clicks</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
         <span class="n">dcc</span><span class="o">.</span><span class="n">Upload</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;upload&#39;</span><span class="p">,</span> <span class="n">contents</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
-        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;write-button&#39;</span><span class="p">,</span> <span class="n">n_clicks</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;save-button&#39;</span><span class="p">,</span> <span class="n">n_clicks</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
     <span class="p">]</span></div>
 
 
@@ -392,9 +391,12 @@
         <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;upload&#39;</span><span class="p">,</span>
         <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;upload&#39;</span><span class="p">)]</span>
     <span class="p">)</span>
+    <span class="n">save</span> <span class="o">=</span> <span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;save&#39;</span><span class="p">)</span>
     <span class="n">row</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
         <span class="n">className</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">,</span>
-        <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">query</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">search</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">upload</span><span class="p">],</span>
+        <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">query</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">search</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">upload</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">save</span>
+        <span class="p">],</span>
     <span class="p">)</span>
     <span class="n">configbar</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;configbar&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;menubar&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">row</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">configbar</span></div>
@@ -570,9 +572,12 @@
                 <span class="n">className</span><span class="o">=</span><span class="s1">&#39;plot plot-error&#39;</span><span class="p">,</span>
                 <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;min-width&#39;</span><span class="p">:</span> <span class="n">min_width</span><span class="p">},</span>
                 <span class="n">children</span><span class="o">=</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
-                    <span class="n">className</span><span class="o">=</span><span class="s1">&#39;plot-error-message&#39;</span><span class="p">,</span>
-                    <span class="n">children</span><span class="o">=</span><span class="s1">&#39;no data found&#39;</span>
-                <span class="p">),</span>
+                    <span class="n">className</span><span class="o">=</span><span class="s1">&#39;plot-error-container&#39;</span><span class="p">,</span>
+                    <span class="n">children</span><span class="o">=</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;plot-error-message&#39;</span><span class="p">,</span>
+                        <span class="n">children</span><span class="o">=</span><span class="s1">&#39;no data found&#39;</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
             <span class="p">)</span>
         <span class="n">elems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">elems</span></div>

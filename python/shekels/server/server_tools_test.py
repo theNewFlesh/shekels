@@ -1,12 +1,17 @@
 from pathlib import Path
 from tempfile import TemporaryDirectory
+import base64
 import json
 import re
 import unittest
 
 from dash.exceptions import PreventUpdate
+import dash
 import flask
+import jsoncomment as jsonc
+import lunchbox.tools as lbt
 
+import shekels.core.config as cfg
 import shekels.server.server_tools as svt
 # ------------------------------------------------------------------------------
 
@@ -159,3 +164,238 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
         store['pizza'] = 'error'
         result = svt.store_key_is_valid(store, 'pizza')
         self.assertTrue(result)
+
+    def test_solve_component_state(self):
+        # correct
+        store = {'/api/initialize': {}, '/api/update': {}, '/api/search': {}}
+        result = svt.solve_component_state(store)
+        self.assertIsNone(result)
+
+        states = {
+            '/api/initialize': 'Please call init or update.',
+            '/api/update': 'Please call update.',
+            '/api/search': None,
+        }
+        keys = states.keys()
+        for key, expected in states.items():
+            # missing
+            store = dict(zip(keys, [{}] * len(keys)))
+            del store[key]
+            result = None
+            if expected is not None:
+                result = svt \
+                    .solve_component_state(store).children[-1].data[0]['value']
+            self.assertEqual(result, expected)
+
+            # error
+            store[key] = {
+                'error': 'FooBarError',
+                'message': 'Not all foos are bars.',
+                'code': '500',
+                'traceback': 'foobar',
+                'args': ['foo', 'bar'],
+            }
+            result = svt \
+                .solve_component_state(store).children[-1].data[0]['value']
+            self.assertEqual(result, 'FooBarError')
+
+    def get_app(self):
+        json_ = json
+
+        class Api:
+            config = {
+                'default_query': 'select * from data',
+                'foo': 'bar',
+                'taco': 'pizza',
+            }
+
+        class Client:
+            def __init__(self, error=False):
+                self.error = error
+
+            def post(self, endpoint, json=None):
+                if endpoint == '/api/initialize':
+                    if self.error:
+                        return svt.error_to_response(ValueError('foo'))
+
+                    return flask.Response(
+                        response=json_.dumps(dict(
+                            message='Database initialized.',
+                            config=Api.config,
+                        )),
+                        mimetype='application/json'
+                    )
+
+                if endpoint == '/api/update':
+                    return flask.Response(
+                        response=json_.dumps(dict(
+                            message='Database updated.',
+                            config=Api.config,
+                        )),
+                        mimetype='application/json'
+                    )
+
+                if endpoint == '/api/search':
+                    return flask.Response(
+                        response=json_.dumps([{'foo': 'bar'}]),
+                        mimetype='application/json'
+                    )
+
+        app = dash.Dash(name='test')
+        app.api = Api()
+        app.client = Client()
+        return app
+
+    def test_config_query_event(self):
+        class Api:
+            config = {
+                'foo': 'bar',
+                'taco': 'pizza',
+            }
+
+        value = None
+        store = {}
+        app = self.get_app()
+
+        # good query
+        value = "select * from config where key == 'foo'"
+        result = svt.config_query_event(value, store, app)
+        expected = {'/config': {'foo': 'bar'}}
+        self.assertEqual(result, expected)
+
+        # bad query
+        value = 'bad query'
+        result = svt.config_query_event(value, store, app)['/config']
+        self.assertIn('error', result)
+        self.assertEqual(result['error'], 'PandaSQLException')
+
+    def test_data_query_event(self):
+        value = None
+        store = {}
+        app = self.get_app()
+
+        # query
+        value = "select * from config where key == 'foo'"
+        result = svt.data_query_event(value, store, app)
+        expected = {
+            '/api/search': [{'foo': 'bar'}],
+            '/api/search/query': value,
+        }
+        self.assertEqual(result, expected)
+
+    def test_init_event(self):
+        value = 'ignore me'
+        app = self.get_app()
+
+        # good config
+        store = {}
+        result = svt.init_event(value, store, app)
+        expected = {
+            '/api/initialize': {
+                'config': {
+                    'default_query': 'select * from data',
+                    'foo': 'bar',
+                    'taco': 'pizza',
+                },
+                'message': 'Database initialized.'
+            }
+        }
+        self.assertEqual(result, expected)
+
+        # bad config
+        app.client.error = True
+        store = {}
+        result = svt.init_event(value, store, app)
+        expected = 'ValueError'
+        self.assertEqual(result['/api/initialize']['error'], expected)
+        self.assertEqual(result['/config']['error'], expected)
+
+    def test_update_event(self):
+        value = 'ignore me'
+        app = self.get_app()
+
+        store = {}
+        result = svt.update_event(value, store, app)
+        expected = {
+            '/api/update': {
+                'message': 'Database updated.',
+                'config': {
+                    'default_query': 'select * from data',
+                    'foo': 'bar', 'taco': 'pizza'
+                }
+            },
+            '/api/search': [{'foo': 'bar'}]
+        }
+        self.assertEqual(result, expected)
+
+    def test_upload_event(self):
+        app = self.get_app()
+
+        config_path = lbt \
+            .relative_path(__file__, '../../../resources/test_config.json')
+        with open(config_path) as f:
+            config = jsonc.JsonComment().load(f)
+
+        value = json.dumps(config)
+        value = base64.encodebytes(value.encode('utf-8')).decode('utf-8')
+        value = 'data:application/json;base64,' + value
+
+        store = {'some': 'value'}
+
+        # good config
+        result = svt.upload_event(value, store, app)
+        expected = {
+            'some': 'value',
+            '/config': cfg.Config(config).to_primitive()
+        }
+        self.assertEqual(result, expected)
+
+        # bad config
+        config['rogue'] = 'field'
+        value = json.dumps(config)
+        value = base64.encodebytes(value.encode('utf-8')).decode('utf-8')
+        value = 'data:application/json;base64,' + value
+
+        result = svt.upload_event(value, store, app)['/config']['error']
+        self.assertEqual(result, 'DataError')
+
+    def test_save_event(self):
+        app = self.get_app()
+
+        config_path = lbt \
+            .relative_path(__file__, '../../../resources/test_config.json')
+        with open(config_path) as f:
+            config = jsonc.JsonComment().load(f)
+
+        store = {'/config': config}
+        value = json.dumps(config)
+        value = base64.encodebytes(value.encode('utf-8')).decode('utf-8')
+        value = 'data:application/json;base64,' + value
+
+        with TemporaryDirectory() as root:
+            config_path = Path(root, 'config.json')
+            app.api.config_path = config_path
+
+            result = svt.save_event(value, store, app)
+            self.assertTrue(config_path.is_file())
+
+            with open(config_path) as f:
+                result = json.load(f)
+            self.assertEqual(result, config)
+
+    def test_save_event_error(self):
+        app = self.get_app()
+
+        config_path = lbt \
+            .relative_path(__file__, '../../../resources/test_config.json')
+        with open(config_path) as f:
+            config = jsonc.JsonComment().load(f)
+
+        config['rogue'] = 'field'
+        store = {'/config': config}
+        value = json.dumps(config)
+        value = base64.encodebytes(value.encode('utf-8')).decode('utf-8')
+        value = 'data:application/json;base64,' + value
+
+        result = svt.save_event(value, store, app)['/config']['error']
+        self.assertEqual(result, 'DataError')

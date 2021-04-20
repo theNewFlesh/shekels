@@ -191,7 +191,7 @@ def get_dummy_elements():
         html.Div(className='dummy', id='init-button', n_clicks=None),
         html.Div(className='dummy', id='update-button', n_clicks=None),
         dcc.Upload(className='dummy', id='upload', contents=None),
-        html.Div(className='dummy', id='write-button', n_clicks=None),
+        html.Div(className='dummy', id='save-button', n_clicks=None),
     ]
 
 
@@ -225,9 +225,12 @@ def get_configbar(config, query='select * from config'):
         id='upload',
         children=[get_button('upload')]
     )
+    save = get_button('save')
     row = html.Div(
         className='row',
-        children=[query, spacer, search, spacer, init, spacer, upload],
+        children=[
+            query, spacer, search, spacer, init, spacer, upload, spacer, save
+        ],
     )
     configbar = html.Div(id='configbar', className='menubar', children=[row])
     return configbar
@@ -254,14 +257,14 @@ def get_button(title):
     return html.Button(id=f'{title}-button', children=[title], n_clicks=0)
 
 
-def get_key_value_table(data, id_='', header='', editable=False, key_order=None):
+def get_key_value_table(data, id_='key-value', header='', editable=False, key_order=None):
     # type (dict, Optional(str), str, bool, Optional(List[str])) -> DataTable
     '''
     Gets a Dash DataTable element representing given dictionary.
 
     Args:
         data (dict): Dictionary.
-        id_ (str, optional): CSS id. Default: ''.
+        id_ (str, optional): CSS id. Default: 'key-value'.
         header (str, optional): Table header title. Default: ''.
         editable (bool, optional): Whether table is editable. Default: False.
         key_order (list[str], optional): Order in which keys will be displayed.
@@ -296,7 +299,7 @@ def get_key_value_table(data, id_='', header='', editable=False, key_order=None)
     table = dash_table.DataTable(
         data=data,
         columns=cols,
-        id='key-value-table',
+        id=f'{id_}-table',
         sort_action='native',
         sort_mode='multi',
         cell_selectable=editable,
@@ -403,9 +406,12 @@ def get_plots(data, plots):
                 className='plot plot-error',
                 style={'min-width': min_width},
                 children=html.Div(
-                    className='plot-error-message',
-                    children='no data found'
-                ),
+                    className='plot-error-container',
+                    children=html.Div(
+                        className='plot-error-message',
+                        children='no data found'
+                    )
+                )
             )
         elems.append(fig)
     return elems

@@ -2,9 +2,7 @@ from typing import Any, Dict, List, Tuple, Union
 
 from copy import copy
 from pathlib import Path
-import json
 import os
-import re
 
 from dash.dependencies import Input, Output, State
 from flask_caching import Cache
@@ -18,8 +16,8 @@ import jsoncomment as jsonc
 
 from shekels.server.api import API
 import shekels.core.config as cfg
-import shekels.core.data_tools as sdt
 import shekels.server.components as svc
+import shekels.server.event_listener as sev
 import shekels.server.server_tools as svt
 # ------------------------------------------------------------------------------
 
@@ -51,60 +49,21 @@ def get_app():
     app.api = API
     app.client = flask_app.test_client()
     app.cache = Cache(flask_app, config={'CACHE_TYPE': 'SimpleCache'})
+
+    # register event listener
+    app.event_listener = sev.EventListener(app, {}) \
+        .listen('config-query', svt.config_query_event) \
+        .listen('config-search-button', svt.config_query_event) \
+        .listen('query', svt.data_query_event) \
+        .listen('search-button', svt.data_query_event) \
+        .listen('init-button', svt.init_event) \
+        .listen('update-button', svt.update_event) \
+        .listen('upload', svt.upload_event) \
+        .listen('save-button', svt.save_event)
     return app
 
 
 APP = get_app()
-
-
-def solve_component_state(store, config=False):
-    # type (dict) -> Optional(html.Div)
-    '''
-    Solves what component to return given the state of the given store.
-
-    Returns a key value card component embedded with a relevant message or error
-    if a required key is not found in the store, or it contain a dictionary with
-    am "error" key in it. Those required keys are as follows:
-
-        * /config
-        * /api/initialize
-        * /api/update
-        * /api/search
-
-    Args:
-        store (dict): Dash store.
-        config (bool, optional): Whether the component is for the config tab.
-            Default: False.
-
-    Returns:
-        Div: Key value card if store values are not present or have errors,
-            otherwise, none.
-    '''
-    states = [
-        ['/config', None],
-        ['/api/initialize', 'Please call init or update.'],
-        ['/api/update', 'Please call update.'],
-        ['/api/search', None],
-    ]
-    if config:
-        states = states[:2]
-        states[1][1] = None
-    for key, message in states:
-        value = store.get(key)
-        if message is not None and value is None:
-            return svc.get_key_value_table(
-                {'action': message},
-                id_='status',
-                header='status',
-            )
-        elif isinstance(value, dict) and 'error' in value:
-            return svc.get_key_value_table(
-                value,
-                id_='error',
-                header='error',
-                key_order=['error', 'message', 'code', 'traceback'],
-            )
-    return None
 
 
 @APP.server.route('/static/<stylesheet>')
@@ -143,7 +102,7 @@ def serve_stylesheet(stylesheet):
         Input('update-button', 'n_clicks'),
         Input('search-button', 'n_clicks'),
         Input('upload', 'contents'),
-        Input('write-button', 'n_clicks'),
+        Input('save-button', 'n_clicks'),
     ],
     [State('store', 'data')]
 )
@@ -158,76 +117,13 @@ def on_event(*inputs):
     Returns:
         dict: Store data.
     '''
-    store = inputs[-1] or {
-        '/api/search/query/count': 0,
-        '/config/query/count': 0
-    }  # type: Any
-    config = APP.api.config  # type: Dict
+    event = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
+    value = dash.callback_context.triggered[0]['value']
+    store = APP.event_listener.store
 
-    input_ = dash.callback_context.triggered[0]
-    element = input_['prop_id'].split('.')[0]
-    value = input_['value']
-
-    if element in ['config-query', 'config-search-button']:
-        value = value or 'select * from config'
-        value = re.sub('from config', 'from data', value, flags=re.I)
-        key = '/config/query/count'
-        if store[key] < 1:
-            store[key] += 1
-        else:
-            try:
-                store['/config'] = sdt.query_dict(config, value)
-            except Exception as e:
-                store['/config'] = svt.error_to_response(e).json
-
-    elif element in ['query', 'search-button']:
-        # needed to block input which is called twice on page load
-        key = '/api/search/query/count'
-        if store[key] < 1:
-            store[key] += 1
-        else:
-            svt.update_store(
-                APP.client, store, '/api/search', data={'query': value}
-            )
-            store['/api/search/query'] = value
-
-    elif element == 'init-button':
-        svt.update_store(APP.client, store, '/api/initialize', data=config)
-        if 'error' in store['/api/initialize']:
-            store['/config'] = store['/api/initialize']
-
-    elif element == 'update-button':
-        if store.get('/api/initialize') is None:
-            svt.update_store(APP.client, store, '/api/initialize', data=config)
-            if 'error' in store['/api/initialize']:
-                store['/config'] = store['/api/initialize']
-        svt.update_store(APP.client, store, '/api/update')
-        svt.update_store(
-            APP.client,
-            store,
-            '/api/search',
-            data={'query': config['default_query']}
-        )
-
-    elif element == 'upload':
-        try:
-            config = svt.parse_json_file_content(value)
-            config = cfg.Config(config)
-            config.validate()
-            store['/config'] = config.to_primitive()
-        except Exception as error:
-            store['/config'] = svt.error_to_response(error).json
-
-    elif element == 'write-button':
-        try:
-            config = store['/config']
-            config = cfg.Config(config)
-            config.validate()
-            with open(APP.api.config_path, 'w') as f:
-                json.dump(config.to_primitive(), f, indent=4, sort_keys=True)
-        except Exception as error:
-            store['/config'] = svt.error_to_response(error).json
-
+    if event == 'update-button' and store.get('/api/initialize') is None:
+        APP.event_listener.emit('init-button', None)
+    store = APP.event_listener.emit(event, value).store
     return store
 
 
@@ -247,7 +143,7 @@ def on_plots_update(store):
     Returns:
         list[dcc.Graph]: Plots.
     '''
-    comp = solve_component_state(store)
+    comp = svt.solve_component_state(store)
     if comp is not None:
         return comp
     plots = store.get('config', APP.api.config).get('plots', [])
@@ -270,7 +166,7 @@ def on_datatable_update(store):
     Returns:
         DataTable: Dash DataTable.
     '''
-    comp = solve_component_state(store)
+    comp = svt.solve_component_state(store)
     if comp is not None:
         return comp
     return svc.get_datatable(store['/api/search']['response'])
@@ -284,7 +180,7 @@ def on_datatable_update(store):
 def on_config_update(store):
     # type: (Dict[str, Any]) -> flask.Response
     '''
-    Updates config card with config information from store.
+    Updates config table with config information from store.
 
     Args:
         store (dict): Store data.
@@ -293,7 +189,7 @@ def on_config_update(store):
         flask.Response: Response.
     '''
     store['/config'] = store.get('/config', APP.api.config)
-    comp = solve_component_state(store, config=True)
+    comp = svt.solve_component_state(store, config=True)
     if comp is not None:
         return comp
     return svc.get_key_value_table(
@@ -324,15 +220,15 @@ def on_get_tab(tab, store):
     store = store or {}
 
     if tab == 'plots':
-        query = store.get('query', APP.api.config['default_query'])
+        query = store.get('/api/search/query', APP.api.config['default_query'])
         return svc.get_plots_tab(query)
 
     elif tab == 'data':
-        query = store.get('query', APP.api.config['default_query'])
+        query = store.get('/api/search/query', APP.api.config['default_query'])
         return svc.get_data_tab(query)
 
     elif tab == 'config':
-        config = store.get('config', APP.api.config)
+        config = store.get('/config', APP.api.config)
         return svc.get_config_tab(config)
 
     elif tab == 'api':  # pragma: no cover
@@ -364,6 +260,8 @@ def run(app, config_path, debug=False, test=False):
         config = jsonc.JsonComment().load(f)
     app.api.config = config
     app.api.config_path = config_path
+    app.event_listener.state.clear()
+    app.event_listener.state.append({})
     if not test:
         app.run_server(debug=debug, host='0.0.0.0', port=5014)  # pragma: no cover
 
