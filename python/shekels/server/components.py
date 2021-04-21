@@ -168,9 +168,7 @@ def get_searchbar(query=None):
         className='row',
         children=[query, spacer, search, spacer, init, spacer, update],
     )
-    searchbar = html.Div(
-        id='searchbar', className='menubar', children=[row]
-    )
+    searchbar = html.Div(id='searchbar', className='menubar', children=[row])
     return searchbar
 
 
@@ -185,7 +183,7 @@ def get_dummy_elements():
     '''
     return [
         dcc.Input(className='dummy', id='config-query', value=None),
-        dcc.Input(className='dummy', id='config-table', value=None),
+        html.Div(className='dummy', children=[dash_table.DataTable(id='config-table')]),
         dcc.Input(className='dummy', id='query', value=None),
         html.Div(className='dummy', id='config-search-button', n_clicks=None),
         html.Div(className='dummy', id='search-button', n_clicks=None),

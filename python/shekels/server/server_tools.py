@@ -165,7 +165,7 @@ def solve_component_state(store, config=False):
     if a required key is not found in the store, or it contain a dictionary with
     am "error" key in it. Those required keys are as follows:
 
-        * /config
+        * /config/search
         * /api/initialize
         * /api/update
         * /api/search
@@ -180,7 +180,7 @@ def solve_component_state(store, config=False):
             otherwise, none.
     '''
     states = [
-        ['/config', None],
+        ['/config/search', None],
         ['/api/initialize', 'Please call init or update.'],
         ['/api/update', 'Please call update.'],
         ['/api/search', None],
@@ -223,9 +223,9 @@ def config_query_event(value, store, app):
     value = value or 'select * from config'
     value = re.sub('from config', 'from data', value, flags=re.I)
     try:
-        store['/config'] = sdt.query_dict(app.api.config, value)
+        store['/config/search'] = sdt.query_dict(app.api.config, value)
     except Exception as e:
-        store['/config'] = error_to_response(e).json
+        store['/config/search'] = error_to_response(e).json
     return store
 
 
@@ -333,8 +333,9 @@ def upload_event(value, store, app):
         config = cfg.Config(config)
         config.validate()
         store['/config'] = config.to_primitive()
+        store['/config/search'] = deepcopy(store['/config'])
     except Exception as error:
-        store['/config'] = error_to_response(error).json
+        store['/config/search'] = error_to_response(error).json
     return store
 
 
