@@ -8,6 +8,7 @@ from dash.dependencies import Input, Output, State
 from flask_caching import Cache
 import dash
 import dash_core_components as dcc
+import dash_html_components as html
 import dash_table
 import flasgger as swg
 import flask
@@ -183,7 +184,7 @@ def on_datatable_update(store):
 )
 @APP.cache.memoize(100)
 def on_config_update(store):
-    # type: (Dict[str, Any]) -> flask.Response
+    # type: (Dict[str, Any]) -> List[flask.Response]
     '''
     Updates config table with config information from store.
 
@@ -196,7 +197,12 @@ def on_config_update(store):
     store['/config'] = store.get('/config', APP.api.config)
     comp = svt.solve_component_state(store, config=True)
     if comp is not None:
-        return comp
+        return [
+            comp,
+            html.Div(className='dummy', children=[
+                dash_table.DataTable(id='config-table')
+            ])
+        ]
 
     store['/config/search'] = store.get('/config/search', store['/config'])
     return svc.get_key_value_table(
