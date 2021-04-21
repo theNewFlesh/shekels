@@ -126,9 +126,7 @@ def get_config_tab(config):
     # dummies must go first for element props behavior to work
     content = html.Div(id='lower-content', children=[
         html.Div(id='config-content', className='col', children=[
-            get_key_value_table(
-                config, id_='config', header='config', editable=True
-            )
+            get_key_value_table(config, id_='config', header='config')
         ])
     ])
     return [*get_dummy_elements(), get_configbar(config), content]
@@ -257,7 +255,9 @@ def get_button(title):
     return html.Button(id=f'{title}-button', children=[title], n_clicks=0)
 
 
-def get_key_value_table(data, id_='key-value', header='', editable=False, key_order=None):
+def get_key_value_table(
+    data, id_='key-value', header='', editable=False, key_order=None
+):
     # type (dict, Optional(str), str, bool, Optional(List[str])) -> DataTable
     '''
     Gets a Dash DataTable element representing given dictionary.
@@ -302,9 +302,9 @@ def get_key_value_table(data, id_='key-value', header='', editable=False, key_or
         id=f'{id_}-table',
         sort_action='native',
         sort_mode='multi',
-        cell_selectable=editable,
-        editable=editable,
         page_action='none',
+        cell_selectable=True,
+        editable=editable,
     )
     head = html.Div(className='key-value-table-header', children=header)
     return html.Div(

@@ -196,7 +196,6 @@ def on_config_update(store):
         store['/config'],
         id_='config',
         header='config',
-        editable=True,
     )
 
 
