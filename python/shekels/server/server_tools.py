@@ -365,5 +365,6 @@ def save_event(value, store, app):
         with open(app.api.config_path, 'w') as f:
             json.dump(config, f, indent=4, sort_keys=True)
     except (Exception, DataError) as error:
-        store['/config'] = error_to_response(error).json
+        store['/config'] = deepcopy(app.api.config)
+        store['/config/search'] = error_to_response(error).json
     return store
