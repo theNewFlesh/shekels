@@ -18,7 +18,7 @@ database
     :show-inheritance:
 
 data_tools
---------------
+----------
 .. automodule:: shekels.core.data_tools
     :members:
     :private-members:
