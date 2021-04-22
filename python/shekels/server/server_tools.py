@@ -294,6 +294,8 @@ def init_event(value, store, app):
     update_store(app.client, store, '/api/initialize', data=app.api.config)
     if 'error' in store['/api/initialize']:
         store['/config'] = store['/api/initialize']
+    else:
+        store['/config'] = deepcopy(app.api.config)
     return store
 
 
@@ -358,7 +360,7 @@ def save_event(value, store, app):
         dict: Modified store.
     '''
     try:
-        config = store.get('/config', {})
+        config = store.get('/config', app.api.config)
         cfg.Config(config).validate()
         with open(app.api.config_path, 'w') as f:
             json.dump(config, f, indent=4, sort_keys=True)

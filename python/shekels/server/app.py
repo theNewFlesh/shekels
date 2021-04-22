@@ -245,7 +245,6 @@ def on_get_tab(tab, store):
 
     elif tab == 'config':
         config = store.get('/config', deepcopy(APP.api.config))
-        config = store.get('/config/search', config)
         return svc.get_config_tab(config)
 
     elif tab == 'api':  # pragma: no cover

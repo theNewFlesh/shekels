@@ -256,6 +256,7 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
         value = None
         store = {}
         app = self.get_app()
+        app.api = Api()
 
         # good query
         value = "select * from config where key == 'foo'"
@@ -268,6 +269,33 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
         result = svt.config_query_event(value, store, app)['/config/search']
         self.assertIn('error', result)
         self.assertEqual(result['error'], 'PandaSQLException')
+
+    def test_config_edit_event(self):
+        class Api:
+            config = {
+                'foo': {'bar': 'baz'},
+                'taco': 'pizza',
+            }
+
+        store = {
+            '/config': Api.config,
+            '/config/search': {'foo': {'bar': 'baz'}},
+        }
+        app = self.get_app()
+        app.api = Api()
+        value = dict(
+            new=dict(key='foo/bar', value='new_val'),
+            old=dict(key='foo/bar', value='bar'),
+        )
+        result = svt.config_edit_event(value, store, app)
+        expected = {
+            '/config': {
+                'foo': {'bar': 'new_val'},
+                'taco': 'pizza',
+            },
+            '/config/search': {'foo': {'bar': 'new_val'}},
+        }
+        self.assertEqual(result, expected)
 
     def test_data_query_event(self):
         value = None
@@ -284,8 +312,15 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
         self.assertEqual(result, expected)
 
     def test_init_event(self):
+        class Api:
+            config = {
+                'foo': 'bar',
+                'taco': 'pizza',
+            }
+
         value = 'ignore me'
         app = self.get_app()
+        app.api = Api()
 
         # good config
         store = {}
@@ -298,7 +333,8 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
                     'taco': 'pizza',
                 },
                 'message': 'Database initialized.'
-            }
+            },
+            '/config': Api.config,
         }
         self.assertEqual(result, expected)
 
