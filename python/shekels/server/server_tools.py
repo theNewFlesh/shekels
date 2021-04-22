@@ -165,6 +165,7 @@ def solve_component_state(store, config=False):
     if a required key is not found in the store, or it contain a dictionary with
     am "error" key in it. Those required keys are as follows:
 
+        * /config
         * /config/search
         * /api/initialize
         * /api/update
@@ -180,6 +181,7 @@ def solve_component_state(store, config=False):
             otherwise, none.
     '''
     states = [
+        ['/config', None],
         ['/config/search', None],
         ['/api/initialize', 'Please call init or update.'],
         ['/api/update', 'Please call update.'],

@@ -195,6 +195,7 @@ def on_config_update(store):
         flask.Response: Response.
     '''
     store['/config'] = store.get('/config', APP.api.config)
+    store['/config/search'] = store.get('/config/search', store['/config'])
     comp = svt.solve_component_state(store, config=True)
     if comp is not None:
         return [
@@ -203,8 +204,6 @@ def on_config_update(store):
                 dash_table.DataTable(id='config-table')
             ])
         ]
-
-    store['/config/search'] = store.get('/config/search', store['/config'])
     return svc.get_key_value_table(
         store['/config/search'],
         id_='config',
@@ -242,6 +241,7 @@ def on_get_tab(tab, store):
 
     elif tab == 'config':
         config = store.get('/config', APP.api.config)
+        config = store.get('/config/search', config)
         return svc.get_config_tab(config)
 
     elif tab == 'api':  # pragma: no cover
