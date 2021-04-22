@@ -340,7 +340,7 @@ def test_on_config_search(dash_duo, run_app):
     # click on config tab
     dash_duo.find_elements('#tabs .tab')[2].click()
     time.sleep(0.1)
-    dash_duo.wait_for_element('#config-content')
+    dash_duo.wait_for_element('#config-content', timeout=4)
 
     # init
     dash_duo.find_elements('#init-button')[-1].click()
