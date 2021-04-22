@@ -2,6 +2,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 import base64
 import json
+import os
 import re
 import unittest
 
@@ -14,6 +15,11 @@ import lunchbox.tools as lbt
 import shekels.core.config as cfg
 import shekels.server.server_tools as svt
 # ------------------------------------------------------------------------------
+
+
+RESOURCES_DIR = lbt.relative_path(__file__, '../resources').as_posix()
+if 'REPO_ENV' in os.environ.keys():
+    RESOURCES_DIR = lbt.relative_path(__file__, '../../../resources').as_posix()
 
 
 class ServerToolsTests(unittest.TestCase):
@@ -367,8 +373,7 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
     def test_upload_event(self):
         app = self.get_app()
 
-        config_path = lbt \
-            .relative_path(__file__, '../../../resources/test_config.json')
+        config_path = Path(RESOURCES_DIR, 'test_config.json')
         with open(config_path) as f:
             config = jsonc.JsonComment().load(f)
 
@@ -400,8 +405,7 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
     def test_save_event(self):
         app = self.get_app()
 
-        config_path = lbt \
-            .relative_path(__file__, '../../../resources/test_config.json')
+        config_path = Path(RESOURCES_DIR, 'test_config.json')
         with open(config_path) as f:
             config = jsonc.JsonComment().load(f)
 
@@ -424,8 +428,7 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
     def test_save_event_error(self):
         app = self.get_app()
 
-        config_path = lbt \
-            .relative_path(__file__, '../../../resources/test_config.json')
+        config_path = Path(RESOURCES_DIR, 'test_config.json')
         with open(config_path) as f:
             config = jsonc.JsonComment().load(f)
 

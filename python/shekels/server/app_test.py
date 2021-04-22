@@ -19,6 +19,11 @@ import shekels.server.event_listener as sev
 # ------------------------------------------------------------------------------
 
 
+RESOURCES_DIR = lbt.relative_path(__file__, '../resources').as_posix()
+if 'REPO_ENV' in os.environ.keys():
+    RESOURCES_DIR = lbt.relative_path(__file__, '../../../resources').as_posix()
+
+
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_get_app(dash_duo):
     result = app.get_app()
@@ -33,9 +38,7 @@ def test_get_app(dash_duo):
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_run():
     result = app.APP
-    config_path = lbt.relative_path(
-        __file__, '../../../resources/test_config.json'
-    ).as_posix()
+    config_path = Path(RESOURCES_DIR, 'test_config.json').as_posix()
     app.run(result, config_path, debug=True, test=True)
     assert result.api.config_path == config_path
     assert isinstance(result.api.config, dict)
@@ -144,8 +147,7 @@ def test_on_event_search_button(dash_duo, run_app):
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_on_event_save_button(dash_duo):
     with TemporaryDirectory() as root:
-        test_config_path = lbt \
-            .relative_path(__file__, '../../../resources/test_config.json')
+        test_config_path = Path(RESOURCES_DIR, 'test_config.json')
         with open(test_config_path) as f:
             config = jsonc.JsonComment().load(f)
 
@@ -185,8 +187,7 @@ def test_on_event_save_button(dash_duo):
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_on_event_save_button_error(dash_duo):
     with TemporaryDirectory() as root:
-        test_config_path = lbt \
-            .relative_path(__file__, '../../../resources/test_config.json')
+        test_config_path = Path(RESOURCES_DIR, 'test_config.json')
         with open(test_config_path) as f:
             config = jsonc.JsonComment().load(f)
 

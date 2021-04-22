@@ -1,7 +1,6 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from copy import deepcopy
-from pathlib import Path
 from pprint import pformat
 import base64
 import json
@@ -22,6 +21,11 @@ import shekels.core.config as cfg
 import shekels.core.data_tools as sdt
 import shekels.server.components as svc
 # ------------------------------------------------------------------------------
+
+
+TEMPLATE_DIR = lbt.relative_path(__file__, '../templates').as_posix()
+if 'REPO_ENV' in os.environ.keys():
+    TEMPLATE_DIR = lbt.relative_path(__file__, '../../../templates').as_posix()
 
 
 def error_to_response(error):
@@ -59,8 +63,8 @@ def error_to_response(error):
     )
 
 
-def render_template(filename, parameters, directory='../../../templates'):
-    # type: (str, Dict[str, Any], str) -> bytes
+def render_template(filename, parameters, directory=None):
+    # type: (str, Dict[str, Any], Optional[str]) -> bytes
     '''
     Renders a jinja2 template given by filename with given parameters.
 
@@ -73,13 +77,8 @@ def render_template(filename, parameters, directory='../../../templates'):
     Returns:
         bytes: HTML.
     '''
-    directory = Path(directory).as_posix()
-
-    # path to templates inside pip package
-    tempdir = lbt.relative_path(__file__, '../templates').as_posix()
-
-    # path to templates inside repo
-    if 'REPO_ENV' in os.environ.keys():
+    tempdir = TEMPLATE_DIR
+    if directory is not None:
         tempdir = lbt.relative_path(__file__, directory).as_posix()
 
     env = jinja2.Environment(
