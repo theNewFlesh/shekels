@@ -438,6 +438,9 @@ def get_package_command(info):
     cmd += 'cp /root/{repo}/docker/dev_requirements.txt /tmp/{repo}/; '
     cmd += 'cp /root/{repo}/docker/prod_requirements.txt /tmp/{repo}/; '
     cmd += 'cp -r /root/{repo}/templates /tmp/{repo}/{repo}; '
+    cmd += 'cp -r /root/{repo}/resources /tmp/{repo}/{repo}; '
+    cmd += "find /tmp/{repo}/{repo}/resources -type f | grep -vE 'icon|test_' "
+    cmd += "| parallel 'rm -rf {x}'; "
     cmd += r"find /tmp/{repo} | grep -E '.*test.*\.py$|mock.*\.py$|__pycache__'"
     cmd += " | parallel 'rm -rf {x}'; "
     cmd += "find /tmp/{repo} -type f | grep __init__.py | parallel '"
@@ -620,12 +623,17 @@ def get_tox_command(info):
     cmd += 'cp /root/{repo}/LICENSE /tmp/{repo}/; '
     cmd += 'cp /root/{repo}/docker/* /tmp/{repo}/; '
     cmd += 'cp /root/{repo}/pip/* /tmp/{repo}/; '
-    cmd += 'cp -R /root/{repo}/resources /tmp; '
+    cmd += 'cp -R /root/{repo}/resources /tmp/{repo}/{repo}; '
+    cmd += "find /tmp/{repo}/{repo}/resources -type f | grep -vE 'icon|test_' "
+    cmd += "| parallel 'rm -rf {x}'; "
     cmd += 'cp -R /root/{repo}/templates /tmp/{repo}/{repo}; '
-    cmd += r"find /tmp/{repo} | grep -E '__pycache__|\.pyc$' | parallel 'rm -rf'; "
+    cmd += "cp -R /root/{repo}/python/conftest.py /tmp/{repo}/; "
+    cmd += r"find /tmp/{repo} | grep -E '__pycache__|\.pyc$' | "
+    cmd += "parallel 'rm -rf'; "
     cmd += 'cd /tmp/{repo}; tox'
     cmd += '"'
     cmd = cmd.format(
+        x='{}',
         repo=REPO,
         exec=get_docker_exec_command(info, env_vars=[]),
     )
