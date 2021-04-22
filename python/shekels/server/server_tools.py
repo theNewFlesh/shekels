@@ -244,16 +244,21 @@ def config_edit_event(value, store, app):
     Returns:
         dict: Modified store.
     '''
-    store['/config/edit'] = store.get('/config/edit', [])
-    store['/config/edit'].append(value)
+    new = value['new']
+    old = value['old']
+    config = store.get(
+        '/config',
+        rpb.BlobETL(deepcopy(app.api.config)).to_dict()
+    )
+    search = store.get('/config/search', config)
+    for item in [config, search]:
+        key = old['key']
+        if key in item:
+            del item[old['key']]
+            item[new['key']] = new['value']
 
-    # edits = store.get('config/edit', [])
-    # config = deepcopy(app.api.config)
-    # config.update(store['/config'])
-    # config = rpb.BlobETL(config).to_flat_dict()
-    # del config[old['key']]
-    # config[new['key']] = new['value']
-    # config = rpb.BlobETL(config).to_dict()
+    store['/config'] = config
+    store['/config/search'] = search
     return store
 
 
@@ -355,7 +360,7 @@ def save_event(value, store, app):
         dict: Modified store.
     '''
     try:
-        config = store.get('/config', app.api.config)
+        config = store.get('/config', {})
         cfg.Config(config).validate()
         with open(app.api.config_path, 'w') as f:
             json.dump(config, f, indent=4, sort_keys=True)
