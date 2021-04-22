@@ -15,7 +15,6 @@ import flasgger as swg
 import flask
 import flask_monitoringdashboard as fmdb
 import jsoncomment as jsonc
-import rolling_pin.blob_etl as rpb
 
 from shekels.server.api import API
 import shekels.core.config as cfg
