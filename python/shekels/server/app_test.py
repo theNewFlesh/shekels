@@ -10,6 +10,7 @@ import flask_caching
 import jsoncomment as jsonc
 import lunchbox.tools as lbt
 import pytest
+import selenium.webdriver.common.action_chains as sac
 import selenium.webdriver.common.keys as sek
 
 import shekels.server.api as api
@@ -375,6 +376,45 @@ def test_on_config_update_error(dash_duo, run_app):
     dash_duo.find_elements('#tabs .tab')[2].click()
     time.sleep(0.1)
     dash_duo.find_elements('#init-button')[-1].click()
+    dash_duo.wait_for_element('#error')
+    result = dash_duo.wait_for_element('#error tr td:last-child > div').text
+    assert result == 'DataError'
+
+
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
+def test_on_config_edit(dash_duo, run_app):
+    test_app, _ = run_app
+    dash_duo.start_server(test_app)
+
+    # click on config tab
+    dash_duo.find_elements('#tabs .tab')[2].click()
+    time.sleep(0.2)
+    dash_duo.wait_for_element('#config-content')
+
+    # init
+    dash_duo.find_elements('#init-button')[-1].click()
+
+    # search
+    query = dash_duo.find_elements('#config-query')[-1]
+    query.send_keys(sek.Keys.CONTROL + 'a')
+    query.send_keys(sek.Keys.BACK_SPACE)
+    time.sleep(0.1)
+    query.send_keys('select * from config where key ~ data_path')
+    dash_duo.find_elements('#config-search-button')[-1].click()
+    time.sleep(0.1)
+
+    # click cell
+    cell = dash_duo.find_element('#config-table tr td.dash-cell.column-1 > div')
+    cell.click()
+
+    # enter bad data_path
+    sac.ActionChains(dash_duo.driver).send_keys('/a/bad/path' + sek.Keys.ENTER).perform()
+
+    # save
+    dash_duo.find_elements('#save-button')[-1].click()
+    time.sleep(0.1)
+
+    # data_path error
     dash_duo.wait_for_element('#error')
     result = dash_duo.wait_for_element('#error tr td:last-child > div').text
     assert result == 'DataError'
