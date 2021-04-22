@@ -154,10 +154,7 @@ def on_plots_update(store):
     comp = svt.solve_component_state(store)
     if comp is not None:
         return comp
-    config = store.get(
-        '/config',
-        rpb.BlobETL(deepcopy(APP.api.config)).to_dict()
-    )
+    config = store.get('/config', deepcopy(APP.api.config))
     plots = config.get('plots', [])
     return svc.get_plots(store['/api/search']['response'], plots)
 
@@ -200,10 +197,7 @@ def on_config_update(store):
     Returns:
         flask.Response: Response.
     '''
-    config = store.get(
-        '/config',
-        rpb.BlobETL(deepcopy(APP.api.config)).to_dict()
-    )
+    config = store.get('/config', deepcopy(APP.api.config))
     store['/config'] = config
     store['/config/search'] = store.get('/config/search', store['/config'])
     comp = svt.solve_component_state(store, config=True)
@@ -250,10 +244,7 @@ def on_get_tab(tab, store):
         return svc.get_data_tab(query)
 
     elif tab == 'config':
-        config = store.get(
-            '/config',
-            rpb.BlobETL(deepcopy(APP.api.config)).to_dict()
-        )
+        config = store.get('/config', deepcopy(APP.api.config))
         config = store.get('/config/search', config)
         return svc.get_config_tab(config)
 

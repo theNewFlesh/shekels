@@ -245,20 +245,18 @@ def config_edit_event(value, store, app):
         dict: Modified store.
     '''
     new = value['new']
-    old = value['old']
-    config = store.get(
-        '/config',
-        rpb.BlobETL(deepcopy(app.api.config)).to_dict()
-    )
-    search = store.get('/config/search', config)
-    for item in [config, search]:
-        key = old['key']
-        if key in item:
-            del item[old['key']]
+    old_key = value['old']['key']
+    config = store.get('/config', deepcopy(app.api.config))
+    items = [
+        ('/config', config),
+        ('/config/search', store.get('/config/search', config)),
+    ]
+    for key, val in items:
+        item = rpb.BlobETL(val).to_flat_dict()
+        if old_key in item:
+            del item[old_key]
             item[new['key']] = new['value']
-
-    store['/config'] = config
-    store['/config/search'] = search
+        store[key] = rpb.BlobETL(item).to_dict()
     return store
 
 
