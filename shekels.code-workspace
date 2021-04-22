@@ -141,7 +141,8 @@
           "cp docker/prod_requirements.txt /tmp/$REPO/ && ",
           "cp -R templates /tmp/$REPO/$REPO && ",
           "cp -R resources /tmp/$REPO/$REPO && ",
-          "find /tmp/$REPO | grep -E '.*test.*\\.py$|mock.*\\.py$|__pycache__|config.json|transactions.csv' | parallel 'rm -rf {}' && ",
+          "find /tmp/$REPO/$REPO/resources -type f | grep -vE 'icon|test_' | parallel 'rm -rf {}' && ",
+          "find /tmp/$REPO | grep -E '.*test.*\\.py$|mock.*\\.py$|__pycache__' | parallel 'rm -rf {}' && ",
           "find /tmp/$REPO -type f | grep __init__.py | parallel 'rm -rf {} && touch {}' && ",
           "cd /tmp/$REPO && ",
           "python3.7 setup.py sdist"
@@ -183,6 +184,7 @@
           "cp -R /root/$REPO/docker/* /tmp/$REPO/ && ",
           "cp -R /root/$REPO/pip/* /tmp/$REPO/ && ",
           "cp -R /root/$REPO/resources /tmp/$REPO/$REPO && ",
+          "find /tmp/$REPO/$REPO/resources -type f | grep -vE 'icon|test_' | parallel 'rm -rf {}' && ",
           "cp -R /root/$REPO/templates /tmp/$REPO/$REPO && ",
           "cp -R /root/$REPO/python/conftest.py /tmp/$REPO/ && ",
           "find /tmp/$REPO | grep -E '__pycache__|\\.pyc$' | parallel 'rm -rf'"

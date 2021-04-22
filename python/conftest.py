@@ -1,4 +1,5 @@
 import logging
+import os
 
 from selenium.webdriver.chrome.options import Options
 import lunchbox.tools as lbt
@@ -6,6 +7,12 @@ import pytest
 
 import shekels.server.app as app
 # ------------------------------------------------------------------------------
+
+
+CONFIG_PATH = '/tmp/shekels/shekels/resources/test_config.json'
+if 'REPO_ENV' in os.environ.keys():
+    CONFIG_PATH = lbt \
+        .relative_path(__file__, '../resources/test_config.json').as_posix()
 
 
 def pytest_setup_options():
@@ -23,9 +30,6 @@ def run_app():
     Pytest fixture used to run shekels Dash app.
     Sets config_path to resources/test_config.json.
     '''
-    config_path = lbt \
-        .relative_path(__file__, '../resources/test_config.json') \
-        .as_posix()
     logging.getLogger('werkzeug').setLevel(logging.ERROR)
-    app.run(app.APP, config_path, debug=False, test=True)
+    app.run(app.APP, CONFIG_PATH, debug=False, test=True)
     yield app.APP, app.APP.client
