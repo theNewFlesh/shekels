@@ -126,7 +126,9 @@ def get_config_tab(config):
     # dummies must go first for element props behavior to work
     content = html.Div(id='lower-content', children=[
         html.Div(id='config-content', className='col', children=[
-            get_key_value_table(config, id_='config', header='config')
+            get_key_value_table(
+                config, id_='config', header='config', editable=True
+            )
         ])
     ])
     return [*get_dummy_elements(), get_configbar(config), content]

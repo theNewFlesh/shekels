@@ -208,6 +208,7 @@ def on_config_update(store):
         store['/config/search'],
         id_='config',
         header='config',
+        editable=True,
     )
 
 
