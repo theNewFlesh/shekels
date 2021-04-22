@@ -260,12 +260,12 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
         # good query
         value = "select * from config where key == 'foo'"
         result = svt.config_query_event(value, store, app)
-        expected = {'/config': {'foo': 'bar'}}
+        expected = {'/config/search': {'foo': 'bar'}}
         self.assertEqual(result, expected)
 
         # bad query
         value = 'bad query'
-        result = svt.config_query_event(value, store, app)['/config']
+        result = svt.config_query_event(value, store, app)['/config/search']
         self.assertIn('error', result)
         self.assertEqual(result['error'], 'PandaSQLException')
 
@@ -344,9 +344,11 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
 
         # good config
         result = svt.upload_event(value, store, app)
+        config = cfg.Config(config).to_primitive()
         expected = {
             'some': 'value',
-            '/config': cfg.Config(config).to_primitive()
+            '/config': config,
+            '/config/search': config,
         }
         self.assertEqual(result, expected)
 
@@ -356,7 +358,7 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
         value = base64.encodebytes(value.encode('utf-8')).decode('utf-8')
         value = 'data:application/json;base64,' + value
 
-        result = svt.upload_event(value, store, app)['/config']['error']
+        result = svt.upload_event(value, store, app)['/config/search']['error']
         self.assertEqual(result, 'DataError')
 
     def test_save_event(self):
@@ -397,5 +399,8 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
         value = base64.encodebytes(value.encode('utf-8')).decode('utf-8')
         value = 'data:application/json;base64,' + value
 
-        result = svt.save_event(value, store, app)['/config']['error']
+        result = svt.save_event(value, store, app)['/config/search']['error']
         self.assertEqual(result, 'DataError')
+
+        result = svt.save_event(value, store, app)['/config']
+        self.assertEqual(result, app.api.config)

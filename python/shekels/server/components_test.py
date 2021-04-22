@@ -169,6 +169,7 @@ class ComponentsTests(unittest.TestCase):
 
     def test_get_dummy_elements(self):
         result = svc.get_dummy_elements()
+        result[1] = result[1].children[0] 
         result = set([x.id for x in result])
         expected = {
             'config-query',
