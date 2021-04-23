@@ -1,6 +1,7 @@
 from typing import Any, Dict, List, Optional
 
 from copy import copy
+import os
 
 from lunchbox.enforce import Enforce, EnforceError
 from pandas import DataFrame, DatetimeIndex
@@ -59,7 +60,13 @@ def get_dash_app(server, storage_type='memory'):
         fullscreen=True,
     )
 
-    assets = lbt.relative_path(__file__, "../../../resources")
+    # path to resources inside pip package
+    assets = lbt.relative_path(__file__, "../resources")
+
+    # path to resources inside repo
+    if 'REPO_ENV' in os.environ.keys():
+        assets = lbt.relative_path(__file__, "../../../resources")
+
     app = dash.Dash(
         name='Shekels',
         title='Shekels',
@@ -87,7 +94,7 @@ def get_data_tab(query=None):
     '''
     # dummies must go first for element props behavior to work
     content = html.Div(id='lower-content', children=[
-        html.Div(id='table-content', className='col', children=[])
+        html.Div(id='data-content', className='col', children=[])
     ])
     return [*get_dummy_elements(), get_searchbar(query), content]
 
@@ -168,9 +175,7 @@ def get_searchbar(query=None):
         className='row',
         children=[query, spacer, search, spacer, init, spacer, update],
     )
-    searchbar = html.Div(
-        id='searchbar', className='menubar', children=[row]
-    )
+    searchbar = html.Div(id='searchbar', className='menubar', children=[row])
     return searchbar
 
 
@@ -185,6 +190,7 @@ def get_dummy_elements():
     '''
     return [
         dcc.Input(className='dummy', id='config-query', value=None),
+        html.Div(className='dummy', children=[dash_table.DataTable(id='config-table')]),
         dcc.Input(className='dummy', id='query', value=None),
         html.Div(className='dummy', id='config-search-button', n_clicks=None),
         html.Div(className='dummy', id='search-button', n_clicks=None),
@@ -257,7 +263,9 @@ def get_button(title):
     return html.Button(id=f'{title}-button', children=[title], n_clicks=0)
 
 
-def get_key_value_table(data, id_='key-value', header='', editable=False, key_order=None):
+def get_key_value_table(
+    data, id_='key-value', header='', editable=False, key_order=None
+):
     # type (dict, Optional(str), str, bool, Optional(List[str])) -> DataTable
     '''
     Gets a Dash DataTable element representing given dictionary.
@@ -298,13 +306,14 @@ def get_key_value_table(data, id_='key-value', header='', editable=False, key_or
 
     table = dash_table.DataTable(
         data=data,
+        data_previous=data,
         columns=cols,
         id=f'{id_}-table',
         sort_action='native',
         sort_mode='multi',
-        cell_selectable=editable,
-        editable=editable,
         page_action='none',
+        cell_selectable=True,
+        editable=editable,
     )
     head = html.Div(className='key-value-table-header', children=header)
     return html.Div(

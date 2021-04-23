@@ -26,7 +26,7 @@ components
     :show-inheritance:
 
 event_listener
-----------
+--------------
 .. automodule:: shekels.server.event_listener
     :members:
     :private-members:

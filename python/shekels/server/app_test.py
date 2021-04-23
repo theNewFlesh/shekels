@@ -10,12 +10,18 @@ import flask_caching
 import jsoncomment as jsonc
 import lunchbox.tools as lbt
 import pytest
+import selenium.webdriver.common.action_chains as sac
 import selenium.webdriver.common.keys as sek
 
 import shekels.server.api as api
 import shekels.server.app as app
 import shekels.server.event_listener as sev
 # ------------------------------------------------------------------------------
+
+
+RESOURCES_DIR = lbt.relative_path(__file__, '../resources').as_posix()
+if 'REPO_ENV' in os.environ.keys():
+    RESOURCES_DIR = lbt.relative_path(__file__, '../../../resources').as_posix()
 
 
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
@@ -32,9 +38,7 @@ def test_get_app(dash_duo):
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_run():
     result = app.APP
-    config_path = lbt.relative_path(
-        __file__, '../../../resources/test_config.json'
-    ).as_posix()
+    config_path = Path(RESOURCES_DIR, 'test_config.json').as_posix()
     app.run(result, config_path, debug=True, test=True)
     assert result.api.config_path == config_path
     assert isinstance(result.api.config, dict)
@@ -143,8 +147,7 @@ def test_on_event_search_button(dash_duo, run_app):
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_on_event_save_button(dash_duo):
     with TemporaryDirectory() as root:
-        test_config_path = lbt \
-            .relative_path(__file__, '../../../resources/test_config.json')
+        test_config_path = Path(RESOURCES_DIR, 'test_config.json')
         with open(test_config_path) as f:
             config = jsonc.JsonComment().load(f)
 
@@ -184,8 +187,7 @@ def test_on_event_save_button(dash_duo):
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_on_event_save_button_error(dash_duo):
     with TemporaryDirectory() as root:
-        test_config_path = lbt \
-            .relative_path(__file__, '../../../resources/test_config.json')
+        test_config_path = Path(RESOURCES_DIR, 'test_config.json')
         with open(test_config_path) as f:
             config = jsonc.JsonComment().load(f)
 
@@ -272,10 +274,10 @@ def test_datatable_update(dash_duo, run_app):
 
     # click on data tab
     dash_duo.find_elements('#tabs .tab')[1].click()
-    time.sleep(0.01)
+    time.sleep(0.1)
     dash_duo.wait_for_element('#status-table')
     result = dash_duo.find_element('#lower-content div')
-    assert result.get_property('id') == 'table-content'
+    assert result.get_property('id') == 'data-content'
 
     # init message
     result = dash_duo.find_element('#status-table td:last-child > div').text
@@ -339,7 +341,7 @@ def test_on_config_search(dash_duo, run_app):
     # click on config tab
     dash_duo.find_elements('#tabs .tab')[2].click()
     time.sleep(0.1)
-    dash_duo.wait_for_element('#config-content')
+    dash_duo.wait_for_element('#config-content', timeout=4)
 
     # init
     dash_duo.find_elements('#init-button')[-1].click()
@@ -375,6 +377,45 @@ def test_on_config_update_error(dash_duo, run_app):
     dash_duo.find_elements('#tabs .tab')[2].click()
     time.sleep(0.1)
     dash_duo.find_elements('#init-button')[-1].click()
+    dash_duo.wait_for_element('#error')
+    result = dash_duo.wait_for_element('#error tr td:last-child > div').text
+    assert result == 'DataError'
+
+
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
+def test_on_config_edit(dash_duo, run_app):
+    test_app, _ = run_app
+    dash_duo.start_server(test_app)
+
+    # click on config tab
+    dash_duo.find_elements('#tabs .tab')[2].click()
+    time.sleep(0.2)
+    dash_duo.wait_for_element('#config-content')
+
+    # init
+    dash_duo.find_elements('#init-button')[-1].click()
+
+    # search
+    query = dash_duo.find_elements('#config-query')[-1]
+    query.send_keys(sek.Keys.CONTROL + 'a')
+    query.send_keys(sek.Keys.BACK_SPACE)
+    time.sleep(0.1)
+    query.send_keys('select * from config where key ~ data_path')
+    dash_duo.find_elements('#config-search-button')[-1].click()
+    time.sleep(0.1)
+
+    # click cell
+    cell = dash_duo.find_element('#config-table tr td.dash-cell.column-1 > div')
+    cell.click()
+
+    # enter bad data_path
+    sac.ActionChains(dash_duo.driver).send_keys('/a/bad/path' + sek.Keys.ENTER).perform()
+
+    # save
+    dash_duo.find_elements('#save-button')[-1].click()
+    time.sleep(0.1)
+
+    # data_path error
     dash_duo.wait_for_element('#error')
     result = dash_duo.wait_for_element('#error tr td:last-child > div').text
     assert result == 'DataError'

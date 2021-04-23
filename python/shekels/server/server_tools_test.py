@@ -2,6 +2,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 import base64
 import json
+import os
 import re
 import unittest
 
@@ -14,6 +15,11 @@ import lunchbox.tools as lbt
 import shekels.core.config as cfg
 import shekels.server.server_tools as svt
 # ------------------------------------------------------------------------------
+
+
+RESOURCES_DIR = lbt.relative_path(__file__, '../resources').as_posix()
+if 'REPO_ENV' in os.environ.keys():
+    RESOURCES_DIR = lbt.relative_path(__file__, '../../../resources').as_posix()
 
 
 class ServerToolsTests(unittest.TestCase):
@@ -256,18 +262,46 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
         value = None
         store = {}
         app = self.get_app()
+        app.api = Api()
 
         # good query
         value = "select * from config where key == 'foo'"
         result = svt.config_query_event(value, store, app)
-        expected = {'/config': {'foo': 'bar'}}
+        expected = {'/config/search': {'foo': 'bar'}}
         self.assertEqual(result, expected)
 
         # bad query
         value = 'bad query'
-        result = svt.config_query_event(value, store, app)['/config']
+        result = svt.config_query_event(value, store, app)['/config/search']
         self.assertIn('error', result)
         self.assertEqual(result['error'], 'PandaSQLException')
+
+    def test_config_edit_event(self):
+        class Api:
+            config = {
+                'foo': {'bar': 'baz'},
+                'taco': 'pizza',
+            }
+
+        store = {
+            '/config': Api.config,
+            '/config/search': {'foo': {'bar': 'baz'}},
+        }
+        app = self.get_app()
+        app.api = Api()
+        value = dict(
+            new=dict(key='foo/bar', value='new_val'),
+            old=dict(key='foo/bar', value='bar'),
+        )
+        result = svt.config_edit_event(value, store, app)
+        expected = {
+            '/config': {
+                'foo': {'bar': 'new_val'},
+                'taco': 'pizza',
+            },
+            '/config/search': {'foo': {'bar': 'new_val'}},
+        }
+        self.assertEqual(result, expected)
 
     def test_data_query_event(self):
         value = None
@@ -284,8 +318,15 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
         self.assertEqual(result, expected)
 
     def test_init_event(self):
+        class Api:
+            config = {
+                'foo': 'bar',
+                'taco': 'pizza',
+            }
+
         value = 'ignore me'
         app = self.get_app()
+        app.api = Api()
 
         # good config
         store = {}
@@ -298,7 +339,8 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
                     'taco': 'pizza',
                 },
                 'message': 'Database initialized.'
-            }
+            },
+            '/config': Api.config,
         }
         self.assertEqual(result, expected)
 
@@ -331,8 +373,7 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
     def test_upload_event(self):
         app = self.get_app()
 
-        config_path = lbt \
-            .relative_path(__file__, '../../../resources/test_config.json')
+        config_path = Path(RESOURCES_DIR, 'test_config.json')
         with open(config_path) as f:
             config = jsonc.JsonComment().load(f)
 
@@ -344,9 +385,11 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
 
         # good config
         result = svt.upload_event(value, store, app)
+        config = cfg.Config(config).to_primitive()
         expected = {
             'some': 'value',
-            '/config': cfg.Config(config).to_primitive()
+            '/config': config,
+            '/config/search': config,
         }
         self.assertEqual(result, expected)
 
@@ -356,14 +399,13 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
         value = base64.encodebytes(value.encode('utf-8')).decode('utf-8')
         value = 'data:application/json;base64,' + value
 
-        result = svt.upload_event(value, store, app)['/config']['error']
+        result = svt.upload_event(value, store, app)['/config/search']['error']
         self.assertEqual(result, 'DataError')
 
     def test_save_event(self):
         app = self.get_app()
 
-        config_path = lbt \
-            .relative_path(__file__, '../../../resources/test_config.json')
+        config_path = Path(RESOURCES_DIR, 'test_config.json')
         with open(config_path) as f:
             config = jsonc.JsonComment().load(f)
 
@@ -386,8 +428,7 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
     def test_save_event_error(self):
         app = self.get_app()
 
-        config_path = lbt \
-            .relative_path(__file__, '../../../resources/test_config.json')
+        config_path = Path(RESOURCES_DIR, 'test_config.json')
         with open(config_path) as f:
             config = jsonc.JsonComment().load(f)
 
@@ -397,5 +438,8 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
         value = base64.encodebytes(value.encode('utf-8')).decode('utf-8')
         value = 'data:application/json;base64,' + value
 
-        result = svt.save_event(value, store, app)['/config']['error']
+        result = svt.save_event(value, store, app)['/config/search']['error']
         self.assertEqual(result, 'DataError')
+
+        result = svt.save_event(value, store, app)['/config']
+        self.assertEqual(result, app.api.config)

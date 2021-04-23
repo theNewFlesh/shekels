@@ -1,6 +1,6 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
-from pathlib import Path
+from copy import deepcopy
 from pprint import pformat
 import base64
 import json
@@ -15,11 +15,17 @@ import flask
 import jinja2
 import jsoncomment as jsonc
 import lunchbox.tools as lbt
+import rolling_pin.blob_etl as rpb
 
 import shekels.core.config as cfg
 import shekels.core.data_tools as sdt
 import shekels.server.components as svc
 # ------------------------------------------------------------------------------
+
+
+TEMPLATE_DIR = lbt.relative_path(__file__, '../templates').as_posix()
+if 'REPO_ENV' in os.environ.keys():
+    TEMPLATE_DIR = lbt.relative_path(__file__, '../../../templates').as_posix()
 
 
 def error_to_response(error):
@@ -57,8 +63,8 @@ def error_to_response(error):
     )
 
 
-def render_template(filename, parameters, directory='../../../templates'):
-    # type: (str, Dict[str, Any], str) -> bytes
+def render_template(filename, parameters, directory=None):
+    # type: (str, Dict[str, Any], Optional[str]) -> bytes
     '''
     Renders a jinja2 template given by filename with given parameters.
 
@@ -71,13 +77,8 @@ def render_template(filename, parameters, directory='../../../templates'):
     Returns:
         bytes: HTML.
     '''
-    directory = Path(directory).as_posix()
-
-    # path to templates inside pip package
-    tempdir = lbt.relative_path(__file__, '../templates').as_posix()
-
-    # path to templates inside repo
-    if 'REPO_ENV' in os.environ.keys():
+    tempdir = TEMPLATE_DIR
+    if directory is not None:
         tempdir = lbt.relative_path(__file__, directory).as_posix()
 
     env = jinja2.Environment(
@@ -164,6 +165,7 @@ def solve_component_state(store, config=False):
     am "error" key in it. Those required keys are as follows:
 
         * /config
+        * /config/search
         * /api/initialize
         * /api/update
         * /api/search
@@ -179,6 +181,7 @@ def solve_component_state(store, config=False):
     '''
     states = [
         ['/config', None],
+        ['/config/search', None],
         ['/api/initialize', 'Please call init or update.'],
         ['/api/update', 'Please call update.'],
         ['/api/search', None],
@@ -221,9 +224,38 @@ def config_query_event(value, store, app):
     value = value or 'select * from config'
     value = re.sub('from config', 'from data', value, flags=re.I)
     try:
-        store['/config'] = sdt.query_dict(app.api.config, value)
+        store['/config/search'] = sdt.query_dict(app.api.config, value)
     except Exception as e:
-        store['/config'] = error_to_response(e).json
+        store['/config/search'] = error_to_response(e).json
+    return store
+
+
+def config_edit_event(value, store, app):
+    # type: (dict, dict, dash.Dash) -> dict
+    '''
+    Saves given edits to store.
+
+    Args:
+        value (dict): Config table.
+        store (dict): Dash store.
+        app (dash.Dash): Dash app.
+
+    Returns:
+        dict: Modified store.
+    '''
+    new = value['new']
+    old_key = value['old']['key']
+    config = store.get('/config', deepcopy(app.api.config))
+    items = [
+        ('/config', config),
+        ('/config/search', store.get('/config/search', config)),
+    ]
+    for key, val in items:
+        item = rpb.BlobETL(val).to_flat_dict()
+        if old_key in item:
+            del item[old_key]
+            item[new['key']] = new['value']
+        store[key] = rpb.BlobETL(item).to_dict()
     return store
 
 
@@ -261,6 +293,8 @@ def init_event(value, store, app):
     update_store(app.client, store, '/api/initialize', data=app.api.config)
     if 'error' in store['/api/initialize']:
         store['/config'] = store['/api/initialize']
+    else:
+        store['/config'] = deepcopy(app.api.config)
     return store
 
 
@@ -305,8 +339,9 @@ def upload_event(value, store, app):
         config = cfg.Config(config)
         config.validate()
         store['/config'] = config.to_primitive()
+        store['/config/search'] = deepcopy(store['/config'])
     except Exception as error:
-        store['/config'] = error_to_response(error).json
+        store['/config/search'] = error_to_response(error).json
     return store
 
 
@@ -329,5 +364,6 @@ def save_event(value, store, app):
         with open(app.api.config_path, 'w') as f:
             json.dump(config, f, indent=4, sort_keys=True)
     except (Exception, DataError) as error:
-        store['/config'] = error_to_response(error).json
+        store['/config'] = deepcopy(app.api.config)
+        store['/config/search'] = error_to_response(error).json
     return store

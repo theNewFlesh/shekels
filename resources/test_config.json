@@ -1,5 +1,5 @@
 {
-    "data_path": "/root/shekels/resources/test_transactions.csv",
+    "data_path": "/mnt/storage/test_transactions.csv",
     "columns": [
         "date",
         "description",

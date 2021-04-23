@@ -35,6 +35,7 @@ def get_info():
                         help='''Command to run in {repo} service.
 
     app          - Run Flask app inside {repo} container
+    build-prod   - Build production image of {repo}
     container    - Display the Docker container id for {repo} service
     coverage     - Generate coverage report for {repo} service
     destroy      - Shutdown {repo} service and destroy its Docker image
@@ -48,6 +49,7 @@ def get_info():
     package      - Build {repo} pip package
     prod         - Start {repo} production service
     publish      - Publish repository to python package index.
+    push         - Push production of {repo} image to Dockerhub
     python       - Run python interpreter session inside {repo} container
     remove       - Remove {repo} service Docker image
     restart      - Restart {repo} service
@@ -315,7 +317,7 @@ def get_type_checking_command(info):
     return cmd
 
 
-def get_production_image_command(info):
+def get_build_production_image_command(info):
     '''
     Create production docker image.
 
@@ -327,9 +329,10 @@ def get_production_image_command(info):
     '''
     cmd = 'CWD=$(pwd); '
     cmd += 'cd {repo_path}; '
+    cmd = "export VERSION=`cat pip/version.txt`; "
     cmd += 'docker build --force-rm '
     cmd += '--file docker/{repo}_prod.dockerfile '
-    cmd += '--tag {repo}-prod:latest ./; '
+    cmd += '--tag thenewflesh/{repo}:$VERSION ./; '
     cmd += 'cd $CWD'
     cmd = cmd.format(
         repo=REPO,
@@ -355,13 +358,13 @@ def get_production_container_command(info):
 
     cmd = 'CWD=$(pwd); '
     cmd += 'cd {repo_path}; '
+    cmd += "export VERSION=`cat pip/version.txt`; "
     cmd += 'CURRENT_USER="{user}" '
     cmd += 'docker run '
     cmd += '--volume {volume}:/mnt/storage '
-    cmd += '--publish 5000:5000 '
+    cmd += '--publish 5000:80 '
     cmd += '--name {repo}-prod '
-    cmd += '--workdir /root/{repo}/python '
-    cmd += '{repo}-prod; '
+    cmd += 'thenewflesh/{repo}:$VERSION; '
     cmd += 'cd $CWD'
 
     cmd = cmd.format(
@@ -416,6 +419,21 @@ def get_publish_command(info):
     return cmd
 
 
+def get_push_to_dockerhub_command():
+    '''
+    Push production image to dockerhub.
+
+    Returns:
+        str: Command.
+    '''
+    cmd = "export VERSION=`cat pip/version.txt`; "
+    cmd += 'docker push thenewflesh/{repo}:$VERSION'
+    cmd = cmd.format(
+        repo=REPO,
+    )
+    return cmd
+
+
 def get_package_command(info):
     '''
     Build pip package.
@@ -438,6 +456,9 @@ def get_package_command(info):
     cmd += 'cp /root/{repo}/docker/dev_requirements.txt /tmp/{repo}/; '
     cmd += 'cp /root/{repo}/docker/prod_requirements.txt /tmp/{repo}/; '
     cmd += 'cp -r /root/{repo}/templates /tmp/{repo}/{repo}; '
+    cmd += 'cp -r /root/{repo}/resources /tmp/{repo}/{repo}; '
+    cmd += "find /tmp/{repo}/{repo}/resources -type f | grep -vE 'icon|test_' "
+    cmd += "| parallel 'rm -rf {x}'; "
     cmd += r"find /tmp/{repo} | grep -E '.*test.*\.py$|mock.*\.py$|__pycache__'"
     cmd += " | parallel 'rm -rf {x}'; "
     cmd += "find /tmp/{repo} -type f | grep __init__.py | parallel '"
@@ -620,12 +641,17 @@ def get_tox_command(info):
     cmd += 'cp /root/{repo}/LICENSE /tmp/{repo}/; '
     cmd += 'cp /root/{repo}/docker/* /tmp/{repo}/; '
     cmd += 'cp /root/{repo}/pip/* /tmp/{repo}/; '
-    cmd += 'cp -R /root/{repo}/resources /tmp; '
+    cmd += 'cp -R /root/{repo}/resources /tmp/{repo}/{repo}; '
+    cmd += "find /tmp/{repo}/{repo}/resources -type f | grep -vE 'icon|test_' "
+    cmd += "| parallel 'rm -rf {x}'; "
     cmd += 'cp -R /root/{repo}/templates /tmp/{repo}/{repo}; '
-    cmd += r"find /tmp/{repo} | grep -E '__pycache__|\.pyc$' | parallel 'rm -rf'; "
+    cmd += "cp -R /root/{repo}/python/conftest.py /tmp/{repo}/; "
+    cmd += r"find /tmp/{repo} | grep -E '__pycache__|\.pyc$' | "
+    cmd += "parallel 'rm -rf'; "
     cmd += 'cd /tmp/{repo}; tox'
     cmd += '"'
     cmd = cmd.format(
+        x='{}',
         repo=REPO,
         exec=get_docker_exec_command(info, env_vars=[]),
     )
@@ -738,6 +764,9 @@ def main():
     if mode == 'app':
         cmd = get_app_command(info)
 
+    elif mode == 'build-prod':
+        cmd = get_build_production_image_command(info)
+
     elif mode == 'container':
         cmd = get_container_id_command()
 
@@ -789,7 +818,7 @@ def main():
         else:
             cmd = get_remove_pycache_command()
             cmd += ' && ' + get_destroy_production_container_command(info)
-            cmd += ' && ' + get_production_image_command(info)
+            cmd += ' && ' + get_build_production_image_command(info)
             cmd += ' && ' + get_production_container_command(info)
 
     elif mode == 'publish':
@@ -797,6 +826,9 @@ def main():
         cmd += ' && ' + get_remove_pycache_command()
         cmd += ' && ' + get_package_command(info)
         cmd += ' && ' + get_publish_command(info)
+
+    elif mode == 'push':
+        cmd = get_push_to_dockerhub_command()
 
     elif mode == 'python':
         cmd = get_python_command(info)

@@ -1,6 +1,7 @@
 from typing import Any, Dict, List, Tuple, Union
 
 from copy import copy
+from copy import deepcopy
 from pathlib import Path
 import os
 
@@ -8,6 +9,7 @@ from dash.dependencies import Input, Output, State
 from flask_caching import Cache
 import dash
 import dash_core_components as dcc
+import dash_html_components as html
 import dash_table
 import flasgger as swg
 import flask
@@ -54,6 +56,7 @@ def get_app():
     app.event_listener = sev.EventListener(app, {}) \
         .listen('config-query', svt.config_query_event) \
         .listen('config-search-button', svt.config_query_event) \
+        .listen('config-table', svt.config_edit_event) \
         .listen('query', svt.data_query_event) \
         .listen('search-button', svt.data_query_event) \
         .listen('init-button', svt.init_event) \
@@ -97,6 +100,7 @@ def serve_stylesheet(stylesheet):
     [
         Input('config-query', 'value'),
         Input('config-search-button', 'n_clicks'),
+        Input('config-table', 'data'),
         Input('query', 'value'),
         Input('init-button', 'n_clicks'),
         Input('update-button', 'n_clicks'),
@@ -104,7 +108,7 @@ def serve_stylesheet(stylesheet):
         Input('upload', 'contents'),
         Input('save-button', 'n_clicks'),
     ],
-    [State('store', 'data')]
+    [State('config-table', 'data_previous')]
 )
 def on_event(*inputs):
     # type: (Tuple[Any, ...]) -> Dict[str, Any]
@@ -120,6 +124,9 @@ def on_event(*inputs):
     event = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
     value = dash.callback_context.triggered[0]['value']
     store = APP.event_listener.store
+
+    if event == 'config-table':
+        value = dict(new=value[0], old=inputs[-1][0])
 
     if event == 'update-button' and store.get('/api/initialize') is None:
         APP.event_listener.emit('init-button', None)
@@ -146,12 +153,13 @@ def on_plots_update(store):
     comp = svt.solve_component_state(store)
     if comp is not None:
         return comp
-    plots = store.get('config', APP.api.config).get('plots', [])
+    config = store.get('/config', deepcopy(APP.api.config))
+    plots = config.get('plots', [])
     return svc.get_plots(store['/api/search']['response'], plots)
 
 
 @APP.callback(
-    Output('table-content', 'children'),
+    Output('data-content', 'children'),
     [Input('store', 'data')]
 )
 @APP.cache.memoize(100)
@@ -178,7 +186,7 @@ def on_datatable_update(store):
 )
 @APP.cache.memoize(100)
 def on_config_update(store):
-    # type: (Dict[str, Any]) -> flask.Response
+    # type: (Dict[str, Any]) -> List[flask.Response]
     '''
     Updates config table with config information from store.
 
@@ -188,12 +196,19 @@ def on_config_update(store):
     Returns:
         flask.Response: Response.
     '''
-    store['/config'] = store.get('/config', APP.api.config)
+    config = store.get('/config', deepcopy(APP.api.config))
+    store['/config'] = config
+    store['/config/search'] = store.get('/config/search', store['/config'])
     comp = svt.solve_component_state(store, config=True)
     if comp is not None:
-        return comp
+        return [
+            comp,
+            html.Div(className='dummy', children=[
+                dash_table.DataTable(id='config-table')
+            ])
+        ]
     return svc.get_key_value_table(
-        store['/config'],
+        store['/config/search'],
         id_='config',
         header='config',
         editable=True,
@@ -228,7 +243,7 @@ def on_get_tab(tab, store):
         return svc.get_data_tab(query)
 
     elif tab == 'config':
-        config = store.get('/config', APP.api.config)
+        config = store.get('/config', deepcopy(APP.api.config))
         return svc.get_config_tab(config)
 
     elif tab == 'api':  # pragma: no cover
@@ -263,12 +278,12 @@ def run(app, config_path, debug=False, test=False):
     app.event_listener.state.clear()
     app.event_listener.state.append({})
     if not test:
-        app.run_server(debug=debug, host='0.0.0.0', port=5014)  # pragma: no cover
+        app.run_server(debug=debug, host='0.0.0.0', port=80)  # pragma: no cover
 
 
 if __name__ == '__main__':  # pragma: no cover
-    run(
-        APP,
-        '/root/shekels/resources/test_config.json',
-        debug='DEBUG_MODE' in os.environ.keys()
-    )
+    config_path = '/mnt/storage/shekels_config.json'
+    if 'REPO_ENV' in os.environ.keys():
+        config_path = '/mnt/storage/test_config.json'
+    debug = 'DEBUG_MODE' in os.environ.keys()
+    run(APP, config_path, debug=debug)
