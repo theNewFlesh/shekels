@@ -274,10 +274,10 @@ def test_datatable_update(dash_duo, run_app):
 
     # click on data tab
     dash_duo.find_elements('#tabs .tab')[1].click()
-    time.sleep(0.01)
+    time.sleep(0.1)
     dash_duo.wait_for_element('#status-table')
     result = dash_duo.find_element('#lower-content div')
-    assert result.get_property('id') == 'table-content'
+    assert result.get_property('id') == 'data-content'
 
     # init message
     result = dash_duo.find_element('#status-table td:last-child > div').text

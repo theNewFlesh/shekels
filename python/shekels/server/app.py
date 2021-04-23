@@ -159,7 +159,7 @@ def on_plots_update(store):
 
 
 @APP.callback(
-    Output('table-content', 'children'),
+    Output('data-content', 'children'),
     [Input('store', 'data')]
 )
 @APP.cache.memoize(100)

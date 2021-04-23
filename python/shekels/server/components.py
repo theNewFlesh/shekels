@@ -94,7 +94,7 @@ def get_data_tab(query=None):
     '''
     # dummies must go first for element props behavior to work
     content = html.Div(id='lower-content', children=[
-        html.Div(id='table-content', className='col', children=[])
+        html.Div(id='data-content', className='col', children=[])
     ])
     return [*get_dummy_elements(), get_searchbar(query), content]
 
