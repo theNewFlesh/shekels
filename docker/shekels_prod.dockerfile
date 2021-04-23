@@ -29,7 +29,7 @@ RUN echo "\n${CYAN}INSTALL SHEKELS${NO_COLOR}"; \
     apt install -y \
         graphviz \
         python3-pydot && \
-    pip3.7 install shekels>=1.0.1;
+    pip3.7 install shekels>=1.0.2;
 
 ENTRYPOINT [\
     "python3.7",\
