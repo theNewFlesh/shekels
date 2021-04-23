@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.10.2
+                1.0.2
               </div>
             
           
@@ -167,6 +167,7 @@
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">from</span> <span class="nn">lunchbox.enforce</span> <span class="kn">import</span> <span class="n">Enforce</span><span class="p">,</span> <span class="n">EnforceError</span>
 <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">DatetimeIndex</span>
@@ -225,7 +226,13 @@
         <span class="n">fullscreen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">assets</span> <span class="o">=</span> <span class="n">lbt</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s2">&quot;../../../resources&quot;</span><span class="p">)</span>
+    <span class="c1"># path to resources inside pip package</span>
+    <span class="n">assets</span> <span class="o">=</span> <span class="n">lbt</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s2">&quot;../resources&quot;</span><span class="p">)</span>
+
+    <span class="c1"># path to resources inside repo</span>
+    <span class="k">if</span> <span class="s1">&#39;REPO_ENV&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">assets</span> <span class="o">=</span> <span class="n">lbt</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s2">&quot;../../../resources&quot;</span><span class="p">)</span>
+
     <span class="n">app</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">Dash</span><span class="p">(</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Shekels&#39;</span><span class="p">,</span>
         <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Shekels&#39;</span><span class="p">,</span>
@@ -253,7 +260,7 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># dummies must go first for element props behavior to work</span>
     <span class="n">content</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;lower-content&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;table-content&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;col&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[])</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;data-content&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;col&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[])</span>
     <span class="p">])</span>
     <span class="k">return</span> <span class="p">[</span><span class="o">*</span><span class="n">get_dummy_elements</span><span class="p">(),</span> <span class="n">get_searchbar</span><span class="p">(</span><span class="n">query</span><span class="p">),</span> <span class="n">content</span><span class="p">]</span></div>
 
@@ -334,9 +341,7 @@
         <span class="n">className</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">,</span>
         <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">query</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">search</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">update</span><span class="p">],</span>
     <span class="p">)</span>
-    <span class="n">searchbar</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;searchbar&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;menubar&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
-    <span class="p">)</span>
+    <span class="n">searchbar</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;searchbar&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;menubar&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">row</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">searchbar</span></div>
 
 
@@ -351,6 +356,7 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="p">[</span>
         <span class="n">dcc</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;config-query&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">dash_table</span><span class="o">.</span><span class="n">DataTable</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;config-table&#39;</span><span class="p">)]),</span>
         <span class="n">dcc</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
         <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;config-search-button&#39;</span><span class="p">,</span> <span class="n">n_clicks</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
         <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;search-button&#39;</span><span class="p">,</span> <span class="n">n_clicks</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
@@ -423,14 +429,16 @@
     <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1">-button&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">title</span><span class="p">],</span> <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_key_value_table"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_key_value_table">[docs]</a><span class="k">def</span> <span class="nf">get_key_value_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">editable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">key_order</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_key_value_table"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_key_value_table">[docs]</a><span class="k">def</span> <span class="nf">get_key_value_table</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">,</span> <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;key-value&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">editable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">key_order</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">):</span>
     <span class="c1"># type (dict, Optional(str), str, bool, Optional(List[str])) -&gt; DataTable</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Gets a Dash DataTable element representing given dictionary.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        data (dict): Dictionary.</span>
-<span class="sd">        id_ (str, optional): CSS id. Default: &#39;&#39;.</span>
+<span class="sd">        id_ (str, optional): CSS id. Default: &#39;key-value&#39;.</span>
 <span class="sd">        header (str, optional): Table header title. Default: &#39;&#39;.</span>
 <span class="sd">        editable (bool, optional): Whether table is editable. Default: False.</span>
 <span class="sd">        key_order (list[str], optional): Order in which keys will be displayed.</span>
@@ -464,13 +472,14 @@
 
     <span class="n">table</span> <span class="o">=</span> <span class="n">dash_table</span><span class="o">.</span><span class="n">DataTable</span><span class="p">(</span>
         <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+        <span class="n">data_previous</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
         <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;key-value-table&#39;</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s1">-table&#39;</span><span class="p">,</span>
         <span class="n">sort_action</span><span class="o">=</span><span class="s1">&#39;native&#39;</span><span class="p">,</span>
         <span class="n">sort_mode</span><span class="o">=</span><span class="s1">&#39;multi&#39;</span><span class="p">,</span>
-        <span class="n">cell_selectable</span><span class="o">=</span><span class="n">editable</span><span class="p">,</span>
-        <span class="n">editable</span><span class="o">=</span><span class="n">editable</span><span class="p">,</span>
         <span class="n">page_action</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+        <span class="n">cell_selectable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">editable</span><span class="o">=</span><span class="n">editable</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">head</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;key-value-table-header&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="n">header</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>

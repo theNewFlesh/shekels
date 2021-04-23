@@ -25,7 +25,7 @@
             96 statements &nbsp;
             <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">96 run</button>
             <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">0 missing</button>
-            <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">9 excluded</button>
+            <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">13 excluded</button>
         </h2>
     </div>
 </div>
@@ -213,7 +213,7 @@
     <p id="t159" class="pln"><span class="n"><a href="#t159">159</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t160" class="pln"><span class="n"><a href="#t160">160</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t161" class="run"><span class="n"><a href="#t161">161</a></span><span class="t"><span class="op">@</span><span class="nam">APP</span><span class="op">.</span><span class="nam">callback</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t162" class="pln"><span class="n"><a href="#t162">162</a></span><span class="t">    <span class="nam">Output</span><span class="op">(</span><span class="str">'table-content'</span><span class="op">,</span> <span class="str">'children'</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t162" class="pln"><span class="n"><a href="#t162">162</a></span><span class="t">    <span class="nam">Output</span><span class="op">(</span><span class="str">'data-content'</span><span class="op">,</span> <span class="str">'children'</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t163" class="pln"><span class="n"><a href="#t163">163</a></span><span class="t">    <span class="op">[</span><span class="nam">Input</span><span class="op">(</span><span class="str">'store'</span><span class="op">,</span> <span class="str">'data'</span><span class="op">)</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p id="t164" class="pln"><span class="n"><a href="#t164">164</a></span><span class="t"><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t165" class="run"><span class="n"><a href="#t165">165</a></span><span class="t"><span class="op">@</span><span class="nam">APP</span><span class="op">.</span><span class="nam">cache</span><span class="op">.</span><span class="nam">memoize</span><span class="op">(</span><span class="num">100</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -332,21 +332,21 @@
     <p id="t278" class="run"><span class="n"><a href="#t278">278</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">event_listener</span><span class="op">.</span><span class="nam">state</span><span class="op">.</span><span class="nam">clear</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t279" class="run"><span class="n"><a href="#t279">279</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">event_listener</span><span class="op">.</span><span class="nam">state</span><span class="op">.</span><span class="nam">append</span><span class="op">(</span><span class="op">{</span><span class="op">}</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t280" class="run"><span class="n"><a href="#t280">280</a></span><span class="t">    <span class="key">if</span> <span class="key">not</span> <span class="nam">test</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t281" class="exc show_exc"><span class="n"><a href="#t281">281</a></span><span class="t">        <span class="nam">app</span><span class="op">.</span><span class="nam">run_server</span><span class="op">(</span><span class="nam">debug</span><span class="op">=</span><span class="nam">debug</span><span class="op">,</span> <span class="nam">host</span><span class="op">=</span><span class="str">'0.0.0.0'</span><span class="op">,</span> <span class="nam">port</span><span class="op">=</span><span class="num">5014</span><span class="op">)</span>  <span class="com"># pragma: no cover</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t281" class="exc show_exc"><span class="n"><a href="#t281">281</a></span><span class="t">        <span class="nam">app</span><span class="op">.</span><span class="nam">run_server</span><span class="op">(</span><span class="nam">debug</span><span class="op">=</span><span class="nam">debug</span><span class="op">,</span> <span class="nam">host</span><span class="op">=</span><span class="str">'0.0.0.0'</span><span class="op">,</span> <span class="nam">port</span><span class="op">=</span><span class="num">80</span><span class="op">)</span>  <span class="com"># pragma: no cover</span>&nbsp;</span><span class="r"></span></p>
     <p id="t282" class="pln"><span class="n"><a href="#t282">282</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t283" class="pln"><span class="n"><a href="#t283">283</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t284" class="exc show_exc"><span class="n"><a href="#t284">284</a></span><span class="t"><span class="key">if</span> <span class="nam">__name__</span> <span class="op">==</span> <span class="str">'__main__'</span><span class="op">:</span>  <span class="com"># pragma: no cover</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t285" class="exc show_exc"><span class="n"><a href="#t285">285</a></span><span class="t">    <span class="nam">run</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t286" class="pln"><span class="n"><a href="#t286">286</a></span><span class="t">        <span class="nam">APP</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t287" class="pln"><span class="n"><a href="#t287">287</a></span><span class="t">        <span class="str">'/root/shekels/resources/test_config.json'</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t288" class="pln"><span class="n"><a href="#t288">288</a></span><span class="t">        <span class="nam">debug</span><span class="op">=</span><span class="str">'DEBUG_MODE'</span> <span class="key">in</span> <span class="nam">os</span><span class="op">.</span><span class="nam">environ</span><span class="op">.</span><span class="nam">keys</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t289" class="pln"><span class="n"><a href="#t289">289</a></span><span class="t">    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t285" class="exc show_exc"><span class="n"><a href="#t285">285</a></span><span class="t">    <span class="nam">config_path</span> <span class="op">=</span> <span class="str">'/mnt/storage/shekels_config.json'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t286" class="exc show_exc"><span class="n"><a href="#t286">286</a></span><span class="t">    <span class="key">if</span> <span class="str">'REPO_ENV'</span> <span class="key">in</span> <span class="nam">os</span><span class="op">.</span><span class="nam">environ</span><span class="op">.</span><span class="nam">keys</span><span class="op">(</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t287" class="exc show_exc"><span class="n"><a href="#t287">287</a></span><span class="t">        <span class="nam">config_path</span> <span class="op">=</span> <span class="str">'/mnt/storage/test_config.json'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t288" class="exc show_exc"><span class="n"><a href="#t288">288</a></span><span class="t">    <span class="nam">debug</span> <span class="op">=</span> <span class="str">'DEBUG_MODE'</span> <span class="key">in</span> <span class="nam">os</span><span class="op">.</span><span class="nam">environ</span><span class="op">.</span><span class="nam">keys</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t289" class="exc show_exc"><span class="n"><a href="#t289">289</a></span><span class="t">    <span class="nam">run</span><span class="op">(</span><span class="nam">APP</span><span class="op">,</span> <span class="nam">config_path</span><span class="op">,</span> <span class="nam">debug</span><span class="op">=</span><span class="nam">debug</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2021-04-22 10:03 +0000
+            created at 2021-04-23 19:26 +0000
         </p>
     </div>
 </div>
