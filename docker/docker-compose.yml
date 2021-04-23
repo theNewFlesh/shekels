@@ -2,17 +2,23 @@ version: "3.4"
 volumes:
   cache:
 services:
-  shekels_prod:
-    container_name: shekels-prod
-    image: shekels-prod
+  shekels:
+    container_name: shekels
+    image: shekels
     build:
       context: .
-      dockerfile: shekels_prod.dockerfile
+      dockerfile: shekels.dockerfile
     ports:
-      - "5015:80"
+      - "9014:8888"
+      - "5014:80"
     userns_mode: "host"
     user: root
     volumes:
-      - /tmp/shekels:/mnt/storage
+      - ../resources:/mnt/storage
       - ../:/root/shekels
+      - ./jupyter:/root/.jupyter
+      - ./ipython:/root/.ipython
+      - ../artifacts:/tmp/dash_artifacts
+      - ~/.ssh:/root/.ssh
+    working_dir: "/root/shekels/python"
     command: "tail -f /dev/null"
