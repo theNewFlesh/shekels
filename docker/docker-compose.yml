@@ -9,8 +9,8 @@ services:
       context: .
       dockerfile: shekels.dockerfile
     ports:
-      - "9014:9000"
-      - "5014:5014"
+      - "9014:8888"
+      - "5014:80"
     userns_mode: "host"
     user: root
     volumes:
