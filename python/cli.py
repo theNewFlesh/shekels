@@ -331,7 +331,7 @@ def get_build_production_image_command(info):
     cmd = "export VERSION=`cat pip/version.txt`; "
     cmd += 'docker build --force-rm '
     cmd += '--file docker/{repo}_prod.dockerfile '
-    cmd += '--tag {repo}-prod:$VERSION ./; '
+    cmd += '--tag thenewflesh/{repo}:$VERSION ./; '
     cmd += 'cd $CWD'
     cmd = cmd.format(
         repo=REPO,
@@ -363,7 +363,7 @@ def get_production_container_command(info):
     cmd += '--volume {volume}:/mnt/storage '
     cmd += '--publish 5000:80 '
     cmd += '--name {repo}-prod '
-    cmd += '{repo}-prod:$VERSION; '
+    cmd += 'thenewflesh/{repo}:$VERSION; '
     cmd += 'cd $CWD'
 
     cmd = cmd.format(
