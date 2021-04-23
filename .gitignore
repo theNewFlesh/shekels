@@ -5,7 +5,7 @@ __pycache__/
 
 # personal data
 resources/transactions.csv
-resources/config.json
+resources/shekels_config.json
 
 # mypy
 .mypy_cache/
