@@ -14,6 +14,7 @@ services:
     userns_mode: "host"
     user: root
     volumes:
+      - ../resources:/mnt/storage
       - ../:/root/shekels
       - ./jupyter:/root/.jupyter
       - ./ipython:/root/.ipython

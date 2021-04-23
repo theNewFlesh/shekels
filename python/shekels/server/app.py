@@ -278,12 +278,12 @@ def run(app, config_path, debug=False, test=False):
     app.event_listener.state.clear()
     app.event_listener.state.append({})
     if not test:
-        app.run_server(debug=debug, host='0.0.0.0', port=5014)  # pragma: no cover
+        app.run_server(debug=debug, host='0.0.0.0', port=80)  # pragma: no cover
 
 
 if __name__ == '__main__':  # pragma: no cover
-    run(
-        APP,
-        '/root/shekels/resources/test_config.json',
-        debug='DEBUG_MODE' in os.environ.keys()
-    )
+    config_path = '/mnt/storage/shekels_config.json'
+    if 'REPO_ENV' in os.environ.keys():
+        config_path = '/mnt/storage/test_config.json'
+    debug = 'DEBUG_MODE' in os.environ.keys()
+    run(APP, config_path, debug=debug)
