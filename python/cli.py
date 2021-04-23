@@ -49,6 +49,7 @@ def get_info():
     package      - Build {repo} pip package
     prod         - Start {repo} production service
     publish      - Publish repository to python package index.
+    push         - Push production of {repo} image to Dockerhub
     python       - Run python interpreter session inside {repo} container
     remove       - Remove {repo} service Docker image
     restart      - Restart {repo} service
@@ -414,6 +415,21 @@ def get_publish_command(info):
         repo=REPO,
         exec=get_docker_exec_command(info, '/tmp/' + REPO, env_vars=[]),
         exec2=get_docker_exec_command(info, env_vars=[]),
+    )
+    return cmd
+
+
+def get_push_to_dockerhub_command():
+    '''
+    Push production image to dockerhub.
+
+    Returns:
+        str: Command.
+    '''
+    cmd = "export VERSION=`cat pip/version.txt`; "
+    cmd += 'docker push thenewflesh/{repo}:$VERSION'
+    cmd = cmd.format(
+        repo=REPO,
     )
     return cmd
 
@@ -810,6 +826,9 @@ def main():
         cmd += ' && ' + get_remove_pycache_command()
         cmd += ' && ' + get_package_command(info)
         cmd += ' && ' + get_publish_command(info)
+
+    elif mode == 'push':
+        cmd = get_push_to_dockerhub_command()
 
     elif mode == 'python':
         cmd = get_python_command(info)
