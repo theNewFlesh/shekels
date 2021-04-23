@@ -35,6 +35,7 @@ def get_info():
                         help='''Command to run in {repo} service.
 
     app          - Run Flask app inside {repo} container
+    build-prod   - Build production image of {repo}
     container    - Display the Docker container id for {repo} service
     coverage     - Generate coverage report for {repo} service
     destroy      - Shutdown {repo} service and destroy its Docker image
@@ -315,7 +316,7 @@ def get_type_checking_command(info):
     return cmd
 
 
-def get_production_image_command(info):
+def get_build_production_image_command(info):
     '''
     Create production docker image.
 
@@ -327,9 +328,10 @@ def get_production_image_command(info):
     '''
     cmd = 'CWD=$(pwd); '
     cmd += 'cd {repo_path}; '
+    cmd = "export VERSION=`cat pip/version.txt`; "
     cmd += 'docker build --force-rm '
     cmd += '--file docker/{repo}_prod.dockerfile '
-    cmd += '--tag {repo}-prod:latest ./; '
+    cmd += '--tag {repo}-prod:$VERSION ./; '
     cmd += 'cd $CWD'
     cmd = cmd.format(
         repo=REPO,
@@ -355,13 +357,13 @@ def get_production_container_command(info):
 
     cmd = 'CWD=$(pwd); '
     cmd += 'cd {repo_path}; '
+    cmd += "export VERSION=`cat pip/version.txt`; "
     cmd += 'CURRENT_USER="{user}" '
     cmd += 'docker run '
     cmd += '--volume {volume}:/mnt/storage '
     cmd += '--publish 5000:5000 '
     cmd += '--name {repo}-prod '
-    cmd += '--workdir /root/{repo}/python '
-    cmd += '{repo}-prod; '
+    cmd += '{repo}-prod:$VERSION; '
     cmd += 'cd $CWD'
 
     cmd = cmd.format(
@@ -746,6 +748,9 @@ def main():
     if mode == 'app':
         cmd = get_app_command(info)
 
+    elif mode == 'build-prod':
+        cmd = get_build_production_image_command(info)
+
     elif mode == 'container':
         cmd = get_container_id_command()
 
@@ -797,7 +802,7 @@ def main():
         else:
             cmd = get_remove_pycache_command()
             cmd += ' && ' + get_destroy_production_container_command(info)
-            cmd += ' && ' + get_production_image_command(info)
+            cmd += ' && ' + get_build_production_image_command(info)
             cmd += ' && ' + get_production_container_command(info)
 
     elif mode == 'publish':
