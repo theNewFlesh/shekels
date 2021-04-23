@@ -361,7 +361,7 @@ def get_production_container_command(info):
     cmd += 'CURRENT_USER="{user}" '
     cmd += 'docker run '
     cmd += '--volume {volume}:/mnt/storage '
-    cmd += '--publish 5000:5000 '
+    cmd += '--publish 5000:80 '
     cmd += '--name {repo}-prod '
     cmd += '{repo}-prod:$VERSION; '
     cmd += 'cd $CWD'
