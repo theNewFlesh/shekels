@@ -35,7 +35,7 @@ spec:
       volumes:
         - name: storage
           hostPath:
-            path: /Users/alex/Desktop/shekels_kubernetes/storage
+            path: /Users/alex/Documents/projects/shekels/resources
             type: Directory
 
 ---
