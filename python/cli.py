@@ -380,7 +380,7 @@ def get_destroy_production_container_command(info):
     '''
     Destroy production container and image.
 
-    Args:age
+    Args:
         info (dict): Info dictionary.
 
     Returns:
