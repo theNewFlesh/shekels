@@ -52,39 +52,17 @@ spec:
     - port: 80
 
 ---
-kind: Deployment
-apiVersion: apps/v1
-metadata:
-  name: nginx
-  namespace: shekels
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      run: nginx
-  template:
-    metadata:
-      labels:
-        run: nginx
-    spec:
-      containers:
-        - name: nginx
-          image: nginx
-          resources:
-            limits:
-              cpu: "1"
-              memory: 2Gi
-
----
 kind: Ingress
 apiVersion: networking.k8s.io/v1
 metadata:
   name: ingress
   namespace: shekels
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/rewrite-target: /shekels
 spec:
   rules:
-  - host: shekels.com
-    http:
+  - http:
       paths:
       - path: "/"
         pathType: Prefix
