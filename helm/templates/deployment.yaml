@@ -1,0 +1,81 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: {{ .Values.namespace }}
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: shekels
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shekels
+  template:
+    metadata:
+      labels:
+        app: shekels
+    spec:
+      containers:
+        - name: shekels
+          image: {{ .Values.container.image }}:{{ .Values.container.tag }}
+          imagePullPolicy: {{ .Values.container.image_pull_policy }}
+          command: [{{ join ", " .Values.container.command }}]
+          env: {{- range .Values.container.env }}
+            - name: {{ .name }}
+              value: "{{ .value }}"
+          {{- end }}
+          ports:
+            - containerPort: {{ .Values.container.port }}
+          volumeMounts:
+            - name: storage
+              mountPath: /mnt/storage
+            - name: repo
+              mountPath: /root/shekels
+      volumes:
+        - name: storage
+          hostPath:
+            path: {{ .Values.container.storage_volume }}
+            type: Directory
+        - name: repo
+          hostPath:
+            path: {{ .Values.container.repo }}
+            type: Directory
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: shekels
+  namespace: {{ .Values.namespace }}
+spec:
+  type: ClusterIP
+  selector:
+    app: shekels
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 80
+
+---
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: ingress
+  namespace: {{ .Values.namespace }}
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/rewrite-target: /shekels
+spec:
+  rules:
+    - http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: shekels
+                port:
+                  number: {{ .Values.service.port }}

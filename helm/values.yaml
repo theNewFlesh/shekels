@@ -1,0 +1,21 @@
+namespace: shekels
+
+organization: k8s
+
+container:
+  image: k3d-dev-registry:5000/shekels
+  tag: 1.0.2
+  repo: /mnt/storage/repos/shekels
+  storage_volume: /mnt/storage
+  port: 80
+  image_pull_policy: IfNotPresent
+  command: ["python3.7", "/root/shekels/python/shekels/server/app.py"]
+  env:
+    - name: REPO_ENV
+      value: "True"
+
+service:
+  port: 80
+
+ingress:
+  path: /shekels

@@ -1,0 +1,22 @@
+apiVersion: v2
+name: shekels
+version: 1.0.2
+home: https://github.com/theNewFlesh/shekels
+description: |
+  Shekels is a local service which consumes a transactions CSV file downloaded
+  from mint.intuit.com. It conforms this data into a database, and displays it
+  as a searchable table and dashboard of configurable plots in web frontend.
+keywords:
+  - dashboard
+  - data
+  - database
+  - datastore
+  - finance
+  - flask
+  - plotly
+type: application
+appVersion: "0.1.0"
+maintainers:
+  - name: Alex Braun
+    email: alexander.g.braun@gmail.com
+    url: http://alexgbraun.com
