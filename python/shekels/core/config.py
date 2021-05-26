@@ -141,7 +141,7 @@ def is_plot_kind(item):
         ValidationError: If item is a plot kind.
     '''
     kinds = [
-        'area', 'bar', 'barh', 'line' 'lines', 'ratio', 'scatter', 'spread'
+        'area', 'bar', 'barh', 'line', 'lines', 'ratio', 'scatter', 'spread'
     ]
     if item not in kinds:
         msg = f'{item} is not a legal plot kind. Legal kinds: {kinds}.'
