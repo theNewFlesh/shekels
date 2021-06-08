@@ -12,13 +12,13 @@ services:
       - "9014:8888"
       - "5014:80"
     userns_mode: "host"
-    user: root
+    user: ubuntu
     volumes:
       - ../resources:/mnt/storage
-      - ../:/root/shekels
-      - ./jupyter:/root/.jupyter
-      - ./ipython:/root/.ipython
+      - ../:/home/ubuntu/shekels
+      - ./jupyter:/home/ubuntu/.jupyter
+      - ./ipython:/home/ubuntu/.ipython
       - ../artifacts:/tmp/dash_artifacts
-      - ~/.ssh:/root/.ssh
-    working_dir: "/root/shekels/python"
+      - ~/.ssh:/home/ubuntu/.ssh
+    working_dir: "/home/ubuntu/shekels/python"
     command: "tail -f /dev/null"

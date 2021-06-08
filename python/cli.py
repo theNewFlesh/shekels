@@ -123,7 +123,7 @@ def get_architecture_diagram_command(info):
     '''
     cmd = '{exec} python3.7 -c "'
     cmd += "import re; from rolling_pin.repo_etl import RepoETL; "
-    cmd += "etl = RepoETL('/root/{repo}/python'); "
+    cmd += "etl = RepoETL('/home/ubuntu/{repo}/python'); "
     cmd += "regex = 'test|mock'; "
     cmd += "data = etl._data.copy(); "
     cmd += "func = lambda x: not bool(re.search(regex, x)); "
@@ -133,7 +133,7 @@ def get_architecture_diagram_command(info):
     cmd += "data.dependencies = data.dependencies"
     cmd += ".apply(lambda x: list(filter(func, x))); "
     cmd += "etl._data = data; "
-    cmd += "etl.write('/root/{repo}/docs/architecture.svg', orient='lr')"
+    cmd += "etl.write('/home/ubuntu/{repo}/docs/architecture.svg', orient='lr')"
     cmd += '"'
     cmd = cmd.format(
         repo=REPO,
@@ -153,9 +153,9 @@ def get_radon_metrics_command(info):
         str: Command.
     '''
     cmd = '{exec} python3.7 -c "from rolling_pin.radon_etl import RadonETL; '
-    cmd += "etl = RadonETL('/root/{repo}/python'); "
-    cmd += "etl.write_plots('/root/{repo}/docs/plots.html'); "
-    cmd += "etl.write_tables('/root/{repo}/docs'); "
+    cmd += "etl = RadonETL('/home/ubuntu/{repo}/python'); "
+    cmd += "etl.write_plots('/home/ubuntu/{repo}/docs/plots.html'); "
+    cmd += "etl.write_tables('/home/ubuntu/{repo}/docs'); "
     cmd += '"'
     cmd = cmd.format(
         repo=REPO,
@@ -188,7 +188,7 @@ def get_app_command(info):
     Returns:
         str: Command.
     '''
-    cmd = "{exec} python3.7 /root/{repo}/python/{repo}/server/app.py".format(
+    cmd = "{exec} python3.7 /home/ubuntu/{repo}/python/{repo}/server/app.py".format(
         exec=get_docker_exec_command(
             info, env_vars=['DEBUG_MODE=True', 'REPO_ENV=True']
         ),
@@ -219,11 +219,11 @@ def get_coverage_command(info):
     Returns:
         str: Command.
     '''
-    cmd = '{exec} mkdir -p /root/{repo}/docs; {test}'
+    cmd = '{exec} mkdir -p /home/ubuntu/{repo}/docs; {test}'
     args = [
-        '--cov=/root/{repo}/python',
-        '--cov-config=/root/{repo}/docker/pytest.ini',
-        '--cov-report=html:/root/{repo}/docs/htmlcov',
+        '--cov=/home/ubuntu/{repo}/python',
+        '--cov-config=/home/ubuntu/{repo}/docker/pytest.ini',
+        '--cov-report=html:/home/ubuntu/{repo}/docs/htmlcov',
     ]
     args = ' '.join(args)
     cmd += ' ' + args
@@ -246,13 +246,13 @@ def get_docs_command(info):
     Returns:
         str: Fully resolved build docs command.
     '''
-    cmd = '{exec} mkdir -p /root/{repo}/docs; '
+    cmd = '{exec} mkdir -p /home/ubuntu/{repo}/docs; '
     cmd += '{exec} zsh -c "'
-    cmd += 'pandoc /root/{repo}/README.md -o /root/{repo}/sphinx/intro.rst; '
-    cmd += 'sphinx-build /root/{repo}/sphinx /root/{repo}/docs; '
-    cmd += 'cp /root/{repo}/sphinx/style.css /root/{repo}/docs/_static/style.css; '
-    cmd += 'touch /root/{repo}/docs/.nojekyll; '
-    cmd += 'mkdir -p /root/{repo}/docs/resources; '
+    cmd += 'pandoc /home/ubuntu/{repo}/README.md -o /home/ubuntu/{repo}/sphinx/intro.rst; '
+    cmd += 'sphinx-build /home/ubuntu/{repo}/sphinx /home/ubuntu/{repo}/docs; '
+    cmd += 'cp /home/ubuntu/{repo}/sphinx/style.css /home/ubuntu/{repo}/docs/_static/style.css; '
+    cmd += 'touch /home/ubuntu/{repo}/docs/.nojekyll; '
+    cmd += 'mkdir -p /home/ubuntu/{repo}/docs/resources; '
     cmd += '"'
     cmd = cmd.format(
         repo=REPO,
@@ -298,7 +298,7 @@ def get_lint_command(info):
     Returns:
         str: Command.
     '''
-    cmd = '{exec} flake8 /root/{repo}/python --config /root/{repo}/docker/flake8.ini'
+    cmd = '{exec} flake8 /home/ubuntu/{repo}/python --config /home/ubuntu/{repo}/docker/flake8.ini'
     cmd = cmd.format(repo=REPO, exec=get_docker_exec_command(info))
     return cmd
 
@@ -313,7 +313,7 @@ def get_type_checking_command(info):
     Returns:
         str: Command.
     '''
-    cmd = '{exec} mypy /root/{repo}/python --config-file /root/{repo}/docker/mypy.ini'
+    cmd = '{exec} mypy /home/ubuntu/{repo}/python --config-file /home/ubuntu/{repo}/docker/mypy.ini'
     cmd = cmd.format(repo=REPO, exec=get_docker_exec_command(info))
     return cmd
 
@@ -447,17 +447,17 @@ def get_package_command(info):
     '''
     cmd = '{exec} zsh -c "'
     cmd += 'rm -rf /tmp/{repo}; '
-    cmd += 'cp -R /root/{repo}/python /tmp/{repo}; '
-    cmd += 'cp /root/{repo}/README.md /tmp/{repo}/README.md; '
-    cmd += 'cp /root/{repo}/LICENSE /tmp/{repo}/LICENSE; '
-    cmd += 'cp /root/{repo}/pip/MANIFEST.in /tmp/{repo}/MANIFEST.in; '
-    cmd += 'cp /root/{repo}/pip/setup.cfg /tmp/{repo}/; '
-    cmd += 'cp /root/{repo}/pip/setup.py /tmp/{repo}/; '
-    cmd += 'cp /root/{repo}/pip/version.txt /tmp/{repo}/; '
-    cmd += 'cp /root/{repo}/docker/dev_requirements.txt /tmp/{repo}/; '
-    cmd += 'cp /root/{repo}/docker/prod_requirements.txt /tmp/{repo}/; '
-    cmd += 'cp -r /root/{repo}/templates /tmp/{repo}/{repo}; '
-    cmd += 'cp -r /root/{repo}/resources /tmp/{repo}/{repo}; '
+    cmd += 'cp -R /home/ubuntu/{repo}/python /tmp/{repo}; '
+    cmd += 'cp /home/ubuntu/{repo}/README.md /tmp/{repo}/README.md; '
+    cmd += 'cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/LICENSE; '
+    cmd += 'cp /home/ubuntu/{repo}/pip/MANIFEST.in /tmp/{repo}/MANIFEST.in; '
+    cmd += 'cp /home/ubuntu/{repo}/pip/setup.cfg /tmp/{repo}/; '
+    cmd += 'cp /home/ubuntu/{repo}/pip/setup.py /tmp/{repo}/; '
+    cmd += 'cp /home/ubuntu/{repo}/pip/version.txt /tmp/{repo}/; '
+    cmd += 'cp /home/ubuntu/{repo}/docker/dev_requirements.txt /tmp/{repo}/; '
+    cmd += 'cp /home/ubuntu/{repo}/docker/prod_requirements.txt /tmp/{repo}/; '
+    cmd += 'cp -r /home/ubuntu/{repo}/templates /tmp/{repo}/{repo}; '
+    cmd += 'cp -r /home/ubuntu/{repo}/resources /tmp/{repo}/{repo}; '
     cmd += "find /tmp/{repo}/{repo}/resources -type f | grep -vE 'icon|test_' "
     cmd += "| parallel 'rm -rf {x}'; "
     cmd += r"find /tmp/{repo} | grep -E '.*test.*\.py$|mock.*\.py$|__pycache__'"
@@ -516,8 +516,8 @@ def get_requirements_command(info):
         str: Command.
     '''
     cmd = '{exec} zsh -c "python3.7 -m pip list --format freeze > '
-    cmd += '/root/{repo}/docker/frozen_requirements.txt && '
-    cmd += 'chown -R {user} /root/{repo}/docker/frozen_requirements.txt"'
+    cmd += '/home/ubuntu/{repo}/docker/frozen_requirements.txt && '
+    cmd += 'chown -R {user} /home/ubuntu/{repo}/docker/frozen_requirements.txt"'
     cmd = cmd.format(
         repo=REPO,
         exec=get_docker_exec_command(info),
@@ -616,7 +616,7 @@ def get_test_command(info, skip_slow_tests=False):
         env.append('SKIP_SLOW_TESTS=true')
 
     cmd = '{exec} '
-    cmd += 'pytest /root/{repo}/python -c /root/{repo}/docker/pytest.ini {args}'
+    cmd += 'pytest /home/ubuntu/{repo}/python -c /home/ubuntu/{repo}/docker/pytest.ini {args}'
     cmd = cmd.format(
         repo=REPO,
         exec=get_docker_exec_command(info, env_vars=env),
@@ -637,16 +637,16 @@ def get_tox_command(info):
     '''
     cmd = '{exec} zsh -c "'
     cmd += 'rm -rf /tmp/{repo}; '
-    cmd += 'cp -R /root/{repo}/python /tmp/{repo}; '
-    cmd += 'cp /root/{repo}/README.md /tmp/{repo}/; '
-    cmd += 'cp /root/{repo}/LICENSE /tmp/{repo}/; '
-    cmd += 'cp /root/{repo}/docker/* /tmp/{repo}/; '
-    cmd += 'cp /root/{repo}/pip/* /tmp/{repo}/; '
-    cmd += 'cp -R /root/{repo}/resources /tmp/{repo}/{repo}; '
+    cmd += 'cp -R /home/ubuntu/{repo}/python /tmp/{repo}; '
+    cmd += 'cp /home/ubuntu/{repo}/README.md /tmp/{repo}/; '
+    cmd += 'cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/; '
+    cmd += 'cp /home/ubuntu/{repo}/docker/* /tmp/{repo}/; '
+    cmd += 'cp /home/ubuntu/{repo}/pip/* /tmp/{repo}/; '
+    cmd += 'cp -R /home/ubuntu/{repo}/resources /tmp/{repo}/{repo}; '
     cmd += "find /tmp/{repo}/{repo}/resources -type f | grep -vE 'icon|test_' "
     cmd += "| parallel 'rm -rf {x}'; "
-    cmd += 'cp -R /root/{repo}/templates /tmp/{repo}/{repo}; '
-    cmd += "cp -R /root/{repo}/python/conftest.py /tmp/{repo}/; "
+    cmd += 'cp -R /home/ubuntu/{repo}/templates /tmp/{repo}/{repo}; '
+    cmd += "cp -R /home/ubuntu/{repo}/python/conftest.py /tmp/{repo}/; "
     cmd += r"find /tmp/{repo} | grep -E '__pycache__|\.pyc$' | "
     cmd += "parallel 'rm -rf'; "
     cmd += 'cd /tmp/{repo}; tox'
@@ -737,7 +737,7 @@ def get_docker_exec_command(
         cmd += '-w {} '.format(working_directory)
     cmd += '$CONTAINER_ID '
     cmd = cmd.format(
-        env='PYTHONPATH="${PYTHONPATH}:' + '/root/{}/python" '.format(REPO),
+        env='PYTHONPATH="${PYTHONPATH}:' + '/home/ubuntu/{}/python" '.format(REPO),
         up_command=get_start_command(info),
         container_command=get_container_id_command(),
     )
@@ -773,7 +773,7 @@ def main():
     '''
     info = get_info()
     mode = info['mode']
-    docs = os.path.join('/root', REPO, 'docs')
+    docs = os.path.join('/home/ubuntu', REPO, 'docs')
     cmd = get_docker_command(info)
 
     if mode == 'app':
