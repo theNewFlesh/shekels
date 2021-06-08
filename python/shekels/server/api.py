@@ -216,7 +216,7 @@ def search():
     Returns:
         Response: Flask Response instance.
     '''
-    params = flask.request.get_json()
+    params = flask.request.get_json()  # type: Any
     params = json.loads(params)
     try:
         query = params['query']

@@ -59,6 +59,7 @@ def get_info():
     stop         - Stop {repo} service
     test         - Run testing on {repo} service
     tox          - Run tox tests on {repo}
+    version      - Updates version and runs full-docs and requirements
     zsh          - Run ZSH session inside {repo} container
 '''.format(repo=REPO))
 
@@ -658,6 +659,20 @@ def get_tox_command(info):
     return cmd
 
 
+def get_update_version_command(info):
+    '''
+    Updates version in version.txt file.
+
+    Args:
+        info (dict): Info dictionary.
+
+    Returns:
+        str: Command.
+    '''
+    cmd = 'echo {version} > pip/version.txt'.format(version=info['args'][0])
+    return cmd
+
+
 def get_zsh_command(info):
     '''
     Opens a zsh session inside a running container.
@@ -857,6 +872,23 @@ def main():
 
     elif mode == 'tox':
         cmd = get_tox_command(info)
+
+    elif mode == 'version':
+        if info['args'] == ['']:
+            cmd = 'echo "Please provide a version after the -a flag."'
+        else:
+            cmd = get_update_version_command(info)
+            info['args'] = ['']
+            cmd += '; echo LINTING'
+            cmd += '; ' + get_lint_command(info)
+            cmd += '; ' + 'echo'
+            cmd += '; ' + 'echo "TYPE CHECKING"'
+            cmd += '; ' + get_type_checking_command(info)
+            cmd += ' && ' + get_docs_command(info)
+            cmd += '; ' + get_coverage_command(info)
+            cmd += '; ' + get_architecture_diagram_command(info)
+            cmd += '; ' + get_radon_metrics_command(info)
+            cmd += '; ' + get_requirements_command(info)
 
     elif mode == 'zsh':
         cmd = get_zsh_command(info)
