@@ -55,8 +55,6 @@ RUN echo "\n${CYAN}SETUP PYTHON3.7${NO_COLOR}"; \
     wget https://bootstrap.pypa.io/get-pip.py && \
     python3.7 get-pip.py
 
-# DEBIAN_FRONTEND needed by texlive to install non-interactively
-ARG DEBIAN_FRONTEND=noninteractive
 RUN echo "\n${CYAN}INSTALL NODE.JS DEPENDENCIES${NO_COLOR}"; \
     curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
     apt upgrade -y && \
@@ -64,9 +62,30 @@ RUN echo "\n${CYAN}INSTALL NODE.JS DEPENDENCIES${NO_COLOR}"; \
     apt install -y nodejs && \
     rm -rf /var/lib/apt/lists/*
 
-# install python dependencies
+# configure zsh
+RUN echo "\n${CYAN}CONFIGURE ZSH${NO_COLOR}"; \
+    echo 'export PYTHONPATH="/home/ubuntu/shekels/python"' >> /home/ubuntu/.zshrc && \
+    echo 'UTC' > /etc/timezone
+COPY ./henanigans.zsh-theme /home/ubuntu/.oh-my-zsh/custom/themes/henanigans.zsh-theme
+COPY ./zshrc /home/ubuntu/.zshrc
+
+# copy python dependency files
 COPY ./dev_requirements.txt /home/ubuntu/dev_requirements.txt
 COPY ./prod_requirements.txt /home/ubuntu/prod_requirements.txt
+
+# install jupyter lab extensions
+ENV NODE_OPTIONS="--max-old-space-size=8192"
+RUN echo "\n${CYAN}INSTALL JUPYTER LAB EXTENSIONS${NO_COLOR}"; \
+    cat /home/ubuntu/dev_requirements.txt | grep -i jupyter > jupyter_requirements.txt && \
+    pip3.7 install -r jupyter_requirements.txt && \
+    jupyter labextension install \
+        --dev-build=False \
+        nbdime-jupyterlab \
+        @oriolmirosa/jupyterlab_materialdarker \
+        @ryantam626/jupyterlab_sublime \
+        @jupyterlab/plotly-extension
+
+# install python dependencies
 RUN echo "\n${CYAN}INSTALL PYTHON DEPENDECIES${NO_COLOR}"; \
     apt update && \
     apt install -y \
@@ -76,28 +95,12 @@ RUN echo "\n${CYAN}INSTALL PYTHON DEPENDECIES${NO_COLOR}"; \
     pip3.7 install -r dev_requirements.txt && \
     pip3.7 install -r prod_requirements.txt;
 
-# configure zsh
-RUN echo "\n${CYAN}CONFIGURE ZSH${NO_COLOR}"; \
-    echo 'export PYTHONPATH="/home/ubuntu/shekels/python"' >> /home/ubuntu/.zshrc && \
-    echo 'UTC' > /etc/timezone
-COPY ./henanigans.zsh-theme /home/ubuntu/.oh-my-zsh/custom/themes/henanigans.zsh-theme
-COPY ./zshrc /home/ubuntu/.zshrc
-
-# install jupyter lab extensions
-ENV NODE_OPTIONS="--max-old-space-size=8192"
-RUN echo "\n${CYAN}INSTALL JUPYTER LAB EXTENSIONS${NO_COLOR}"; \
-    jupyter labextension install \
-        --dev-build=False \
-        nbdime-jupyterlab \
-        @oriolmirosa/jupyterlab_materialdarker \
-        @ryantam626/jupyterlab_sublime \
-        @jupyterlab/plotly-extension
-
+# fix /home/ubuntu permissions
 RUN echo "\n${CYAN}FIX /HOME/UBUNTU PERMISSIONS${NO_COLOR}"; \
     chown -R ubuntu:ubuntu /home/ubuntu
+USER ubuntu
 ENV REPO_ENV=True
 ENV PYTHONPATH "${PYTHONPATH}:/home/ubuntu/shekels/python"
 ENV LANGUAGE "C"
 ENV LC_ALL "C"
 ENV LANG "C"
-USER ubuntu
