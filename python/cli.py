@@ -35,6 +35,7 @@ def get_info():
                         help='''Command to run in {repo} service.
 
     app          - Run Flask app inside {repo} container
+    build        - Build image of {repo}
     build-prod   - Build production image of {repo}
     container    - Display the Docker container id for {repo} service
     coverage     - Generate coverage report for {repo} service
@@ -318,11 +319,31 @@ def get_type_checking_command(info):
     return cmd
 
 
+def get_build_image_command():
+    '''
+    Create production docker image.
+
+    Returns:
+        str: Command.
+    '''
+    cmd = 'CWD=$(pwd); '
+    cmd += 'cd {repo_path}; '
+    cmd += 'docker build --force-rm '
+    cmd += '--file docker/{repo}.dockerfile '
+    cmd += '--tag {repo}:latest ./; '
+    cmd += 'cd $CWD'
+    cmd = cmd.format(
+        repo=REPO,
+        repo_path=REPO_PATH
+    )
+    return cmd
+
+
 def get_build_production_image_command(info):
     '''
     Create production docker image.
 
-    Args:age
+    Args:
         info (dict): Info dictionary.
 
     Returns:
@@ -346,7 +367,7 @@ def get_production_container_command(info):
     '''
     Run production docker container.
 
-    Args:age
+    Args:
         info (dict): Info dictionary.
 
     Returns:
@@ -693,7 +714,7 @@ def get_docker_command(info):
     '''
     Get misc docker command.
 
-    Args:age
+    Args:
         info (dict): Info dictionary.
 
     Returns:
@@ -779,6 +800,9 @@ def main():
 
     if mode == 'app':
         cmd = get_app_command(info)
+
+    elif mode == 'build':
+        cmd = get_build_image_command(info)
 
     elif mode == 'build-prod':
         cmd = get_build_production_image_command(info)
