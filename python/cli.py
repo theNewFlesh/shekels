@@ -772,7 +772,6 @@ def main():
     '''
     info = get_info()
     mode = info['mode']
-    docs = os.path.join('/home/ubuntu', REPO, 'docs')
     cmd = get_docker_command(info)
 
     if mode == 'app':
