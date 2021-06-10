@@ -4,9 +4,9 @@
   "folders": [{ "path": "./" }],
   "dockerComposeFile": "docker/docker-compose.yml",
   "service": "${localWorkspaceFolderBasename}",
-  "workspaceFolder": "/root/${localWorkspaceFolderBasename}",
+  "workspaceFolder": "/home/ubuntu/${localWorkspaceFolderBasename}",
   "settings": {
-    "terminal.integrated.cwd": "/root/${localWorkspaceFolderBasename}",
+    "terminal.integrated.cwd": "/home/ubuntu/${localWorkspaceFolderBasename}",
     "terminal.integrated.shell.linux": "/bin/zsh",
     "python.languageServer": "Pylance",
     "python.linting.enabled": true,

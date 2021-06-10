@@ -1,6 +1,6 @@
 c = get_config()
 c.NotebookApp.iopub_data_rate_limit = 10000000
-c.NotebookApp.notebook_dir = '/root/shekels/notebooks'
+c.NotebookApp.notebook_dir = '/home/ubuntu/shekels/notebooks'
 c.NotebookApp.disable_check_xsrf = True
 c.NotebookApp.password_required = False
 c.NotebookApp.port = 8888
