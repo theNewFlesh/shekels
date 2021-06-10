@@ -278,7 +278,7 @@ def run(app, config_path, debug=False, test=False):
     app.event_listener.state.clear()
     app.event_listener.state.append({})
     if not test:
-        app.run_server(debug=debug, host='0.0.0.0', port=80)  # pragma: no cover
+        app.run_server(debug=debug, host='0.0.0.0', port=8080)  # pragma: no cover
 
 
 if __name__ == '__main__':  # pragma: no cover
