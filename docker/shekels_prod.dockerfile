@@ -1,10 +1,23 @@
-FROM ubuntu:18.04
+FROM ubuntu:18.04 as base
 
-WORKDIR /home/ubuntu
+USER root
 
 # coloring syntax for headers
-ARG CYAN='\033[0;36m'
-ARG NO_COLOR='\033[0m'
+ENV CYAN='\033[0;36m'
+ENV NO_COLOR='\033[0m'
+ENV DEBIAN_FRONTEND='noninteractive'
+
+# setup ubuntu user
+ARG UID_='1000'
+ARG GID_='1000'
+RUN echo "\n${CYAN}SETUP UBUNTU USER${NO_COLOR}"; \
+    addgroup --gid $GID_ ubuntu && \
+    adduser \
+    --disabled-password \
+    --gecos '' \
+    --uid $UID_ \
+    --gid $GID_ ubuntu
+WORKDIR /home/ubuntu
 
 # update ubuntu and install basic dependencies
 RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${NO_COLOR}"; \
@@ -24,7 +37,9 @@ RUN echo "\n${CYAN}SETUP PYTHON3.7${NO_COLOR}"; \
     rm -rf /home/ubuntu/get-pip.py
 
 # install shekels
-RUN echo "\n${CYAN}INSTALL SHEKELS${NO_COLOR}"; \
+ENV REPO='shekels'
+ENV PYTHONPATH "${PYTHONPATH}:/home/ubuntu/$REPO/python"
+RUN echo "\n${CYAN}INSTALL $REPO${NO_COLOR}"; \
     apt update && \
     apt install -y \
         graphviz \
@@ -33,5 +48,5 @@ RUN echo "\n${CYAN}INSTALL SHEKELS${NO_COLOR}"; \
 
 ENTRYPOINT [\
     "python3.7",\
-    "/usr/local/lib/python3.7/dist-packages/shekels/server/app.py"\
+    "/home/ubuntu/.local/lib/python3.7/site-packages/shekels/server/app.py"\
 ]
