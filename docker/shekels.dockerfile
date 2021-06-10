@@ -1,11 +1,11 @@
-FROM ubuntu:18.04
+FROM ubuntu:18.04 as base
 
 USER root
 
 # coloring syntax for headers
-ARG CYAN='\033[0;36m'
-ARG NO_COLOR='\033[0m'
-ARG DEBIAN_FRONTEND=noninteractive
+ENV CYAN='\033[0;36m'
+ENV NO_COLOR='\033[0m'
+ENV DEBIAN_FRONTEND='noninteractive'
 
 # setup ubuntu user
 ARG UID_='1000'
@@ -13,14 +13,11 @@ ARG GID_='1000'
 RUN echo "\n${CYAN}SETUP UBUNTU USER${NO_COLOR}"; \
     addgroup --gid $GID_ ubuntu && \
     adduser \
-        --disabled-password \
-        --gecos '' \
-        --uid $UID_ \
-        --gid $GID_ ubuntu && \
-    usermod -aG root ubuntu && \
-    apt update && \
-    apt install -y sudo && \
-    echo "ubuntu ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
+    --disabled-password \
+    --gecos '' \
+    --uid $UID_ \
+    --gid $GID_ ubuntu && \
+    usermod -aG root ubuntu
 WORKDIR /home/ubuntu
 
 # update ubuntu and install basic dependencies
@@ -28,9 +25,12 @@ RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${NO_COLOR}"; \
     apt update && \
     apt install -y \
         curl \
+        chromium-chromedriver \
         git \
-        parallel \
+        graphviz \
         pandoc \
+        parallel \
+        python3-pydot \
         python3.7-dev \
         software-properties-common \
         tree \
@@ -40,12 +40,14 @@ RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${NO_COLOR}"; \
 # install zsh
 RUN echo "\n${CYAN}SETUP ZSH${NO_COLOR}"; \
     apt install -y zsh && \
-    curl \
-        -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh \
-        -o install-oh-my-zsh.sh && \
-    cd /root && \
-    echo y | sh /home/ubuntu/install-oh-my-zsh.sh && \
-    cp -r .oh-my-zsh /home/ubuntu
+    curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh \
+    -o install-oh-my-zsh.sh && \
+    echo y | sh install-oh-my-zsh.sh && \
+    cp -r /root/.oh-my-zsh /home/ubuntu/ && \
+    chown -R ubuntu:ubuntu \
+        .oh-my-zsh \
+        install-oh-my-zsh.sh && \
+    echo 'UTC' > /etc/timezone
 
 # install python3.7 and pip
 RUN echo "\n${CYAN}SETUP PYTHON3.7${NO_COLOR}"; \
@@ -53,30 +55,26 @@ RUN echo "\n${CYAN}SETUP PYTHON3.7${NO_COLOR}"; \
     apt update && \
     apt install -y python3.7 && \
     wget https://bootstrap.pypa.io/get-pip.py && \
-    python3.7 get-pip.py
+    python3.7 get-pip.py && \
+    chown -R ubuntu:ubuntu get-pip.py
 
-RUN echo "\n${CYAN}INSTALL NODE.JS DEPENDENCIES${NO_COLOR}"; \
+# install node.js, needed by jupyterlab
+RUN echo "\n${CYAN}INSTALL NODE.JS${NO_COLOR}"; \
     curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
     apt upgrade -y && \
-    echo "\n${CYAN}INSTALL JUPYTERLAB DEPENDENCIES${NO_COLOR}"; \
     apt install -y nodejs && \
     rm -rf /var/lib/apt/lists/*
 
-# configure zsh
-RUN echo "\n${CYAN}CONFIGURE ZSH${NO_COLOR}"; \
-    echo 'export PYTHONPATH="/home/ubuntu/shekels/python"' >> /home/ubuntu/.zshrc && \
-    echo 'UTC' > /etc/timezone
-COPY ./henanigans.zsh-theme /home/ubuntu/.oh-my-zsh/custom/themes/henanigans.zsh-theme
-COPY ./zshrc /home/ubuntu/.zshrc
+USER ubuntu
+ENV PATH="/home/ubuntu/.local/bin:$PATH"
+COPY ./henanigans.zsh-theme .oh-my-zsh/custom/themes/henanigans.zsh-theme
+COPY ./zshrc .zshrc
 
-# copy python dependency files
-COPY ./dev_requirements.txt /home/ubuntu/dev_requirements.txt
-COPY ./prod_requirements.txt /home/ubuntu/prod_requirements.txt
-
-# install jupyter lab extensions
+# install jupyter lab and extensions
+COPY ./dev_requirements.txt dev_requirements.txt
 ENV NODE_OPTIONS="--max-old-space-size=8192"
-RUN echo "\n${CYAN}INSTALL JUPYTER LAB EXTENSIONS${NO_COLOR}"; \
-    cat /home/ubuntu/dev_requirements.txt | grep -i jupyter > jupyter_requirements.txt && \
+RUN echo "\n${CYAN}INSTALL JUPYTER LAB AND EXTENSIONS${NO_COLOR}"; \
+    cat dev_requirements.txt | grep -i jupyter > jupyter_requirements.txt && \
     pip3.7 install -r jupyter_requirements.txt && \
     jupyter labextension install \
         --dev-build=False \
@@ -85,22 +83,22 @@ RUN echo "\n${CYAN}INSTALL JUPYTER LAB EXTENSIONS${NO_COLOR}"; \
         @ryantam626/jupyterlab_sublime \
         @jupyterlab/plotly-extension
 
-# install python dependencies
-RUN echo "\n${CYAN}INSTALL PYTHON DEPENDECIES${NO_COLOR}"; \
-    apt update && \
-    apt install -y \
-        chromium-chromedriver \
-        graphviz \
-        python3-pydot && \
-    pip3.7 install -r dev_requirements.txt && \
-    pip3.7 install -r prod_requirements.txt;
-
-# fix /home/ubuntu permissions
-RUN echo "\n${CYAN}FIX /HOME/UBUNTU PERMISSIONS${NO_COLOR}"; \
-    chown -R ubuntu:ubuntu /home/ubuntu
-USER ubuntu
-ENV REPO_ENV=True
-ENV PYTHONPATH "${PYTHONPATH}:/home/ubuntu/shekels/python"
+ENV LANG "C"
 ENV LANGUAGE "C"
 ENV LC_ALL "C"
-ENV LANG "C"
+# ------------------------------------------------------------------------------
+
+FROM base AS dev
+
+USER ubuntu
+WORKDIR /home/ubuntu
+ENV REPO='shekels'
+ENV PYTHONPATH "${PYTHONPATH}:/home/ubuntu/$REPO/python"
+ENV REPO_ENV=True
+
+# install python dependencies
+COPY ./dev_requirements.txt dev_requirements.txt
+COPY ./prod_requirements.txt prod_requirements.txt
+RUN echo "\n${CYAN}INSTALL PYTHON DEPENDECIES${NO_COLOR}"; \
+    pip3.7 install -r dev_requirements.txt && \
+    pip3.7 install -r prod_requirements.txt

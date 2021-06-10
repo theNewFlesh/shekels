@@ -516,8 +516,7 @@ def get_requirements_command(info):
         str: Command.
     '''
     cmd = '{exec} zsh -c "python3.7 -m pip list --format freeze > '
-    cmd += '/home/ubuntu/{repo}/docker/frozen_requirements.txt && '
-    cmd += 'chown -R {user} /home/ubuntu/{repo}/docker/frozen_requirements.txt"'
+    cmd += '/home/ubuntu/{repo}/docker/frozen_requirements.txt'
     cmd = cmd.format(
         repo=REPO,
         exec=get_docker_exec_command(info),
@@ -787,7 +786,6 @@ def main():
 
     elif mode == 'coverage':
         cmd = get_coverage_command(info)
-        cmd += '; ' + get_fix_permissions_command(info, docs)
 
     elif mode == 'destroy':
         cmd = get_stop_command(info)
@@ -798,7 +796,6 @@ def main():
 
     elif mode == 'docs':
         cmd = get_docs_command(info)
-        cmd += '; ' + get_fix_permissions_command(info, docs)
 
     elif mode == 'fast-test':
         cmd = get_test_command(info, skip_slow_tests=True)
@@ -808,7 +805,6 @@ def main():
         cmd += '; ' + get_coverage_command(info)
         cmd += '; ' + get_architecture_diagram_command(info)
         cmd += '; ' + get_radon_metrics_command(info)
-        cmd += '; ' + get_fix_permissions_command(info, docs)
 
     elif mode == 'image':
         cmd = get_image_id_command()

@@ -86,7 +86,7 @@
       {
         "label": "fast-test",
         "command": "SKIP_SLOW_TESTS=true pytest python -c docker/pytest.ini --headless",
-        "type": "shell",
+        "type": "shell"
       },
       {
         "label": "full-docs",

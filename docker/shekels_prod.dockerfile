@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-WORKDIR /root
+WORKDIR /home/ubuntu
 
 # coloring syntax for headers
 ARG CYAN='\033[0;36m'
@@ -21,7 +21,7 @@ RUN echo "\n${CYAN}SETUP PYTHON3.7${NO_COLOR}"; \
     apt install -y python3.7 && \
     wget https://bootstrap.pypa.io/get-pip.py && \
     python3.7 get-pip.py && \
-    rm -rf /root/get-pip.py
+    rm -rf /home/ubuntu/get-pip.py
 
 # install shekels
 RUN echo "\n${CYAN}INSTALL SHEKELS${NO_COLOR}"; \
