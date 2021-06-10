@@ -363,7 +363,7 @@ def get_production_container_command(info):
     cmd += 'CURRENT_USER="{user}" '
     cmd += 'docker run '
     cmd += '--volume {volume}:/mnt/storage '
-    cmd += '--publish 5000:80 '
+    cmd += '--publish 8080:8080 '
     cmd += '--name {repo}-prod '
     cmd += 'thenewflesh/{repo}:$VERSION; '
     cmd += 'cd $CWD'

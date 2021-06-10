@@ -24,7 +24,7 @@ spec:
           image: thenewflesh/shekels:1.0.2
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 80
+            - containerPort: 8080
           resources:
             limits:
               cpu: "1"
