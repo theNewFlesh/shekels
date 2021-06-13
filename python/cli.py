@@ -205,8 +205,8 @@ def get_container_id_command():
     Returns:
         str: Command.
     '''
-    cmd = "docker ps | grep '{repo} ' ".format(repo=REPO)
-    cmd += "| head -n 1 | awk '{print $1}'"
+    cmd = "docker ps -a --filter name={repo} --format '{fmt}'"
+    cmd = cmd.format(repo=REPO, fmt='{{.ID}}')
     return cmd
 
 
@@ -327,9 +327,9 @@ def get_build_image_command():
         str: Command.
     '''
     cmd = 'CWD=$(pwd); '
-    cmd += 'cd {repo_path}; '
-    cmd += 'docker build --force-rm '
-    cmd += '--file docker/{repo}.dockerfile '
+    cmd += 'cd {repo_path}/docker; '
+    cmd += 'docker build --force-rm --no-cache '
+    cmd += '--file {repo}.dockerfile '
     cmd += '--tag {repo}:latest ./; '
     cmd += 'cd $CWD'
     cmd = cmd.format(
@@ -523,6 +523,22 @@ def get_remove_image_command(info):
     cmd = 'IMAGE_ID=$({image_command}); '
     cmd += 'docker image rm --force $IMAGE_ID'
     cmd = cmd.format(image_command=get_image_id_command())
+    return cmd
+
+
+def get_remove_container_command(info):
+    '''
+    Removes docker container.
+
+    Args:
+        info (dict): Info dictionary.
+
+    Returns:
+        str: Command.
+    '''
+    cmd = 'CONTAINER_ID=$({container_command}); '
+    cmd += 'docker container rm --force $CONTAINER_ID'
+    cmd = cmd.format(container_command=get_container_id_command())
     return cmd
 
 
@@ -800,7 +816,7 @@ def main():
         cmd = get_app_command(info)
 
     elif mode == 'build':
-        cmd = get_build_image_command(info)
+        cmd = get_build_image_command()
 
     elif mode == 'build-prod':
         cmd = get_build_production_image_command(info)
@@ -813,6 +829,7 @@ def main():
 
     elif mode == 'destroy':
         cmd = get_stop_command(info)
+        cmd += '; ' + get_remove_container_command(info)
         cmd += '; ' + get_remove_image_command(info)
 
     elif mode == 'destroy-prod':
