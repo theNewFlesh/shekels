@@ -34,7 +34,7 @@ spec:
             - name: storage
               mountPath: /mnt/storage
             - name: repo
-              mountPath: /root/shekels
+              mountPath: /home/ubuntu/shekels
       volumes:
         - name: storage
           hostPath:
