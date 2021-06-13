@@ -50,6 +50,7 @@ devops/ansible/**/*.retry
 
 # vscode
 .vscode/*
+vscode/
 
 # sublime sftp config
 sftp-config.json
