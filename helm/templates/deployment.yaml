@@ -57,7 +57,7 @@ spec:
     app: shekels
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: 80
+      targetPort: {{ .Values.container.port }}
 
 ---
 kind: Ingress

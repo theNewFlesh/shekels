@@ -10,7 +10,7 @@ services:
       dockerfile: shekels.dockerfile
     ports:
       - "9014:8888"
-      - "8080:8080"
+      - "7080:8080"
     userns_mode: "host"
     user: ubuntu
     volumes:
