@@ -1,81 +1,77 @@
-# python
-__pycache__/
-*.py[cod]
-*$py.class
+# ansible
+devops/ansible/**/*.retry
 
-# personal data
-resources/transactions.csv
-resources/shekels_config.json
+# c
+*.so
+
+# flask
+flask_monitoringdashboard*
+
+# jupyter
+!*/ipython/profile_default/ipython_kernel_config.py
+.cache/
+.ipynb_checkpoints/
+.ipynb_checkpoints/*
+*.jupyterlab-workspace
+**/jupyter/migrated
+**/jupyter/workspaces
+*/ipython/*
+
+# logs
+pip-delete-this-directory.txt
+pip-log.txt
 
 # mypy
 .mypy_cache/
 
+# misc
+.DS_Store
+
 # packaging
+.eggs/
+.installed.cfg
 .Python
-env/
+*.egg
+*.egg-info/
 build/
 develop-eggs/
 dist/
 eggs/
-.eggs/
+env/
 lib/
 lib64/
 parts/
 sdist/
 var/
-*.egg-info/
-.installed.cfg
-*.egg
 
-# web
-node_modules
-/.npm/*
-
-# c
-*.so
-
-# vim
-.*.swp
-.*.swo
-
-# os x files
-.DS_Store
+# personal data
+resources/shekels_config.json
+resources/transactions.csv
 
 # pytest
-.pytest_cache/
 .coverage
+.pytest_cache/
 
-# ansible
-devops/ansible/**/*.retry
+# python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# sublime
+sftp-config.json
+
+# testing
+artifacts
+artifacts/
+
+# vim
+.*.swo
+.*.swp
 
 # vscode
 .vscode/*
 vscode/
 
-# sublime sftp config
-sftp-config.json
-
-# Data
-data/
-
-# testing artifacts
-artifacts/
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# jupyter
-.ipynb_checkpoints/
-.ipynb_checkpoints/*
-data/
-.cache/
-**/jupyter/workspaces
-*.jupyterlab-workspace
-*/ipython/*
-!*/ipython/profile_default/ipython_kernel_config.py
-flask_monitoringdashboard.db
-**/jupyter/migrated
-
-# flask
-flask_monitoringdashboard*
+# web
+/.npm/*
+node_modules
