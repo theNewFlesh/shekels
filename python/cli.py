@@ -329,7 +329,7 @@ def get_build_image_command():
     cmd = 'CWD=$(pwd); '
     cmd += 'cd {repo_path}/docker; '
     cmd += 'docker build --force-rm --no-cache '
-    cmd += '--file {repo}.dockerfile '
+    cmd += '--file dev.dockerfile '
     cmd += '--tag {repo}:latest ./; '
     cmd += 'cd $CWD'
     cmd = cmd.format(
@@ -353,7 +353,7 @@ def get_build_production_image_command(info):
     cmd += 'cd {repo_path}; '
     cmd = "export VERSION=`cat pip/version.txt`; "
     cmd += 'docker build --force-rm '
-    cmd += '--file docker/{repo}_prod.dockerfile '
+    cmd += '--file docker/prod.dockerfile '
     cmd += '--tag thenewflesh/{repo}:$VERSION ./; '
     cmd += 'cd $CWD'
     cmd = cmd.format(

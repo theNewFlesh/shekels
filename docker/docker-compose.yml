@@ -7,7 +7,7 @@ services:
     image: shekels
     build:
       context: .
-      dockerfile: shekels.dockerfile
+      dockerfile: dev.dockerfile
     ports:
       - "9014:8888"
       - "7080:8080"
