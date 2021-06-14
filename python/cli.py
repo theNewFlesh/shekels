@@ -352,7 +352,7 @@ def get_build_production_image_command(info):
     cmd = 'CWD=$(pwd); '
     cmd += 'cd {repo_path}; '
     cmd = "export VERSION=`cat pip/version.txt`; "
-    cmd += 'docker build --force-rm '
+    cmd += 'docker build --force-rm --no-cache '
     cmd += '--file docker/prod.dockerfile '
     cmd += '--tag thenewflesh/{repo}:$VERSION ./; '
     cmd += 'cd $CWD'
