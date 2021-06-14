@@ -558,9 +558,11 @@ def get_start_command(info):
     Returns:
         str: Fully resolved docker compose up command.
     '''
-    cmd = 'if [ -z "$STATE" ]; then cd docker; {compose} up --detach; cd ..; fi'
+    cmd = 'if [ -z "$STATE" ]; then cd docker; {compose} up --detach; cd ..; fi && '
+    cmd += "export CONTAINER_ID=`docker ps -a --filter name=shekels --format '{pattern}'`"
     cmd = cmd.format(
-        compose=get_docker_compose_command(info)
+        compose=get_docker_compose_command(info),
+        pattern='{{.ID}}',
     )
     return cmd
 
@@ -619,11 +621,11 @@ def get_tox_command(info):
     cmd = '{exec} zsh -c "'
     cmd += 'rm -rf /tmp/{repo} && '
     cmd += 'cp -R /home/ubuntu/{repo}/python /tmp/{repo} && '
-    cmd += 'cp /home/ubuntu/{repo}/README.md /tmp/{repo}/ && '
-    cmd += 'cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/ && '
-    cmd += 'cp /home/ubuntu/{repo}/docker/* /tmp/{repo}/ && '
-    cmd += 'cp /home/ubuntu/{repo}/pip/* /tmp/{repo}/ && '
+    cmd += 'cp -R /home/ubuntu/{repo}/docker/* /tmp/{repo}/ && '
     cmd += 'cp -R /home/ubuntu/{repo}/resources /tmp/{repo}/{repo} && '
+    cmd += 'cp /home/ubuntu/{repo}/pip/* /tmp/{repo}/ && '
+    cmd += 'cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/ && '
+    cmd += 'cp /home/ubuntu/{repo}/README.md /tmp/{repo}/ && '
     cmd += "find /tmp/{repo}/{repo}/resources -type f | grep -vE 'icon|test_' "
     cmd += "| parallel 'rm -rf {x}' && "
     cmd += 'cp -R /home/ubuntu/{repo}/templates /tmp/{repo}/{repo} && '
