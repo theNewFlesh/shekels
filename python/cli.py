@@ -447,16 +447,13 @@ def get_variables_command(info):
     Returns:
         str: Command.
     '''
-    cmd = 'export CWD=`pwd` && '
-    cmd += 'cd {repo_path} && '
-    cmd += 'export CONTAINER_ID=`{container_id}` && '
+    cmd = 'export CONTAINER_ID=`{container_id}` && '
     cmd += 'export REPO_PATH="{repo_path}" && '
     cmd += 'export USER="{user}" && '
     cmd += 'export IMAGE="{repo}" && '
     cmd += 'export VERSION=`cat pip/version.txt` && '
     cmd += 'export STATE=`docker ps -a -f name={repo} -f status=running '
-    cmd += '| grep -v CONTAINER` && '
-    cmd += 'cd {repo_path}'
+    cmd += '| grep -v CONTAINER`'
     cmd = cmd.format(
         container_id=get_container_id_command(),
         mode=info['mode'],
@@ -474,8 +471,8 @@ def get_remove_image_command():
     Returns:
         str: Command.
     '''
-    cmd = 'docker image rm --force $IMAGE_ID'
-    cmd = cmd.format(image_command=get_image_id_command())
+    cmd = 'docker image rm --force {repo}'
+    cmd = cmd.format(repo=REPO)
     return cmd
 
 
@@ -486,8 +483,8 @@ def get_remove_container_command():
     Returns:
         str: Command.
     '''
-    cmd = 'docker container rm --force $CONTAINER_ID'
-    cmd = cmd.format(container_command=get_container_id_command())
+    cmd = 'docker container rm --force {repo}'
+    cmd = cmd.format(repo=REPO)
     return cmd
 
 
@@ -526,7 +523,6 @@ def get_state_command():
     cmd += ' | grep -v CONTAINER` && '
     cmd += 'export RUNNING=`docker ps -a -f name={repo} -f status=running '
     cmd += '| grep -v CONTAINER` && '
-    cmd += 'export CONTAINER_STATE; export IMAGE_STATE && '
     cmd += 'if [ -z "$IMAGE_EXISTS" ]; then'
     cmd += '    export IMAGE_STATE="{red}absent{clear}"; '
     cmd += 'else export IMAGE_STATE="{green}present{clear}"; fi; '
@@ -756,9 +752,7 @@ def main():
         ])
 
     elif mode == 'build':
-        cmds.extend([
-            get_build_image_command(),
-        ])
+        cmds = [get_build_image_command()]
 
     elif mode == 'build-prod':
         cmds.extend([
@@ -778,16 +772,14 @@ def main():
         ])
 
     elif mode == 'destroy':
-        cmds.extend([
+        cmds = [
             get_stop_command(info),
             get_remove_container_command(),
             get_remove_image_command(),
-        ])
+        ]
 
     elif mode == 'destroy-prod':
-        cmds.extend([
-            get_destroy_production_container_command(),
-        ])
+        cmds = [get_destroy_production_container_command()]
 
     elif mode == 'docs':
         cmds.extend([
@@ -873,9 +865,7 @@ def main():
         ])
 
     elif mode == 'remove':
-        cmds.extend([
-            get_remove_image_command(),
-        ])
+        cmds = [get_remove_container_command()]
 
     elif mode == 'restart':
         cmds.extend([
@@ -948,6 +938,10 @@ def main():
     # resolve in a subprocess and subprocesses do not give real time stdout.
     # So, running `command up` will give you nothing until the process ends.
     # `eval "[generated command] $@"` resolves all these issues.
+    cmds = [
+        'export CWD=`pwd`',
+        'cd {}'.format(REPO_PATH)
+    ] + cmds
     cmds.append('cd $CWD')
     cmd = ' && '.join(cmds)
     print(cmd)
