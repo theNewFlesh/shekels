@@ -449,17 +449,17 @@ def get_variables_command(info):
     '''
     cmd = 'export CONTAINER_ID=`{container_id}` && '
     cmd += 'export REPO_PATH="{repo_path}" && '
-    cmd += 'export USER="{user}" && '
     cmd += 'export IMAGE="{repo}" && '
     cmd += 'export VERSION=`cat pip/version.txt` && '
     cmd += 'export STATE=`docker ps -a -f name={repo} -f status=running '
-    cmd += '| grep -v CONTAINER`'
+    cmd += "--format='{x}'`"
     cmd = cmd.format(
         container_id=get_container_id_command(),
         mode=info['mode'],
         repo_path=REPO_PATH,
         repo=REPO,
         user=info['user'],
+        x='{{.Status}}'
     )
     return cmd
 
