@@ -61,7 +61,7 @@ class ConfigValidatorTests(unittest.TestCase):
 
     def test_is_plot_kind(self):
         vals = [
-            'area', 'bar', 'barh', 'line' 'lines', 'ratio', 'scatter', 'spread'
+            'area', 'bar', 'barh', 'line', 'lines', 'ratio', 'scatter', 'spread'
         ]
         for val in vals:
             cfg.is_plot_kind(val)
