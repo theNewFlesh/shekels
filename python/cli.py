@@ -287,7 +287,7 @@ def get_type_checking_command():
 
 def get_build_image_command():
     '''
-    Create production docker image.
+    Create docker image.
 
     Returns:
         str: Command.
@@ -308,10 +308,12 @@ def get_build_production_image_command():
     Returns:
         str: Command.
     '''
-    cmd = 'docker build --force-rm '
-    cmd += '--file docker/prod.dockerfile '
-    cmd += '--tag thenewflesh/{repo}:$VERSION . '
-    cmd = cmd.format(repo=REPO)
+    cmd = 'cd docker; '
+    cmd += 'docker build --force-rm --no-cache '
+    cmd += '--file prod.dockerfile '
+    cmd += '--tag {repo}:latest .; '
+    cmd += 'cd ..'
+    cmd = cmd.format(repo=REPO, repo_path=REPO_PATH)
     return cmd
 
 
