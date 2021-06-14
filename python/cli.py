@@ -94,7 +94,7 @@ def get_info():
     return info
 
 
-def get_fix_permissions_command(directory):
+def get_fix_permissions_command(info, directory):
     '''
     Recursively reverts permissions of given directory from user.
 
@@ -104,8 +104,9 @@ def get_fix_permissions_command(directory):
     Returns:
         str: Command.
     '''
-    cmd = "{exec} chown -R $USER {directory}".format(
+    cmd = "{exec} chown -R {user} {directory}".format(
         exec=get_docker_exec_command(),
+        user=info['user'],
         directory=directory
     )
     return cmd
@@ -132,10 +133,7 @@ def get_architecture_diagram_command():
     cmd += "etl._data = data; "
     cmd += "etl.write('/home/ubuntu/{repo}/docs/architecture.svg', orient='lr')"
     cmd += '"'
-    cmd = cmd.format(
-        repo=REPO,
-        exec=get_docker_exec_command(),
-    )
+    cmd = cmd.format(repo=REPO, exec=get_docker_exec_command())
     return cmd
 
 
@@ -151,10 +149,7 @@ def get_radon_metrics_command():
     cmd += "etl.write_plots('/home/ubuntu/{repo}/docs/plots.html'); "
     cmd += "etl.write_tables('/home/ubuntu/{repo}/docs'); "
     cmd += '"'
-    cmd = cmd.format(
-        repo=REPO,
-        exec=get_docker_exec_command(),
-    )
+    cmd = cmd.format(repo=REPO, exec=get_docker_exec_command())
     return cmd
 
 
@@ -179,9 +174,11 @@ def get_app_command():
     Returns:
         str: Command.
     '''
-    exec = get_docker_exec_command(env_vars=['DEBUG_MODE=True', 'REPO_ENV=True'])
-    cmd = "{exec} python3.7 /home/ubuntu/$REPO/python/$REPO/server/app.py"
-    cmd = cmd.format(exec=exec)
+    exec = get_docker_exec_command(
+        env_vars=['DEBUG_MODE=True', 'REPO_ENV=True']
+    )
+    cmd = "{exec} python3.7 /home/ubuntu/{repo}/python/{repo}/server/app.py"
+    cmd = cmd.format(exec=exec, repo=REPO)
     return cmd
 
 
@@ -192,7 +189,8 @@ def get_container_id_command():
     Returns:
         str: Command.
     '''
-    cmd = "docker ps -a --filter name=$REPO --format '{{.ID}}'"
+    cmd = "docker ps -a --filter name={repo} --format '{pattern}'"
+    cmd = cmd.format(repo=REPO, pattern='{{.ID}}')
     return cmd
 
 
@@ -206,15 +204,10 @@ def get_coverage_command(info):
     Returns:
         str: Command.
     '''
-    cmd = '{exec} mkdir -p /home/ubuntu/$REPO/docs && {test}'
-    args = [
-        '--cov=/home/ubuntu/$REPO/python',
-        '--cov-config=/home/ubuntu/$REPO/docker/pytest.ini',
-        '--cov-report=html:/home/ubuntu/$REPO/docs/htmlcov',
-    ]
-    args = ' '.join(args)
-    cmd += ' ' + args
-
+    cmd = '{exec} mkdir -p /home/ubuntu/{repo}/docs && {test} '
+    cmd += '--cov=/home/ubuntu/{repo}/python '
+    cmd += '--cov-config=/home/ubuntu/{repo}/docker/pytest.ini '
+    cmd += '--cov-report=html:/home/ubuntu/{repo}/docs/htmlcov '
     cmd = cmd.format(
         repo=REPO,
         exec=get_docker_exec_command(),
@@ -230,15 +223,15 @@ def get_docs_command():
     Returns:
         str: Fully resolved build docs command.
     '''
-    cmd = '{exec} mkdir -p /home/ubuntu/$REPO/docs && '
+    cmd = '{exec} mkdir -p /home/ubuntu/{repo}/docs && '
     cmd += '{exec} zsh -c "'
-    cmd += 'pandoc /home/ubuntu/$REPO/README.md -o /home/ubuntu/$REPO/sphinx/intro.rst && '
-    cmd += 'sphinx-build /home/ubuntu/$REPO/sphinx /home/ubuntu/$REPO/docs && '
-    cmd += 'cp /home/ubuntu/$REPO/sphinx/style.css /home/ubuntu/$REPO/docs/_static/style.css && '
-    cmd += 'touch /home/ubuntu/$REPO/docs/.nojekyll && '
-    cmd += 'mkdir -p /home/ubuntu/$REPO/docs/resources '
+    cmd += 'pandoc /home/ubuntu/{repo}/README.md -o /home/ubuntu/{repo}/sphinx/intro.rst && '
+    cmd += 'sphinx-build /home/ubuntu/{repo}/sphinx /home/ubuntu/{repo}/docs && '
+    cmd += 'cp /home/ubuntu/{repo}/sphinx/style.css /home/ubuntu/{repo}/docs/_static/style.css && '
+    cmd += 'touch /home/ubuntu/{repo}/docs/.nojekyll && '
+    cmd += 'mkdir -p /home/ubuntu/{repo}/docs/resources '
     cmd += '"'
-    cmd = cmd.format(exec=get_docker_exec_command())
+    cmd = cmd.format(repo=REPO, exec=get_docker_exec_command())
     return cmd
 
 
@@ -249,7 +242,8 @@ def get_image_id_command():
     Returns:
         str: Command.
     '''
-    cmd = "docker images $REPO --format '{{.ID}}'"
+    cmd = "docker images {repo} --format '{pattern}'"
+    cmd = cmd.format(repo=REPO, pattern='{{.ID}}')
     return cmd
 
 
@@ -272,7 +266,8 @@ def get_lint_command():
     Returns:
         str: Command.
     '''
-    cmd = '{exec} flake8 /home/ubuntu/{repo}/python --config /home/ubuntu/{repo}/docker/flake8.ini'
+    cmd = '{exec} flake8 /home/ubuntu/{repo}/python '
+    cmd += '--config /home/ubuntu/{repo}/docker/flake8.ini'
     cmd = cmd.format(repo=REPO, exec=get_docker_exec_command())
     return cmd
 
@@ -284,7 +279,8 @@ def get_type_checking_command():
     Returns:
         str: Command.
     '''
-    cmd = '{exec} mypy /home/ubuntu/{repo}/python --config-file /home/ubuntu/{repo}/docker/mypy.ini'
+    cmd = '{exec} mypy /home/ubuntu/{repo}/python '
+    cmd += '--config-file /home/ubuntu/{repo}/docker/mypy.ini'
     cmd = cmd.format(repo=REPO, exec=get_docker_exec_command())
     return cmd
 
@@ -296,16 +292,12 @@ def get_build_image_command():
     Returns:
         str: Command.
     '''
-    cmd = 'CWD=$(pwd) && '
-    cmd += 'cd {repo_path}/docker && '
+    cmd = 'cd docker; '
     cmd += 'docker build --force-rm --no-cache '
     cmd += '--file dev.dockerfile '
-    cmd += '--tag {repo}:latest ./ && '
-    cmd += 'cd $CWD'
-    cmd = cmd.format(
-        repo=REPO,
-        repo_path=REPO_PATH
-    )
+    cmd += '--tag {repo}:latest .; '
+    cmd += 'cd ..'
+    cmd = cmd.format(repo=REPO, repo_path=REPO_PATH)
     return cmd
 
 
@@ -316,17 +308,10 @@ def get_build_production_image_command():
     Returns:
         str: Command.
     '''
-    cmd = 'CWD=$(pwd) && '
-    cmd += 'cd {repo_path} && '
-    cmd = "export VERSION=`cat pip/version.txt` && "
-    cmd += 'docker build --force-rm '
+    cmd = 'docker build --force-rm '
     cmd += '--file docker/prod.dockerfile '
-    cmd += '--tag thenewflesh/{repo}:$VERSION ./ && '
-    cmd += 'cd $CWD'
-    cmd = cmd.format(
-        repo=REPO,
-        repo_path=REPO_PATH
-    )
+    cmd += '--tag thenewflesh/{repo}:$VERSION . '
+    cmd = cmd.format(repo=REPO)
     return cmd
 
 
@@ -345,23 +330,12 @@ def get_production_container_command(info):
         cmd += 'after the -a flag."'
         return cmd
 
-    cmd = 'CWD=$(pwd) && '
-    cmd += 'cd {repo_path} && '
-    cmd += "export VERSION=`cat pip/version.txt` && "
-    cmd += 'USER="{user}" '
-    cmd += 'docker run '
+    cmd = 'docker run '
     cmd += '--volume {volume}:/mnt/storage '
     cmd += '--publish 8080:8080 '
     cmd += '--name {repo}-prod '
     cmd += 'thenewflesh/{repo}:$VERSION && '
-    cmd += 'cd $CWD'
-
-    cmd = cmd.format(
-        volume=info['args'][0],
-        user=info['user'],
-        repo=REPO,
-        repo_path=REPO_PATH
-    )
+    cmd = cmd.format(volume=info['args'][0], repo=REPO)
     return cmd
 
 
@@ -372,25 +346,18 @@ def get_destroy_production_container_command():
     Returns:
         str: Command.
     '''
-    cmd = 'CWD=$(pwd) && '
-    cmd += 'cd {repo_path}/docker && '
+    cmd = 'cd docker; '
     cmd += 'docker stop {repo}-prod && '
     cmd += 'docker rm {repo}-prod && '
-    cmd += 'docker image remove {repo}-prod && '
-    cmd += 'cd $CWD'
-    cmd = cmd.format(
-        repo=REPO,
-        repo_path=REPO_PATH
-    )
+    cmd += 'docker image remove {repo}-prod; '
+    cmd += 'cd ..'
+    cmd = cmd.format(repo=REPO, repo_path=REPO_PATH)
     return cmd
 
 
-def get_publish_command(info):
+def get_publish_command():
     '''
     Publish repository to python package index.
-
-    Args:
-        info (dict): Info dictionary.
 
     Returns:
         str: Command.
@@ -405,27 +372,24 @@ def get_publish_command(info):
     return cmd
 
 
-def get_push_to_dockerhub_command():
+def get_push_to_dockerhub_command(info):
     '''
     Push production image to dockerhub.
+
+    Args:
+        info (dict): Info dictionary.
 
     Returns:
         str: Command.
     '''
-    cmd = "export VERSION=`cat pip/version.txt` && "
-    cmd += 'docker push thenewflesh/{repo}:$VERSION'
-    cmd = cmd.format(
-        repo=REPO,
-    )
+    cmd = 'docker push thenewflesh/{repo}:$VERSION'
+    cmd = cmd.format(repo=REPO)
     return cmd
 
 
-def get_package_command(info):
+def get_package_command():
     '''
     Build pip package.
-
-    Args:
-        info (dict): Info dictionary.
 
     Returns:
         str: Command.
@@ -481,10 +445,16 @@ def get_variables_command(info):
     Returns:
         str: Command.
     '''
-    cmd = 'export REPO="{repo}" && '
+    cmd = 'export CWD=`pwd` && '
+    cmd += 'cd {repo_path} && '
+    cmd += 'export CONTAINER_ID=`{container_id}` && '
     cmd += 'export REPO_PATH="{repo_path}" && '
     cmd += 'export USER="{user}" && '
-    cmd += 'export CONTAINER_ID=`{container_id}`'
+    cmd += 'export IMAGE="{repo}" && '
+    cmd += 'export VERSION=`cat pip/version.txt` && '
+    cmd += 'export STATE=`docker ps -a -f name={repo} -f status=running '
+    cmd += '| grep -v CONTAINER` && '
+    cmd += 'cd {repo_path}'
     cmd = cmd.format(
         container_id=get_container_id_command(),
         mode=info['mode'],
@@ -502,8 +472,7 @@ def get_remove_image_command():
     Returns:
         str: Command.
     '''
-    cmd = 'IMAGE_ID=$({image_command}) && '
-    cmd += 'docker image rm --force $IMAGE_ID'
+    cmd = 'docker image rm --force $IMAGE_ID'
     cmd = cmd.format(image_command=get_image_id_command())
     return cmd
 
@@ -531,7 +500,7 @@ def get_requirements_command(info):
         str: Command.
     '''
     cmd = '{exec} zsh -c "python3.7 -m pip list --format freeze > '
-    cmd += '/home/ubuntu/{repo}/docker/frozen_requirements.txt'
+    cmd += '/home/ubuntu/{repo}/docker/frozen_requirements.txt"'
     cmd = cmd.format(
         repo=REPO,
         exec=get_docker_exec_command(),
@@ -589,11 +558,8 @@ def get_start_command(info):
     Returns:
         str: Fully resolved docker compose up command.
     '''
-    cmd = 'export STATE=`docker ps -a -f name={repo} -f status=running '
-    cmd += '| grep -v CONTAINER` && '
-    cmd += 'if [ -z "$STATE" ]; then {compose} up --detach; cd $CWD; fi'
+    cmd = 'if [ -z "$STATE" ]; then cd docker; {compose} up --detach; cd ..; fi'
     cmd = cmd.format(
-        repo=REPO,
         compose=get_docker_compose_command(info)
     )
     return cmd
@@ -609,7 +575,7 @@ def get_stop_command(info):
     Returns:
         str: Fully resolved docker compose down command.
     '''
-    cmd = '{compose} down && cd $CWD'
+    cmd = 'cd docker; {compose} down; cd ..'
     cmd = cmd.format(compose=get_docker_compose_command(info))
     return cmd
 
@@ -710,12 +676,15 @@ def get_docker_command(info):
     Returns:
         str: Command.
     '''
-    cmd = 'CWD=$(pwd) && '
-    cmd += 'cd {repo_path}/docker && '
-    cmd += 'docker {mode} {args} && cd $CWD'
+    cmd = 'cd docker; '
+    cmd += 'REPO_PATH="{repo_path}" USER="{user}" IMAGE="{repo}"; '
+    cmd += 'docker {mode} {args} '
+    cmd += 'cd ..'
     args = ' '.join(info['args'])
     cmd = cmd.format(
+        repo=REPO,
         repo_path=REPO_PATH,
+        user=info['user'],
         mode=info['mode'],
         args=args
     )
@@ -734,7 +703,7 @@ def get_docker_exec_command(working_directory=None, env_vars=['REPO_ENV=True']):
     Returns:
         str: Command.
     '''
-    cmd = 'docker exec --interactive --tty --user $USER -e {env} '
+    cmd = 'docker exec --interactive --tty --user ubuntu:ubuntu -e {env} '
     if env_vars is not None and len(env_vars) > 0:
         cmd += '-e ' + ' -e '.join(env_vars) + ' '
     if working_directory is not None:
@@ -742,6 +711,7 @@ def get_docker_exec_command(working_directory=None, env_vars=['REPO_ENV=True']):
     cmd += '$CONTAINER_ID '
     cmd = cmd.format(
         env='PYTHONPATH="${PYTHONPATH}:' + '/home/ubuntu/{}/python" '.format(REPO),
+        container_command=get_container_id_command(),
     )
     return cmd
 
@@ -756,11 +726,11 @@ def get_docker_compose_command(info):
     Returns:
         str: Command.
     '''
-    cmd = 'CWD=`pwd`; cd {repo_path}/docker && '
-    cmd += 'docker compose -p {repo} -f {compose_path} '
+    cmd = 'docker compose -p {repo} -f {compose_path} '
     cmd = cmd.format(
         repo=REPO,
         repo_path=REPO_PATH,
+        user=info['user'],
         compose_path=info['compose_path'],
     )
     return cmd
@@ -773,132 +743,209 @@ def main():
     '''
     info = get_info()
     mode = info['mode']
-
-    cmd = get_variables_command(info)
-    cmd += ' && '+ get_start_command(info)
+    cmds = [get_variables_command(info)]
 
     if mode == 'app':
-        cmd += ' && ' + get_app_command()
+        cmds.extend([
+            get_start_command(info),
+            get_app_command(),
+        ])
 
     elif mode == 'build':
-        cmd = get_build_image_command()
+        cmds.extend([
+            get_build_image_command(),
+        ])
 
     elif mode == 'build-prod':
-        cmd = get_build_production_image_command()
+        cmds.extend([
+            get_build_production_image_command(),
+        ])
 
     elif mode == 'container':
-        cmd += ' && ' + get_container_id_command()
+        cmds.extend([
+            get_start_command(info),
+            get_container_id_command(),
+        ])
 
     elif mode == 'coverage':
-        cmd += ' && ' + get_coverage_command(info)
+        cmds.extend([
+            get_start_command(info),
+            get_coverage_command(info),
+        ])
 
     elif mode == 'destroy':
-        cmd += ' && ' + get_stop_command(info)
-        cmd += ' && ' + get_remove_container_command()
-        cmd += ' && ' + get_remove_image_command()
+        cmds.extend([
+            get_stop_command(info),
+            get_remove_container_command(),
+            get_remove_image_command(),
+        ])
 
     elif mode == 'destroy-prod':
-        cmd = get_destroy_production_container_command()
+        cmds.extend([
+            get_destroy_production_container_command(),
+        ])
 
     elif mode == 'docs':
-        cmd += ' && ' + get_docs_command()
+        cmds.extend([
+            get_start_command(info),
+            get_docs_command(),
+        ])
 
     elif mode == 'fast-test':
-        cmd += ' && ' + get_test_command(info, skip_slow_tests=True)
+        cmds.extend([
+            get_start_command(info),
+            get_test_command(info, skip_slow_tests=True),
+        ])
 
     elif mode == 'full-docs':
-        cmd += ' && ' + get_docs_command()
-        cmd += ' && ' + get_coverage_command(info)
-        cmd += ' && ' + get_architecture_diagram_command()
-        cmd += ' && ' + get_radon_metrics_command()
+        cmds.extend([
+            get_start_command(info),
+            get_docs_command(),
+            get_coverage_command(info),
+            get_architecture_diagram_command(),
+            get_radon_metrics_command(),
+        ])
 
     elif mode == 'image':
-        cmd += ' && ' + get_image_id_command()
+        cmds.extend([
+            get_start_command(info),
+            get_image_id_command(),
+        ])
 
     elif mode == 'lab':
-        cmd += ' && ' + get_lab_command()
+        cmds.extend([
+            get_start_command(info),
+            get_lab_command(),
+        ])
 
     elif mode == 'lint':
-        cmd += ' && echo LINTING'
-        cmd += ' && ' + get_lint_command()
-        cmd += ' && ' + 'echo'
-        cmd += ' && ' + 'echo "TYPE CHECKING"'
-        cmd += ' && ' + get_type_checking_command()
+        cmds.extend([
+            get_start_command(info),
+            'echo LINTING',
+            get_lint_command(),
+            'echo',
+            'echo "TYPE CHECKING"',
+            get_type_checking_command(),
+        ])
 
     elif mode == 'package':
-        cmd += ' && ' + get_package_command(info)
+        cmds.extend([
+            get_start_command(info),
+            get_package_command(),
+        ])
 
     elif mode == 'prod':
         if info['args'] == ['']:
             cmd = 'echo "Please provide a directory to map into the container '
             cmd += 'after the -a flag."'
+            cmds = [cmd]
         else:
-            cmd = get_remove_pycache_command()
-            cmd += ' && ' + get_destroy_production_container_command()
-            cmd += ' && ' + get_build_production_image_command()
-            cmd += ' && ' + get_production_container_command(info)
+            cmds.extend([
+                get_remove_pycache_command(),
+                get_destroy_production_container_command(),
+                get_build_production_image_command(),
+                get_production_container_command(info),
+            ])
 
     elif mode == 'publish':
-        cmd += ' && ' + get_tox_command(info)
-        cmd += ' && ' + get_remove_pycache_command()
-        cmd += ' && ' + get_package_command(info)
-        cmd += ' && ' + get_publish_command(info)
+        cmds.extend([
+            get_start_command(info),
+            get_tox_command(info),
+            get_remove_pycache_command(),
+            get_package_command(),
+            get_publish_command(),
+        ])
 
     elif mode == 'push':
-        cmd += ' && ' + get_push_to_dockerhub_command()
+        cmds.extend([
+            get_start_command(info),
+            get_push_to_dockerhub_command(info),
+        ])
 
     elif mode == 'python':
-        cmd += ' && ' + get_python_command()
+        cmds.extend([
+            get_start_command(info),
+            get_python_command(),
+        ])
 
     elif mode == 'remove':
-        cmd = get_remove_image_command()
+        cmds.extend([
+            get_remove_image_command(),
+        ])
 
     elif mode == 'restart':
-        cmd = get_stop_command(info)
-        cmd += ' && ' + get_start_command(info)
+        cmds.extend([
+            get_stop_command(info),
+            get_start_command(info),
+        ])
 
     elif mode == 'requirements':
-        cmd += ' && ' + get_requirements_command(info)
+        cmds.extend([
+            get_start_command(info),
+            get_requirements_command(info),
+        ])
 
     elif mode == 'start':
-        cmd = get_start_command(info)
+        cmds.extend([
+            get_start_command(info),
+        ])
 
     elif mode == 'state':
-        cmd = get_state_command()
+        cmds.extend([
+            get_state_command(),
+        ])
 
     elif mode == 'stop':
-        cmd = get_stop_command(info)
+        cmds.extend([
+            get_stop_command(info),
+        ])
 
     elif mode == 'test':
-        cmd += ' && ' + get_test_command(info)
+        cmds.extend([
+            get_start_command(info),
+            get_test_command(info),
+        ])
 
     elif mode == 'tox':
-        cmd += ' && ' + get_tox_command(info)
+        cmds.extend([
+            get_start_command(info),
+            get_tox_command(info),
+        ])
 
     elif mode == 'version':
+        cmds.extend([
+            get_start_command(info),
+        ])
         if info['args'] == ['']:
-            cmd = 'echo "Please provide a version after the -a flag."'
+            cmds = ['echo "Please provide a version after the -a flag."']
         else:
-            cmd = get_update_version_command(info)
+            cmds.append(get_update_version_command(info))
             info['args'] = ['']
-            cmd += ' && echo LINTING'
-            cmd += ' && ' + get_lint_command()
-            cmd += ' && ' + 'echo'
-            cmd += ' && ' + 'echo "TYPE CHECKING"'
-            cmd += ' && ' + get_type_checking_command()
-            cmd += ' && ' + get_docs_command()
-            cmd += ' && ' + get_coverage_command(info)
-            cmd += ' && ' + get_architecture_diagram_command()
-            cmd += ' && ' + get_radon_metrics_command()
-            cmd += ' && ' + get_requirements_command(info)
+            cmds.extend([
+                'echo LINTING',
+                get_lint_command(),
+                'echo',
+                'echo "TYPE CHECKING"',
+                get_type_checking_command(),
+                get_docs_command(),
+                get_coverage_command(info),
+                get_architecture_diagram_command(),
+                get_radon_metrics_command(),
+                get_requirements_command(info),
+            ])
 
     elif mode == 'zsh':
-        cmd += ' && ' + get_zsh_command()
+        cmds.extend([
+            get_start_command(info),
+            get_zsh_command(),
+        ])
 
     # print is used instead of execute because REPO_PATH and USER do not
     # resolve in a subprocess and subprocesses do not give real time stdout.
     # So, running `command up` will give you nothing until the process ends.
     # `eval "[generated command] $@"` resolves all these issues.
+    cmds.append('cd $CWD')
+    cmd = ' && '.join(cmds)
     print(cmd)
 
 
