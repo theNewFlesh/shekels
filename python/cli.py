@@ -609,7 +609,7 @@ def get_start_command(info):
         info (dict): Info dictionary.
 
     Returns:
-        str: Fully resolved docker-compose up command.
+        str: Fully resolved docker compose up command.
     '''
     cmd = 'export STATE=`docker ps -a -f name={repo} -f status=running '
     cmd += '| grep -v CONTAINER`; '
@@ -629,7 +629,7 @@ def get_stop_command(info):
         info (dict): Info dictionary.
 
     Returns:
-        str: Fully resolved docker-compose down command.
+        str: Fully resolved docker compose down command.
     '''
     cmd = '{compose} down; cd $CWD'
     cmd = cmd.format(compose=get_docker_compose_command(info))
@@ -783,7 +783,7 @@ def get_docker_exec_command(
 
 def get_docker_compose_command(info):
     '''
-    Gets docker-compose command.
+    Gets docker compose command.
 
     Args:
         info (dict): Info dictionary.
@@ -793,7 +793,7 @@ def get_docker_compose_command(info):
     '''
     cmd = 'CWD=`pwd`; cd {repo_path}/docker; '
     cmd += 'REPO_PATH="{repo_path}" CURRENT_USER="{user}" IMAGE="{repo}" '
-    cmd += 'docker-compose -p {repo} -f {compose_path} '
+    cmd += 'docker compose -p {repo} -f {compose_path} '
     cmd = cmd.format(
         repo=REPO,
         repo_path=REPO_PATH,
