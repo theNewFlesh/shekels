@@ -311,7 +311,7 @@ def get_build_production_image_command():
     cmd = 'cd docker; '
     cmd += 'docker build --force-rm --no-cache '
     cmd += '--file prod.dockerfile '
-    cmd += '--tag {repo}:latest .; '
+    cmd += '--tag thenewflesh/{repo}:$VERSION .; '
     cmd += 'cd ..'
     cmd = cmd.format(repo=REPO, repo_path=REPO_PATH)
     return cmd
