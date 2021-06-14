@@ -11,7 +11,7 @@ REPO_PATH = Path(__file__).parents[1].absolute().as_posix()
 # ------------------------------------------------------------------------------
 
 '''
-A CLI for developing and deploying a service deeply integrated with this
+A CLI for developing and deploying an app deeply integrated with this
 repository's structure. Written to be python version agnostic.
 '''
 
@@ -32,33 +32,33 @@ def get_info():
                         type=str,
                         nargs=1,
                         action='store',
-                        help='''Command to run in {repo} service.
+                        help='''Command to run in {repo} app.
 
     app          - Run Flask app inside {repo} container
     build        - Build image of {repo}
     build-prod   - Build production image of {repo}
-    container    - Display the Docker container id for {repo} service
-    coverage     - Generate coverage report for {repo} service
-    destroy      - Shutdown {repo} service and destroy its Docker image
+    container    - Display the Docker container id for {repo} app
+    coverage     - Generate coverage report for {repo} app
+    destroy      - Shutdown {repo} app and destroy its Docker image
     destroy-prod - Shutdown {repo}-prod container and destroy its Docker image
-    docs         - Generate documentation for {repo} service
-    fast-test    - Run testing on {repo} service skipping tests marked as slow
+    docs         - Generate documentation for {repo} app
+    fast-test    - Run testing on {repo} app skipping tests marked as slow
     full-docs    - Generates documentation, coverage report and metrics
-    image        - Display the Docker image id for {repo} service
+    image        - Display the Docker image id for {repo} app
     lab          - Start a Jupyter lab server
-    lint         - Run linting and type checking on {repo} service code
+    lint         - Run linting and type checking on {repo} app code
     package      - Build {repo} pip package
-    prod         - Start {repo} production service
+    prod         - Start {repo} production app
     publish      - Publish repository to python package index.
     push         - Push production of {repo} image to Dockerhub
     python       - Run python interpreter session inside {repo} container
-    remove       - Remove {repo} service Docker image
-    restart      - Restart {repo} service
+    remove       - Remove {repo} app Docker image
+    restart      - Restart {repo} app
     requirements - Write frozen requirements to disk
-    start        - Start {repo} service
-    state        - State of {repo} service
-    stop         - Stop {repo} service
-    test         - Run testing on {repo} service
+    start        - Start {repo} app
+    state        - State of {repo} app
+    stop         - Stop {repo} app
+    test         - Run testing on {repo} app
     tox          - Run tox tests on {repo}
     version      - Updates version and runs full-docs and requirements
     zsh          - Run ZSH session inside {repo} container
@@ -513,7 +513,7 @@ def get_requirements_command(info):
 
 def get_state_command():
     '''
-    Gets the state of the service.
+    Gets the state of the app.
 
     * Container states include: absent, running, stopped.
     * Image states include: present, absent.
@@ -537,7 +537,7 @@ def get_state_command():
     cmd += 'else'
     cmd += '    export CONTAINER_STATE="{green}running{clear}"; '
     cmd += 'fi && '
-    cmd += 'echo "service: {cyan}{repo}{clear}  -  '
+    cmd += 'echo "app: {cyan}{repo}{clear}  -  '
     cmd += 'image: $IMAGE_STATE  -  container: $CONTAINER_STATE  -  '
     cmd += 'version: {cyan}`cat pip/version.txt`{clear}"'
     cmd = cmd.format(
