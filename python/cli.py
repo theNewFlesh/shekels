@@ -9,6 +9,7 @@ REPO = Path(__file__).parents[1].absolute().name
 REPO_PATH = Path(__file__).parents[1].absolute().as_posix()
 GITHUB_USER = 'thenewflesh'
 USER = 'ubuntu:ubuntu'
+PORT = 8080
 # ------------------------------------------------------------------------------
 
 '''
@@ -102,6 +103,7 @@ def resolve(commands):
         white='\033[0;37m',
         yellow='\033[0;33m',
         github_user=GITHUB_USER,
+        port=str(PORT),
         pythonpath='{PYTHONPATH}',
         repo_path=REPO_PATH,
         repo=REPO,
@@ -485,10 +487,26 @@ def package_command():
     return resolve(cmds)
 
 
-def prod_command():
+def prod_command(args):
+    if args == ['']:
+        cmds = [
+            line('''
+                echo "Please provide a directory to map into the container
+                after the {cyan}-a{clear} flag."
+            ''')
+        ]
+        return resolve(cmds)
+
+    run = 'docker run --volume {}:/mnt/storage'.format(args[0])
     cmds = [
         enter_repo(),
-        'echo "Please provide a directory to map into the container after the -a flag."',
+        version_variable(),
+        line(run + '''
+            --rm
+            --publish {port}:{port}
+            --name {repo}-prod
+            {github_user}/{repo}:$VERSION
+        '''),
         exit_repo(),
     ]
     return resolve(cmds)
@@ -710,6 +728,7 @@ def main():
     '''
     Print different commands to stdout depending on mode provided to command.
     '''
+    mode, args = get_info()
     lut = {
         'app': app_command(),
         'build': build_dev_command(),
@@ -725,7 +744,7 @@ def main():
         'lab': lab_command(),
         'lint': lint_command(),
         'package': package_command(),
-        'prod': prod_command(),
+        'prod': prod_command(args),
         'publish': publish_command(),
         'push': push_command(),
         'python': python_command(),
@@ -740,7 +759,6 @@ def main():
         'version': version_command(),
         'zsh': zsh_command(),
     }
-    mode, args = get_info()
     cmd = lut.get(mode, get_illegal_command())
 
     # print is used instead of execute because REPO_PATH and USER do not
