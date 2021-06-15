@@ -2,14 +2,13 @@
 
 from pathlib import Path
 import argparse
-import os
 import re
 
 # set's REPO to whatever the repository is named
 REPO = Path(__file__).parents[1].absolute().name
 REPO_PATH = Path(__file__).parents[1].absolute().as_posix()
 GITHUB_USER = 'thenewflesh'
-USER = '{}:{}'.format(os.geteuid(), os.getegid())
+USER = 'ubuntu:ubuntu'
 # ------------------------------------------------------------------------------
 
 '''
@@ -93,16 +92,19 @@ def resolve(commands):
     cmd = ' && '.join(commands)
 
     all_ = dict(
+        black='\033[0;30m',
+        blue='\033[0;34m',
         clear='\033[0m',
         cyan='\033[0;36m',
-        github_user=GITHUB_USER,
         green='\033[0;32m',
-        id_='{{.ID}}',
-        pythonpath='{PYTHONPATH}',
+        purple='\033[0;35m',
         red='\033[0;31m',
+        white='\033[0;37m',
+        yellow='\033[0;33m',
+        github_user=GITHUB_USER,
+        pythonpath='{PYTHONPATH}',
         repo_path=REPO_PATH,
         repo=REPO,
-        status='{{.Status}}',
         user=USER,
         x='{}',
     )
@@ -139,7 +141,7 @@ def start():
                 -a
                 -f name={repo}
                 -f status=running
-                --format='{status}'`
+                --format='{{{{{{{{.Status}}}}}}}}'`
         '''),
         line('''
             if [ -z "$STATE" ];
@@ -151,7 +153,6 @@ def start():
                 cd ..;
             fi'''
         ),
-        "export CID=`docker ps -a --filter name={repo} --format '{id_}'`",
     ]
     return resolve(cmds)
 
@@ -167,7 +168,7 @@ def docs():
             --tty
             --user {user}
             -e PYTHONPATH="${pythonpath}:/home/ubuntu/{repo}/python"
-            -e REPO_ENV=True $CID
+            -e REPO_ENV=True {repo}
             mkdir -p /home/ubuntu/{repo}/docs'''
     )
     return cmd
@@ -181,6 +182,20 @@ def docker_down():
             -f {repo_path}/docker/docker-compose.yml
             down;
         cd ..'''
+    )
+    return cmd
+
+
+# has errors
+def coverage():
+    cmd = line(
+        docker_exec() + '''-e REPO_ENV=True {repo}
+            pytest
+                /home/ubuntu/{repo}/python
+                -c /home/ubuntu/{repo}/docker/pytest.ini
+                --cov /home/ubuntu/{repo}/python
+                --cov-config /home/ubuntu/{repo}/docker/pytest.ini
+                --cov-report html:/home/ubuntu/{repo}/docs/htmlcov'''
     )
     return cmd
 
@@ -208,7 +223,7 @@ def app_command():
         line(
             docker_exec() + '''
                 -e DEBUG_MODE=True
-                -e REPO_ENV=True $CID
+                -e REPO_ENV=True {repo}
                 python3.7 /home/ubuntu/{repo}/python/{repo}/server/app.py'''
         ),
         exit_repo(),
@@ -216,7 +231,7 @@ def app_command():
     return resolve(cmds)
 
 
-def build_command():
+def build_dev_command():
     cmds = [
         enter_repo(),
         line('''
@@ -233,7 +248,7 @@ def build_command():
     return resolve(cmds)
 
 
-def build_command():
+def build_prod_command():
     cmds = [
         enter_repo(),
         version_variable(),
@@ -253,7 +268,7 @@ def build_command():
 
 def container_command():
     cmds = [
-        "docker ps -a --filter name={repo} --format '{id_}'"
+        "docker ps -a --filter name={repo} --format '{{{{.ID}}}}'"
     ]
     return resolve(cmds)
 
@@ -263,21 +278,13 @@ def coverage_command():
         enter_repo(),
         start(),
         docs(),
-        line(
-            docker_exec() + '''-e REPO_ENV=True $CID
-                pytest
-                    /home/ubuntu/{repo}/python
-                    -c /home/ubuntu/{repo}/docker/pytest.ini
-                    --cov=/home/ubuntu/{repo}/python
-                    --cov-config=/home/ubuntu/{repo}/docker/pytest.ini
-                    --cov-report=html:/home/ubuntu/{repo}/docs/htmlcov'''
-        ),
+        coverage(),
         exit_repo(),
     ]
     return resolve(cmds)
 
 
-def destroy_command():
+def destroy_dev_command():
     cmds = [
         enter_repo(),
         docker_down(),
@@ -288,13 +295,13 @@ def destroy_command():
     return resolve(cmds)
 
 
-def destroy_command():
+def destroy_prod_command():
     cmds = [
         enter_repo(),
         'cd docker',
         'docker stop {repo}-prod',
         'docker rm {repo}-prod',
-        'docker image remove {repo}-prod',
+        'docker rmi {repo}-prod',
         'cd ..',
         exit_repo(),
     ]
@@ -307,7 +314,7 @@ def docs_command():
         start(),
         docs(),
         line(
-            docker_exec() + '''-e REPO_ENV=True $CID
+            docker_exec() + '''-e REPO_ENV=True {repo}
                  zsh -c "
                     pandoc /home/ubuntu/{repo}/README.md
                         -o /home/ubuntu/{repo}/sphinx/intro.rst;
@@ -330,12 +337,10 @@ def fast_test_command():
         enter_repo(),
         start(),
         line(
-            docker_exec() + '''
-                -e REPO_ENV=True
-                -e SKIP_SLOW_TESTS=true $CID
-                    pytest
-                        /home/ubuntu/{repo}/python
-                        -c /home/ubuntu/{repo}/docker/pytest.ini'''
+            docker_exec() + '''-e REPO_ENV=True -e SKIP_SLOW_TESTS=true {repo}
+                pytest
+                    /home/ubuntu/{repo}/python
+                    -c /home/ubuntu/{repo}/docker/pytest.ini'''
         ),
         exit_repo(),
     ]
@@ -348,7 +353,7 @@ def full_docs_command():
         start(),
         docs(),
         line(
-            docker_exec() + '''-e REPO_ENV=True $CID
+            docker_exec() + '''-e REPO_ENV=True {repo}
                  zsh -c "
                     pandoc
                         /home/ubuntu/{repo}/README.md
@@ -363,17 +368,9 @@ def full_docs_command():
                     mkdir -p /home/ubuntu/{repo}/docs/resources;
                 "
         '''),
+        coverage(),
         line(
-            docker_exec() + '''-e REPO_ENV=True $CID
-                pytest
-                    /home/ubuntu/{repo}/python
-                    -c /home/ubuntu/{repo}/docker/pytest.ini
-                    --cov=/home/ubuntu/{repo}/python
-                    --cov-config=/home/ubuntu/{repo}/docker/pytest.ini
-                    --cov-report=html:/home/ubuntu/{repo}/docs/htmlcov'''
-        ),
-        line(
-            docker_exec() + '''-e REPO_ENV=True $CID
+            docker_exec() + '''-e REPO_ENV=True {repo}
                 python3.7 -c "
                     import re;
                     from rolling_pin.repo_etl import RepoETL;
@@ -395,7 +392,7 @@ def full_docs_command():
                 "
         '''),
         line(
-            docker_exec() + '''-e REPO_ENV=True $CID
+            docker_exec() + '''-e REPO_ENV=True {repo}
                 python3.7 -c "
                     from rolling_pin.radon_etl import RadonETL;
                     etl = RadonETL('/home/ubuntu/{repo}/python');
@@ -412,7 +409,7 @@ def image_command():
     cmds = [
         enter_repo(),
         start(),
-        "docker images {repo} --format '{id_}'",
+        "docker images {repo} --format '{{{{.ID}}}}'",
         exit_repo(),
     ]
     return resolve(cmds)
@@ -423,7 +420,7 @@ def lab_command():
         enter_repo(),
         start(),
         line(
-            docker_exec() + '''-e REPO_ENV=True $CID
+            docker_exec() + '''-e REPO_ENV=True {repo}
                 jupyter lab --allow-root --ip=0.0.0.0 --no-browser'''
         ),
         exit_repo(),
@@ -437,14 +434,14 @@ def lint_command():
         start(),
         'echo LINTING',
         line(
-            docker_exec() + '''-e REPO_ENV=True $CID
+            docker_exec() + '''-e REPO_ENV=True {repo}
                 flake8
                     /home/ubuntu/{repo}/python
                     --config /home/ubuntu/{repo}/docker/flake8.ini'''
         ),
         'echo TYPE CHECKING',
         line(
-            docker_exec() + '''-e REPO_ENV=True $CID
+            docker_exec() + '''-e REPO_ENV=True {repo}
                 mypy
                     /home/ubuntu/{repo}/python
                     --config-file /home/ubuntu/{repo}/docker/mypy.ini'''
@@ -459,7 +456,7 @@ def package_command():
         enter_repo(),
         start(),
         line(
-            docker_exec() + '''$CID zsh -c "
+            docker_exec() + '''{repo} zsh -c "
                 rm -rf /tmp/{repo};
                 cp -R /home/ubuntu/{repo}/python /tmp/{repo};
                 cp /home/ubuntu/{repo}/README.md /tmp/{repo}/README.md;
@@ -477,7 +474,7 @@ def package_command():
                 find /tmp/{repo} -type f | grep __init__.py | parallel 'rm -rf {x}; touch {x}'
             "
         '''),
-        docker_exec() + ' -w /tmp/{repo} $CID python3.7 setup.py sdist',
+        docker_exec() + ' -w /tmp/{repo} {repo} python3.7 setup.py sdist',
         exit_repo(),
     ]
     return resolve(cmds)
@@ -497,7 +494,7 @@ def publish_command():
         enter_repo(),
         start(),
         line(
-            docker_exec() + '''$CID zsh -c "
+            docker_exec() + '''{repo} zsh -c "
                 rm -rf /tmp/{repo};
                 cp -R /home/ubuntu/{repo}/python /tmp/{repo};
                 cp -R /home/ubuntu/{repo}/docker/* /tmp/{repo}/;
@@ -515,7 +512,7 @@ def publish_command():
             "
         '''),
         line(
-            docker_exec() + '''$CID zsh -c "
+            docker_exec() + '''{repo} zsh -c "
                 rm -rf /tmp/{repo};
                 cp -R /home/ubuntu/{repo}/python /tmp/{repo};
                 cp /home/ubuntu/{repo}/README.md /tmp/{repo}/README.md;
@@ -533,9 +530,9 @@ def publish_command():
                 find /tmp/{repo} -type f | grep __init__.py | parallel 'rm -rf {x}; touch {x}';
             "
         '''),
-        docker_exec() + ' -w /tmp/{repo} $CID python3.7 setup.py sdist',
-        docker_exec() + ' -w /tmp/{repo} $CID twine upload dist/*',
-        docker_exec() + ' $CID rm -rf /tmp/{repo}',
+        docker_exec() + ' -w /tmp/{repo} {repo} python3.7 setup.py sdist',
+        docker_exec() + ' -w /tmp/{repo} {repo} twine upload dist/*',
+        docker_exec() + ' {repo} rm -rf /tmp/{repo}',
         exit_repo(),
     ]
     return resolve(cmds)
@@ -556,7 +553,7 @@ def python_command():
     cmds = [
         enter_repo(),
         start(),
-        docker_exec() + ' -e REPO_ENV=True $CID python3.7',
+        docker_exec() + ' -e REPO_ENV=True {repo} python3.7',
         exit_repo(),
     ]
     return resolve(cmds)
@@ -592,7 +589,7 @@ def requirements_command():
         enter_repo(),
         start(),
         line(
-            docker_exec() + '''-e REPO_ENV=True $CID zsh -c "
+            docker_exec() + '''-e REPO_ENV=True {repo} zsh -c "
                 python3.7 -m pip list --format freeze > /home/ubuntu/{repo}/docker/frozen_requirements.txt
             "
         '''),
@@ -630,12 +627,11 @@ def state_command():
                 export CONTAINER_STATE="{green}running{clear}";
             fi
         '''),
-        line('''echo "
-            app: {cyan}{repo}{clear} -
+        line('''echo 
+            "app: {cyan}{repo}{clear}:{yellow}$VERSION{clear} -
             image: $IMAGE_STATE -
-            container: $CONTAINER_STATE -
-            version: {cyan}$VERSION{clear}
-        "'''),
+            container: $CONTAINER_STATE"
+        '''),
         exit_repo(),
     ]
     return resolve(cmds)
@@ -655,7 +651,7 @@ def test_command():
         enter_repo(),
         start(),
         line(
-            docker_exec() + '''-e REPO_ENV=True $CID
+            docker_exec() + '''-e REPO_ENV=True {repo}
                 pytest
                     /home/ubuntu/{repo}/python
                     -c /home/ubuntu/{repo}/docker/pytest.ini'''
@@ -670,7 +666,7 @@ def tox_command():
         enter_repo(),
         start(),
         line(
-            docker_exec() + '''$CID zsh -c "
+            docker_exec() + '''{repo} zsh -c "
                 rm -rf /tmp/{repo};
                 cp -R /home/ubuntu/{repo}/python /tmp/{repo};
                 cp -R /home/ubuntu/{repo}/docker/* /tmp/{repo}/;
@@ -704,7 +700,7 @@ def zsh_command():
     cmds = [
         enter_repo(),
         start(),
-        docker_exec() + ' -e REPO_ENV=True $CID zsh',
+        docker_exec() + ' -e REPO_ENV=True {repo} zsh',
         exit_repo(),
     ]
     return resolve(cmds)
@@ -717,12 +713,12 @@ def main():
     '''
     lut = {
         'app': app_command(),
-        'build-prod': build_command(),
-        'build': build_command(),
+        'build': build_dev_command(),
+        'build-prod': build_prod_command(),
         'container': container_command(),
         'coverage': coverage_command(),
-        'destroy-prod': destroy_command(),
-        'destroy': destroy_command(),
+        'destroy': destroy_dev_command(),
+        'destroy-prod': destroy_prod_command(),
         'docs': docs_command(),
         'fast-test': fast_test_command(),
         'full-docs': full_docs_command(),
