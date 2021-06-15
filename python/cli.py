@@ -66,7 +66,7 @@ def get_info():
     stop         - Stop {repo} app
     test         - Run testing on {repo} app
     tox          - Run tox tests on {repo}
-    version      - Updates version and runs full-docs and requirements
+    version-up   - Updates version and runs full-docs and requirements
     zsh          - Run ZSH session inside {repo} container
 '''.format(repo=REPO))
 
@@ -693,13 +693,21 @@ def tox_command():
     return resolve(cmds)
 
 
-def version_command():
+def version_up_command(args):
+    if args == ['']:
+        cmds = [
+            'echo "Please provide a version after the {cyan}-a{clear} flag."'
+        ]
+        return resolve(cmds)
+
     cmds = [
         enter_repo(),
-        'echo Please provide a version after the -a flag',
+        'echo {} > pip/version.txt'.format(args[0]),
         exit_repo(),
     ]
-    return resolve(cmds)
+    cmd = resolve(cmds)
+    cmd = cmd + ' && ' + full_docs_command()
+    return cmd
 
 
 def zsh_command():
@@ -756,7 +764,7 @@ def main():
         'stop': stop_command(),
         'test': test_command(),
         'tox': tox_command(),
-        'version': version_command(),
+        'version-up': version_up_command(args),
         'zsh': zsh_command(),
     }
     cmd = lut.get(mode, get_illegal_command())
