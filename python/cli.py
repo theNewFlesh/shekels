@@ -185,7 +185,6 @@ def docker_down():
     return cmd
 
 
-# has errors
 def coverage():
     cmd = line(
         docker_exec() + '''-e REPO_ENV=True {repo}
@@ -194,7 +193,8 @@ def coverage():
                 -c /home/ubuntu/{repo}/docker/pytest.ini
                 --cov /home/ubuntu/{repo}/python
                 --cov-config /home/ubuntu/{repo}/docker/pytest.ini
-                --cov-report html:/home/ubuntu/{repo}/docs/htmlcov'''
+                --cov-report html:/home/ubuntu/{repo}/docs/htmlcov
+                --headless'''
     )
     return cmd
 
@@ -362,7 +362,8 @@ def fast_test_command():
             docker_exec() + '''-e REPO_ENV=True -e SKIP_SLOW_TESTS=true {repo}
                 pytest
                     /home/ubuntu/{repo}/python
-                    -c /home/ubuntu/{repo}/docker/pytest.ini'''
+                    -c /home/ubuntu/{repo}/docker/pytest.ini
+                    --headless'''
         ),
         exit_repo(),
     ]
@@ -640,7 +641,8 @@ def test_command():
             docker_exec() + '''-e REPO_ENV=True {repo}
                 pytest
                     /home/ubuntu/{repo}/python
-                    -c /home/ubuntu/{repo}/docker/pytest.ini'''
+                    -c /home/ubuntu/{repo}/docker/pytest.ini
+                    --headless'''
         ),
         exit_repo(),
     ]
