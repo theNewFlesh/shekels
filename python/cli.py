@@ -694,6 +694,17 @@ def zsh_command():
     return resolve(cmds)
 
 
+def get_illegal_command():
+    cmds = [
+        line('''
+            echo "That is not a legal command.
+            Please call {cyan}{repo} --help{clear} to see a list of legal
+            commands."
+        ''')
+    ]
+    return resolve(cmds)
+
+
 # MAIN--------------------------------------------------------------------------
 def main():
     '''
@@ -730,12 +741,13 @@ def main():
         'zsh': zsh_command(),
     }
     mode, args = get_info()
+    cmd = lut.get(mode, get_illegal_command())
 
     # print is used instead of execute because REPO_PATH and USER do not
     # resolve in a subprocess and subprocesses do not give real time stdout.
     # So, running `command up` will give you nothing until the process ends.
     # `eval "[generated command] $@"` resolves all these issues.
-    print(lut[mode])
+    print(cmd)
 
 
 if __name__ == '__main__':
