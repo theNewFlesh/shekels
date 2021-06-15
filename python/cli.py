@@ -23,7 +23,7 @@ def get_info():
     Returns:
         tuple: Mode and arguments.
     '''
-    desc = 'A CLI for developing and deploying {repo} containers.'.format(
+    desc = 'A CLI for developing and deploying the {repo} app.'.format(
         repo=REPO
     )
     parser = argparse.ArgumentParser(
