@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from typing import List, Tuple
+
 from pathlib import Path
 import argparse
 import re
@@ -19,6 +21,7 @@ repository's structure. Written to be python version agnostic.
 
 
 def get_info():
+    # type: () -> Tuple[str, list]
     '''
     Returns:
         tuple: Mode and arguments.
@@ -90,6 +93,7 @@ def get_info():
 
 
 def resolve(commands):
+    # type: (List[str]) -> str
     cmd = ' && '.join(commands)
 
     all_ = dict(
@@ -119,6 +123,7 @@ def resolve(commands):
 
 
 def line(text):
+    # type: (str) -> str
     output = re.sub('^\n|\n$', '', text)
     output = output.split('\n')
     output = [re.sub('^ +| +$', '', x) for x in output]
@@ -128,14 +133,17 @@ def line(text):
 
 # SUBCOMMANDS-------------------------------------------------------------------
 def enter_repo():
+    # type: () -> str
     return 'export CWD=`pwd` && cd {repo_path}'
 
 
 def exit_repo():
+    # type: () -> str
     return 'cd $CWD'
 
 
 def start():
+    # type: () -> str
     cmds = [
         line('''
             export STATE=`docker ps
@@ -159,10 +167,12 @@ def start():
 
 
 def version_variable():
+    # type: () -> str
     return 'export VERSION=`cat pip/version.txt`'
 
 
 def docs():
+    # type: () -> str
     cmd = line('''
         docker exec
             --interactive
@@ -176,6 +186,7 @@ def docs():
 
 
 def docker_down():
+    # type: () -> str
     cmd = line('''
         cd docker;
         docker compose
@@ -188,6 +199,7 @@ def docker_down():
 
 
 def coverage():
+    # type: () -> str
     cmd = line(
         docker_exec() + '''-e REPO_ENV=True {repo}
             pytest
@@ -202,10 +214,12 @@ def coverage():
 
 
 def remove_container():
+    # type: () -> str
     return 'docker container rm --force {repo}'
 
 
 def docker_exec():
+    # type: () -> str
     cmd = line('''
         docker exec
             --interactive
@@ -217,6 +231,7 @@ def docker_exec():
 
 
 def create_package_repo():
+    # type: () -> str
     cmd = line(
             docker_exec() + '''{repo} zsh -c "
                 rm -rf /tmp/{repo} &&
@@ -241,6 +256,7 @@ def create_package_repo():
 
 # COMMANDS----------------------------------------------------------------------
 def app_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         start(),
@@ -256,6 +272,7 @@ def app_command():
 
 
 def build_dev_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         line('''
@@ -273,6 +290,7 @@ def build_dev_command():
 
 
 def build_prod_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         version_variable(),
@@ -291,6 +309,7 @@ def build_prod_command():
 
 
 def container_command():
+    # type: () -> str
     cmds = [
         "docker ps -a --filter name={repo} --format '{{{{.ID}}}}'"
     ]
@@ -298,6 +317,7 @@ def container_command():
 
 
 def coverage_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         start(),
@@ -309,6 +329,7 @@ def coverage_command():
 
 
 def destroy_dev_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         docker_down(),
@@ -320,6 +341,7 @@ def destroy_dev_command():
 
 
 def destroy_prod_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         'cd docker',
@@ -333,6 +355,7 @@ def destroy_prod_command():
 
 
 def docs_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         start(),
@@ -357,6 +380,7 @@ def docs_command():
 
 
 def fast_test_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         start(),
@@ -373,6 +397,7 @@ def fast_test_command():
 
 
 def full_docs_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         start(),
@@ -431,6 +456,7 @@ def full_docs_command():
 
 
 def image_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         start(),
@@ -441,6 +467,7 @@ def image_command():
 
 
 def lab_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         start(),
@@ -454,6 +481,7 @@ def lab_command():
 
 
 def lint_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         start(),
@@ -477,6 +505,7 @@ def lint_command():
 
 
 def package_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         start(),
@@ -488,6 +517,7 @@ def package_command():
 
 
 def prod_command(args):
+    # type: (list) -> str
     if args == ['']:
         cmds = [
             line('''
@@ -513,6 +543,7 @@ def prod_command(args):
 
 
 def publish_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         start(),
@@ -544,6 +575,7 @@ def publish_command():
 
 
 def push_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         version_variable(),
@@ -555,6 +587,7 @@ def push_command():
 
 
 def python_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         start(),
@@ -565,6 +598,7 @@ def python_command():
 
 
 def remove_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         remove_container(),
@@ -574,6 +608,7 @@ def remove_command():
 
 
 def restart_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         line('''
@@ -590,6 +625,7 @@ def restart_command():
 
 
 def requirements_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         start(),
@@ -604,6 +640,7 @@ def requirements_command():
 
 
 def start_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         start(),
@@ -612,6 +649,7 @@ def start_command():
 
 
 def state_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         version_variable(),
@@ -643,6 +681,7 @@ def state_command():
 
 
 def stop_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         docker_down(),
@@ -652,6 +691,7 @@ def stop_command():
 
 
 def test_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         start(),
@@ -668,6 +708,7 @@ def test_command():
 
 
 def tox_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         start(),
@@ -694,6 +735,7 @@ def tox_command():
 
 
 def version_up_command(args):
+    # type: (list) -> str
     if args == ['']:
         cmds = [
             'echo "Please provide a version after the {cyan}-a{clear} flag."'
@@ -711,6 +753,7 @@ def version_up_command(args):
 
 
 def zsh_command():
+    # type: () -> str
     cmds = [
         enter_repo(),
         start(),
@@ -721,6 +764,7 @@ def zsh_command():
 
 
 def get_illegal_command():
+    # type: () -> str
     cmds = [
         line('''
             echo "That is not a legal command.
@@ -733,6 +777,7 @@ def get_illegal_command():
 
 # MAIN--------------------------------------------------------------------------
 def main():
+    # type: () -> None
     '''
     Print different commands to stdout depending on mode provided to command.
     '''
