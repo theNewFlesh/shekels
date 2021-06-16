@@ -21,7 +21,7 @@
                 "zsh": {"path": "/bin/zsh"}
         },
         "search.exclude": {
-                "**/docs": true
+            "**/docs": true
         },
         "files.exclude": {
             "**/.classpath": true,
