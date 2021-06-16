@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from typing import List, Tuple
+from typing import Any, List, Tuple
 
 from pathlib import Path
 import argparse
@@ -145,7 +145,7 @@ def line(text):
     Returns:
         str: Formatted command.
     '''
-    output = re.sub('^\n|\n$', '', text)
+    output = re.sub('^\n|\n$', '', text)  # type: Any
     output = output.split('\n')
     output = [re.sub('^ +| +$', '', x) for x in output]
     output = ' '.join(output) + ' '
@@ -163,7 +163,6 @@ def enter_repo():
 
 
 def exit_repo():
-    
     # type: () -> str
     '''
     Returns:
@@ -194,8 +193,8 @@ def start():
                     -f {repo_path}/docker/docker-compose.yml up
                     --detach;
                 cd ..;
-            fi'''
-        ),
+            fi
+        '''),
     ]
     return resolve(cmds)
 
@@ -222,8 +221,8 @@ def make_docs_dir():
             --user {user}
             -e PYTHONPATH="${pythonpath}:/home/ubuntu/{repo}/python"
             -e REPO_ENV=True {repo}
-            mkdir -p /home/ubuntu/{repo}/docs'''
-    )
+            mkdir -p /home/ubuntu/{repo}/docs
+    ''')
     return cmd
 
 
@@ -239,8 +238,8 @@ def docker_down():
             -p {repo}
             -f {repo_path}/docker/docker-compose.yml
             down;
-        cd ..'''
-    )
+        cd ..
+    ''')
     return cmd
 
 
@@ -295,23 +294,26 @@ def create_package_repo():
         str: Command to create a temporary repo in /tmp.
     '''
     cmd = line(
-            docker_exec() + '''{repo} zsh -c "
-                rm -rf /tmp/{repo} &&
-                cp -R /home/ubuntu/{repo}/python /tmp/{repo} &&
-                cp /home/ubuntu/{repo}/README.md /tmp/{repo}/README.md &&
-                cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/LICENSE &&
-                cp /home/ubuntu/{repo}/pip/MANIFEST.in /tmp/{repo}/MANIFEST.in &&
-                cp /home/ubuntu/{repo}/pip/setup.cfg /tmp/{repo}/ &&
-                cp /home/ubuntu/{repo}/pip/setup.py /tmp/{repo}/ &&
-                cp /home/ubuntu/{repo}/pip/version.txt /tmp/{repo}/ &&
-                cp /home/ubuntu/{repo}/docker/dev_requirements.txt /tmp/{repo}/ &&
-                cp /home/ubuntu/{repo}/docker/prod_requirements.txt /tmp/{repo}/ &&
-                cp -r /home/ubuntu/{repo}/templates /tmp/{repo}/{repo} &&
-                cp -r /home/ubuntu/{repo}/resources /tmp/{repo}/{repo} &&
-                find /tmp/{repo}/{repo}/resources -type f | grep -vE 'icon|test_' | parallel 'rm -rf {{}}' &&
-                find /tmp/{repo} | grep -E '.*test.*\.py$|mock.*\.py$|__pycache__' | parallel 'rm -rf {{}}' &&
-                find /tmp/{repo} -type f | grep __init__.py | parallel 'rm -rf {{}}; touch {{}}'
-            "
+        docker_exec() + r'''{repo} zsh -c "
+            rm -rf /tmp/{repo} &&
+            cp -R /home/ubuntu/{repo}/python /tmp/{repo} &&
+            cp /home/ubuntu/{repo}/README.md /tmp/{repo}/README.md &&
+            cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/LICENSE &&
+            cp /home/ubuntu/{repo}/pip/MANIFEST.in /tmp/{repo}/MANIFEST.in &&
+            cp /home/ubuntu/{repo}/pip/setup.cfg /tmp/{repo}/ &&
+            cp /home/ubuntu/{repo}/pip/setup.py /tmp/{repo}/ &&
+            cp /home/ubuntu/{repo}/pip/version.txt /tmp/{repo}/ &&
+            cp /home/ubuntu/{repo}/docker/dev_requirements.txt /tmp/{repo}/ &&
+            cp /home/ubuntu/{repo}/docker/prod_requirements.txt /tmp/{repo}/ &&
+            cp -r /home/ubuntu/{repo}/templates /tmp/{repo}/{repo} &&
+            cp -r /home/ubuntu/{repo}/resources /tmp/{repo}/{repo} &&
+            find /tmp/{repo}/{repo}/resources -type f | grep -vE 'icon|test_'
+                | parallel 'rm -rf {{}}' &&
+            find /tmp/{repo} | grep -E '.*test.*\.py$|mock.*\.py$|__pycache__'
+                | parallel 'rm -rf {{}}' &&
+            find /tmp/{repo} -type f | grep __init__.py
+                | parallel 'rm -rf {{}};touch {{}}'
+        "
     ''')
     return cmd
 
@@ -352,8 +354,8 @@ def build_dev_command():
                 --no-cache
                 --file dev.dockerfile
                 --tag {repo}:latest .;
-            cd ..'''
-        ),
+            cd ..
+        '''),
         exit_repo(),
     ]
     return resolve(cmds)
@@ -663,7 +665,7 @@ def publish_command():
         enter_repo(),
         start(),
         line(
-            docker_exec() + '''{repo} zsh -c "
+            docker_exec() + r'''{repo} zsh -c "
                 rm -rf /tmp/{repo} &&
                 cp -R /home/ubuntu/{repo}/python /tmp/{repo} &&
                 cp -R /home/ubuntu/{repo}/docker/* /tmp/{repo}/ &&
@@ -671,13 +673,16 @@ def publish_command():
                 cp /home/ubuntu/{repo}/pip/* /tmp/{repo}/ &&
                 cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/ &&
                 cp /home/ubuntu/{repo}/README.md /tmp/{repo}/ &&
-                find /tmp/{repo}/{repo}/resources -type f | grep -vE 'icon|test_' | parallel 'rm -rf {{}}' &&
+                find /tmp/{repo}/{repo}/resources -type f
+                    | grep -vE 'icon|test_' | parallel 'rm -rf {{}}' &&
                 cp -R /home/ubuntu/{repo}/templates /tmp/{repo}/{repo} &&
                 cp -R /home/ubuntu/{repo}/python/conftest.py /tmp/{repo}/ &&
-                find /tmp/{repo} | grep -E '__pycache__|\.pyc$' | parallel 'rm -rf' &&
+                find /tmp/{repo} | grep -E '__pycache__|\.pyc$'
+                    | parallel 'rm -rf' &&
                 cd /tmp/{repo} &&
                 tox &&
-                find {repo_path} | grep -E '__pycache__|\.pyc$' | parallel 'rm -rf {{}}'
+                find {repo_path} | grep -E '__pycache__|\.pyc$'
+                    | parallel 'rm -rf {{}}'
             "
         '''),
         create_package_repo(),
@@ -766,8 +771,8 @@ def requirements_command():
         start(),
         line(
             docker_exec() + '''-e REPO_ENV=True {repo} zsh -c "
-                python3.7 -m pip list --format freeze > /home/ubuntu/{repo}/docker/frozen_requirements.txt
-            "
+                python3.7 -m pip list --format freeze >
+                    /home/ubuntu/{repo}/docker/frozen_requirements.txt"
         '''),
         exit_repo(),
     ]
@@ -813,7 +818,7 @@ def state_command():
                 export CONTAINER_STATE="{green}running{clear}";
             fi
         '''),
-        line('''echo 
+        line('''echo
             "app: {cyan}{repo}{clear}:{yellow}$VERSION{clear} -
             image: $IMAGE_STATE -
             container: $CONTAINER_STATE"
@@ -868,7 +873,7 @@ def tox_command():
         enter_repo(),
         start(),
         line(
-            docker_exec() + '''{repo} zsh -c "
+            docker_exec() + r'''{repo} zsh -c "
                 rm -rf /tmp/{repo} &&
                 cp -R /home/ubuntu/{repo}/python /tmp/{repo} &&
                 cp -R /home/ubuntu/{repo}/docker/* /tmp/{repo}/ &&
@@ -876,10 +881,12 @@ def tox_command():
                 cp /home/ubuntu/{repo}/pip/* /tmp/{repo}/ &&
                 cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/ &&
                 cp /home/ubuntu/{repo}/README.md /tmp/{repo}/ &&
-                find /tmp/{repo}/{repo}/resources -type f | grep -vE 'icon|test_' | parallel 'rm -rf {{}}' &&
+                find /tmp/{repo}/{repo}/resources -type f
+                    | grep -vE 'icon|test_' | parallel 'rm -rf {{}}' &&
                 cp -R /home/ubuntu/{repo}/templates /tmp/{repo}/{repo} &&
                 cp -R /home/ubuntu/{repo}/python/conftest.py /tmp/{repo}/ &&
-                find /tmp/{repo} | grep -E '__pycache__|\.pyc$' | parallel 'rm -rf' &&
+                find /tmp/{repo} | grep -E '__pycache__|\.pyc$'
+                    | parallel 'rm -rf' &&
                 cd /tmp/{repo} &&
                 tox
             "
