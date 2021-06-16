@@ -23,7 +23,9 @@ WORKDIR /home/ubuntu
 RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${CLEAR}"; \
     apt update && \
     apt install -y \
+        graphviz \
         python3-dev \
+        python3-pydot \
         software-properties-common \
         wget
 
@@ -37,13 +39,10 @@ RUN echo "\n${CYAN}SETUP PYTHON3.7${CLEAR}"; \
     rm -rf /home/ubuntu/get-pip.py
 
 # install shekels
+USER ubuntu
 ENV REPO='shekels'
 ENV PYTHONPATH "${PYTHONPATH}:/home/ubuntu/$REPO/python"
 RUN echo "\n${CYAN}INSTALL $REPO${CLEAR}"; \
-    apt update && \
-    apt install -y \
-        graphviz \
-        python3-pydot && \
     pip3.7 install shekels>=1.0.2;
 
 ENTRYPOINT [\
