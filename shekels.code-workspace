@@ -1,22 +1,28 @@
 {
   "folders": [{ "path": "./" }],
   "settings": {
+    "debug.allowBreakpointsEverywhere": true,
     "python.languageServer": "Pylance",
     "python.linting.enabled": true,
     "python.linting.flake8Args": ["--config=docker/flake8.ini"],
     "python.linting.flake8Enabled": true,
-    "python.linting.flake8Path": "/usr/local/bin/flake8",
+    "python.linting.flake8Path": "/home/ubuntu/.local/bin/flake8",
     "python.linting.mypyArgs": ["--config=docker/mypy.ini"],
     "python.linting.mypyEnabled": true,
-    "python.linting.mypyPath": "/usr/local/bin/mypy",
-    "python.linting.pycodestylePath": "/usr/local/bin/pycodestyle",
+    "python.linting.mypyPath": "/home/ubuntu/.local/bin/mypy",
+    "python.linting.pycodestylePath": "/home/ubuntu/.local/bin/pycodestyle",
     "python.linting.pylintEnabled": false,
     "python.pythonPath": "/usr/bin/python3.7",
+    "python.testing.pytestArgs": ["--headless"],
     "python.testing.pytestEnabled": true,
     "python.testing.unittestEnabled": false,
-    "terminal.integrated.shell.linux": "/bin/zsh",
-    "debug.allowBreakpointsEverywhere": true,
-    "python.testing.pytestArgs": ["--headless"],
+    "todo-tree.filtering.excludeGlobs": ["**/docs/**/*.*"],
+    "terminal.integrated.profiles.linux": {
+        "zsh": {"path": "/bin/zsh"}
+    },
+    "search.exclude": {
+        "**/docs": true
+    },
     "files.exclude": {
       "**/.classpath": true,
       "**/.coverage": true,
@@ -34,8 +40,7 @@
       "*/*/**/node_modules": true,
       "**/.vscode": true,
       "**/flask_monitoringdashboard.db": true
-    },
-    "todo-tree.filtering.excludeGlobs": ["**/docs/**/*.*"]
+    }
   },
   "tasks": {
     "version": "2.0.0",
