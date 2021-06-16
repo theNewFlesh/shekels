@@ -51,7 +51,6 @@ def get_info():
     container    - Display the Docker container id for {repo} app
     coverage     - Generate coverage report for {repo} app
     destroy      - Shutdown {repo} app and destroy its Docker image
-    destroy-prod - Shutdown {repo}-prod container and destroy its Docker image
     docs         - Generate documentation for {repo} app
     fast-test    - Run testing on {repo} app skipping tests marked as slow
     full-docs    - Generates documentation, coverage report and metrics
@@ -427,24 +426,6 @@ def destroy_dev_command():
     return resolve(cmds)
 
 
-def destroy_prod_command():
-    # type: () -> str
-    '''
-    Returns:
-        str: Command to destroy prod container and image.
-    '''
-    cmds = [
-        enter_repo(),
-        'cd docker',
-        'docker stop {repo}-prod',
-        'docker rm {repo}-prod',
-        'docker rmi {repo}-prod',
-        'cd ..',
-        exit_repo(),
-    ]
-    return resolve(cmds)
-
-
 def docs_command():
     # type: () -> str
     '''
@@ -767,7 +748,7 @@ def restart_command():
                 -p {repo}
                 -f {repo_path}/docker/docker-compose.yml
                 restart;
-            cd ..;
+            cd ..
         '''),
         exit_repo(),
     ]
@@ -977,7 +958,6 @@ def main():
         'container': container_id_command(),
         'coverage': coverage_command(),
         'destroy': destroy_dev_command(),
-        'destroy-prod': destroy_prod_command(),
         'docs': docs_command(),
         'fast-test': fast_test_command(),
         'full-docs': full_docs_command(),

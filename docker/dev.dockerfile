@@ -4,13 +4,13 @@ USER root
 
 # coloring syntax for headers
 ENV CYAN='\033[0;36m'
-ENV NO_COLOR='\033[0m'
+ENV CLEAR='\033[0m'
 ENV DEBIAN_FRONTEND='noninteractive'
 
 # setup ubuntu user
 ARG UID_='1000'
 ARG GID_='1000'
-RUN echo "\n${CYAN}SETUP UBUNTU USER${NO_COLOR}"; \
+RUN echo "\n${CYAN}SETUP UBUNTU USER${CLEAR}"; \
     addgroup --gid $GID_ ubuntu && \
     adduser \
     --disabled-password \
@@ -21,7 +21,7 @@ RUN echo "\n${CYAN}SETUP UBUNTU USER${NO_COLOR}"; \
 WORKDIR /home/ubuntu
 
 # update ubuntu and install basic dependencies
-RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${NO_COLOR}"; \
+RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${CLEAR}"; \
     apt update && \
     apt install -y \
         curl \
@@ -38,7 +38,7 @@ RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${NO_COLOR}"; \
         wget
 
 # install zsh
-RUN echo "\n${CYAN}SETUP ZSH${NO_COLOR}"; \
+RUN echo "\n${CYAN}SETUP ZSH${CLEAR}"; \
     apt install -y zsh && \
     curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh \
     -o install-oh-my-zsh.sh && \
@@ -50,16 +50,16 @@ RUN echo "\n${CYAN}SETUP ZSH${NO_COLOR}"; \
     echo 'UTC' > /etc/timezone
 
 # install python3.7 and pip
-RUN echo "\n${CYAN}SETUP PYTHON3.7${NO_COLOR}"; \
+RUN echo "\n${CYAN}SETUP PYTHON3.7${CLEAR}"; \
     add-apt-repository -y ppa:deadsnakes/ppa && \
     apt update && \
-    apt install -y python3.7 && \
+    apt install --fix-missing -y python3.7 && \
     wget https://bootstrap.pypa.io/get-pip.py && \
     python3.7 get-pip.py && \
     chown -R ubuntu:ubuntu get-pip.py
 
 # install node.js, needed by jupyterlab
-RUN echo "\n${CYAN}INSTALL NODE.JS${NO_COLOR}"; \
+RUN echo "\n${CYAN}INSTALL NODE.JS${CLEAR}"; \
     curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
     apt upgrade -y && \
     apt install -y nodejs && \
@@ -73,7 +73,7 @@ COPY ./zshrc .zshrc
 # install jupyter lab and extensions
 COPY ./dev_requirements.txt dev_requirements.txt
 ENV NODE_OPTIONS="--max-old-space-size=8192"
-RUN echo "\n${CYAN}INSTALL JUPYTER LAB AND EXTENSIONS${NO_COLOR}"; \
+RUN echo "\n${CYAN}INSTALL JUPYTER LAB AND EXTENSIONS${CLEAR}"; \
     cat dev_requirements.txt | grep -i jupyter > jupyter_requirements.txt && \
     pip3.7 install -r jupyter_requirements.txt && \
     jupyter labextension install \
@@ -99,6 +99,6 @@ ENV REPO_ENV=True
 # install python dependencies
 COPY ./dev_requirements.txt dev_requirements.txt
 COPY ./prod_requirements.txt prod_requirements.txt
-RUN echo "\n${CYAN}INSTALL PYTHON DEPENDECIES${NO_COLOR}"; \
+RUN echo "\n${CYAN}INSTALL PYTHON DEPENDECIES${CLEAR}"; \
     pip3.7 install -r dev_requirements.txt && \
     pip3.7 install -r prod_requirements.txt
