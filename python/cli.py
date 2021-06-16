@@ -51,6 +51,7 @@ def get_info():
     container    - Display the Docker container id for {repo} app
     coverage     - Generate coverage report for {repo} app
     destroy      - Shutdown {repo} app and destroy its Docker image
+    destroy-prod - Shutdown {repo} production app and destroy its Docker image
     docs         - Generate documentation for {repo} app
     fast-test    - Run testing on {repo} app skipping tests marked as slow
     full-docs    - Generates documentation, coverage report and metrics
@@ -424,6 +425,21 @@ def destroy_dev_command():
         remove_container(),
         'docker image rm --force {repo}',
         exit_repo(),
+    ]
+    return resolve(cmds)
+
+
+def destroy_prod_command():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to destroy prod image.
+    '''
+    cmds = [
+        "export PROD_CID=`docker ps --filter name={repo}-prod --format '{{{{.ID}}}}'`",
+        "export PROD_IID=`docker images {github_user}/{repo} --format '{{{{.ID}}}}'`",
+        'docker container stop $PROD_CID',
+        'docker image rm --force $PROD_IID',
     ]
     return resolve(cmds)
 
@@ -965,6 +981,7 @@ def main():
         'container': container_id_command(),
         'coverage': coverage_command(),
         'destroy': destroy_dev_command(),
+        'destroy-prod': destroy_prod_command(),
         'docs': docs_command(),
         'fast-test': fast_test_command(),
         'full-docs': full_docs_command(),
