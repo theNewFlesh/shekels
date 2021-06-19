@@ -13,10 +13,10 @@ ARG GID_='1000'
 RUN echo "\n${CYAN}SETUP UBUNTU USER${CLEAR}"; \
     addgroup --gid $GID_ ubuntu && \
     adduser \
-    --disabled-password \
-    --gecos '' \
-    --uid $UID_ \
-    --gid $GID_ ubuntu && \
+        --disabled-password \
+        --gecos '' \
+        --uid $UID_ \
+        --gid $GID_ ubuntu && \
     usermod -aG root ubuntu
 WORKDIR /home/ubuntu
 
