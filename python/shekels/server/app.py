@@ -11,6 +11,7 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_table
+from flask_healthz import healthz, HealthError
 import flasgger as swg
 import flask
 import flask_monitoringdashboard as fmdb
@@ -41,6 +42,13 @@ def get_app():
     swg.Swagger(flask_app)
     flask_app.register_blueprint(API)
 
+    # healthz endpoints
+    flask_app.register_blueprint(healthz, url_prefix="/healthz")
+    flask_app.config.update(HEALTHZ={
+        "live": "shekels.checks.liveness",
+        "ready": "shekels.checks.readiness",
+    })
+
     # flask monitoring
     fmdb.config.link = 'monitor'
     fmdb.config.monitor_level = 3
@@ -67,6 +75,22 @@ def get_app():
 
 
 APP = get_app()
+
+
+def liveness():
+    '''Liveness probe for kubernetes.'''
+    pass
+
+
+def readiness():
+    '''
+    Readiness probe for kubernetes.
+
+    Raises:
+        HealthError: If api is not availiable.
+    '''
+    if not hasattr(APP, 'api'):
+        raise HealthError('App is missing api.')
 
 
 @APP.server.route('/static/<stylesheet>')

@@ -30,6 +30,18 @@ spec:
           {{- end }}
           ports:
             - containerPort: {{ .Values.container.port }}
+          livenessProbe:
+            httpGet:
+              path: /healthz/live
+              port: 8080
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+          readinessProbe:
+            httpGet:
+              path: /healthz/ready
+              port: 8080
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
           volumeMounts:
             - name: storage
               mountPath: /mnt/storage

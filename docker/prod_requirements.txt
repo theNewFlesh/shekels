@@ -6,6 +6,7 @@ dash-html-components
 dash-table
 flasgger
 flask
+flask-healthz
 flask_monitoringdashboard
 flask-caching
 jinja2
