@@ -30,6 +30,22 @@ Shekels app used for displaying and interacting with database.
 '''
 
 
+def liveness():
+    '''Liveness probe for kubernetes.'''
+    pass
+
+
+def readiness():
+    '''
+    Readiness probe for kubernetes.
+
+    Raises:
+        HealthError: If api is not availiable.
+    '''
+    if not hasattr(APP, 'api'):
+        raise HealthError('App is missing api.')
+
+
 def get_app():
     # type: () -> dash.Dash
     '''
@@ -45,8 +61,8 @@ def get_app():
     # healthz endpoints
     flask_app.register_blueprint(healthz, url_prefix="/healthz")
     flask_app.config.update(HEALTHZ={
-        "live": "shekels.checks.liveness",
-        "ready": "shekels.checks.readiness",
+        "live": liveness,
+        "ready": readiness,
     })
 
     # flask monitoring
@@ -75,22 +91,6 @@ def get_app():
 
 
 APP = get_app()
-
-
-def liveness():
-    '''Liveness probe for kubernetes.'''
-    pass
-
-
-def readiness():
-    '''
-    Readiness probe for kubernetes.
-
-    Raises:
-        HealthError: If api is not availiable.
-    '''
-    if not hasattr(APP, 'api'):
-        raise HealthError('App is missing api.')
 
 
 @APP.server.route('/static/<stylesheet>')
