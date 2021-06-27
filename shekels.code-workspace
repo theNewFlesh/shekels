@@ -153,6 +153,17 @@
                 "type": "shell"
             },
             {
+                // needed because selenium makes tests flakey
+                "label": "publish-without-tox",
+                "command": "unset REPO_ENV && cd /tmp/$REPO && twine upload dist/* && rm -rf /tmp/$REPO",
+                "dependsOrder": "sequence",
+                "dependsOn": [
+                    "lint",
+                    "package"
+                ],
+                "type": "shell"
+            },
+            {
                 "label": "python",
                 "command": "python3.7",
                 "type": "shell"
