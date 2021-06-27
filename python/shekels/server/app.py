@@ -45,7 +45,7 @@ def readiness():
         HealthError: If api is not availiable.
     '''
     if not hasattr(APP, 'api'):
-        raise HealthError('App is missing api.')
+        raise HealthError('App is missing API.')
 
 
 def get_app():

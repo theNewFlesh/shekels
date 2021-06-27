@@ -4,6 +4,7 @@ import json
 import os
 import time
 
+from flask_healthz import HealthError
 import dash
 import flask
 import flask_caching
@@ -24,6 +25,22 @@ if 'REPO_ENV' in os.environ.keys():
     RESOURCES_DIR = lbt.relative_path(__file__, '../../../resources').as_posix()
 
 
+def test_liveness():
+    app.liveness()
+
+
+def test_readiness():
+    app.readiness()
+
+    api = app.APP.api
+    del app.APP.api
+    try:
+        app.readiness()
+    except HealthError as result:
+        assert result.args[0] == 'App is missing API.'
+    app.APP.api = api
+
+
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_get_app(dash_duo):
     result = app.get_app()
@@ -33,6 +50,24 @@ def test_get_app(dash_duo):
     assert isinstance(result.client, flask.testing.FlaskClient)
     assert isinstance(result.cache, flask_caching.Cache)
     assert isinstance(result.event_listener, sev.EventListener)
+
+
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
+def test_healthz(dash_duo, run_app):
+    test_app, client = run_app
+    dash_duo.start_server(test_app)
+
+    # live
+    result = client.get('/healthz/live')
+    assert result.status_code == 200
+
+    # ready
+    result = client.get('/healthz/ready')
+    assert result.status_code == 200
+
+    del test_app.api
+    result = client.get('/healthz/ready')
+    assert result.json == dict(status=503, title='App is missing API.')
 
 
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
