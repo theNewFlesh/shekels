@@ -25,7 +25,8 @@ Docker
 2. Install
    `docker-machine <https://docs.docker.com/machine/install-machine>`__
    (if running on macOS or Windows)
-3. ``docker pull thenewflesh/shekels:latest``
+3. ``docker pull thenewflesh/shekels:[version]``
+4. ``docker run --name shekels-prod --volume [path to shekels directory]:/mnt/storage --publish 5000:80 thenewflesh/shekels:[version]``
 
 Docker For Developers
 ~~~~~~~~~~~~~~~~~~~~~

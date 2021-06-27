@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
@@ -30,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -177,6 +180,7 @@
 <span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="nn">dcc</span>
 <span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="k">as</span> <span class="nn">html</span>
 <span class="kn">import</span> <span class="nn">dash_table</span>
+<span class="kn">from</span> <span class="nn">flask_healthz</span> <span class="kn">import</span> <span class="n">healthz</span><span class="p">,</span> <span class="n">HealthError</span>
 <span class="kn">import</span> <span class="nn">flasgger</span> <span class="k">as</span> <span class="nn">swg</span>
 <span class="kn">import</span> <span class="nn">flask</span>
 <span class="kn">import</span> <span class="nn">flask_monitoringdashboard</span> <span class="k">as</span> <span class="nn">fmdb</span>
@@ -195,6 +199,24 @@
 <span class="sd">&#39;&#39;&#39;</span>
 
 
+<div class="viewcode-block" id="liveness"><a class="viewcode-back" href="../../../server.html#shekels.server.app.liveness">[docs]</a><span class="k">def</span> <span class="nf">liveness</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; None</span>
+    <span class="sd">&#39;&#39;&#39;Liveness probe for kubernetes.&#39;&#39;&#39;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="readiness"><a class="viewcode-back" href="../../../server.html#shekels.server.app.readiness">[docs]</a><span class="k">def</span> <span class="nf">readiness</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; None</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Readiness probe for kubernetes.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        HealthError: If api is not availiable.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">APP</span><span class="p">,</span> <span class="s1">&#39;api&#39;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">HealthError</span><span class="p">(</span><span class="s1">&#39;App is missing API.&#39;</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="get_app"><a class="viewcode-back" href="../../../server.html#shekels.server.app.get_app">[docs]</a><span class="k">def</span> <span class="nf">get_app</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; dash.Dash</span>
     <span class="sd">&#39;&#39;&#39;</span>
@@ -206,6 +228,13 @@
     <span class="n">flask_app</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">Flask</span><span class="p">(</span><span class="s1">&#39;Shekels&#39;</span><span class="p">)</span>
     <span class="n">swg</span><span class="o">.</span><span class="n">Swagger</span><span class="p">(</span><span class="n">flask_app</span><span class="p">)</span>
     <span class="n">flask_app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">API</span><span class="p">)</span>
+
+    <span class="c1"># healthz endpoints</span>
+    <span class="n">flask_app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">healthz</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s2">&quot;/healthz&quot;</span><span class="p">)</span>
+    <span class="n">flask_app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">HEALTHZ</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;live&quot;</span><span class="p">:</span> <span class="n">liveness</span><span class="p">,</span>
+        <span class="s2">&quot;ready&quot;</span><span class="p">:</span> <span class="n">readiness</span><span class="p">,</span>
+    <span class="p">})</span>
 
     <span class="c1"># flask monitoring</span>
     <span class="n">fmdb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="s1">&#39;monitor&#39;</span>
@@ -444,7 +473,7 @@
     <span class="n">app</span><span class="o">.</span><span class="n">event_listener</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
     <span class="n">app</span><span class="o">.</span><span class="n">event_listener</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">append</span><span class="p">({})</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">test</span><span class="p">:</span>
-        <span class="n">app</span><span class="o">.</span><span class="n">run_server</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span></div>
+        <span class="n">app</span><span class="o">.</span><span class="n">run_server</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>

@@ -65,9 +65,11 @@ def test_healthz(dash_duo, run_app):
     result = client.get('/healthz/ready')
     assert result.status_code == 200
 
+    api = test_app.api
     del test_app.api
     result = client.get('/healthz/ready')
     assert result.json == dict(status=503, title='App is missing API.')
+    test_app.api = api
 
 
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')

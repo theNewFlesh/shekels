@@ -270,7 +270,7 @@
     <p id="t216" class="pln"><span class="n"><a href="#t216">216</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t217" class="pln"><span class="n"><a href="#t217">217</a></span><span class="t"><span class="str">        Response: Flask Response instance.</span>&nbsp;</span><span class="r"></span></p>
     <p id="t218" class="pln"><span class="n"><a href="#t218">218</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t219" class="run"><span class="n"><a href="#t219">219</a></span><span class="t">    <span class="nam">params</span> <span class="op">=</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">get_json</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t219" class="run"><span class="n"><a href="#t219">219</a></span><span class="t">    <span class="nam">params</span> <span class="op">=</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">get_json</span><span class="op">(</span><span class="op">)</span>  <span class="com"># type: Any</span>&nbsp;</span><span class="r"></span></p>
     <p id="t220" class="run"><span class="n"><a href="#t220">220</a></span><span class="t">    <span class="nam">params</span> <span class="op">=</span> <span class="nam">json</span><span class="op">.</span><span class="nam">loads</span><span class="op">(</span><span class="nam">params</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t221" class="run"><span class="n"><a href="#t221">221</a></span><span class="t">    <span class="key">try</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t222" class="run"><span class="n"><a href="#t222">222</a></span><span class="t">        <span class="nam">query</span> <span class="op">=</span> <span class="nam">params</span><span class="op">[</span><span class="str">'query'</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
@@ -366,7 +366,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2021-04-16 06:31 +0000
+            created at 2021-06-27 20:44 +0000
         </p>
     </div>
 </div>

@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/style.css" type="text/css" />
 
   
@@ -30,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -62,7 +65,7 @@
             
             
               <div class="version">
-                1.0.2
+                1.0.3
               </div>
             
           
@@ -190,6 +193,7 @@
  | <a href="#V"><strong>V</strong></a>
  | <a href="#X"><strong>X</strong></a>
  | <a href="#Y"><strong>Y</strong></a>
+ | <a href="#Z"><strong>Z</strong></a>
  
 </div>
 <h2 id="_">_</h2>
@@ -233,6 +237,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="server.html#shekels.server.api.api">api() (in module shekels.server.api)</a>
 </li>
+      <li><a href="cli.html#cli.app_command">app_command() (in module cli)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -241,9 +247,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#id11">bar_mode (shekels.core.config.FigureItem attribute)</a>, <a href="core.html#shekels.core.config.FigureItem.bar_mode">[1]</a>
 </li>
+      <li><a href="core.html#id12">bins (shekels.core.config.FigureItem attribute)</a>, <a href="core.html#shekels.core.config.FigureItem.bins">[1]</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="core.html#id12">bins (shekels.core.config.FigureItem attribute)</a>, <a href="core.html#shekels.core.config.FigureItem.bins">[1]</a>
+      <li><a href="cli.html#cli.build_dev_command">build_dev_command() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.build_prod_command">build_prod_command() (in module cli)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -274,13 +284,13 @@
         <li><a href="core.html#id26">(shekels.core.config.PivotAction attribute)</a>, <a href="core.html#shekels.core.config.PivotAction.columns">[1]</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#id21">comparator (shekels.core.config.FilterAction attribute)</a>, <a href="core.html#shekels.core.config.FilterAction.comparator">[1]</a>
 </li>
       <li><a href="core.html#shekels.core.config.Config">Config (class in shekels.core.config)</a>
 </li>
-      <li><a href="core.html#shekels.core.database.Database.config">config() (shekels.core.database.Database property)</a>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="core.html#shekels.core.database.Database.config">config (shekels.core.database.Database property)</a>
 </li>
       <li><a href="server.html#shekels.server.server_tools.config_edit_event">config_edit_event() (in module shekels.server.server_tools)</a>
 </li>
@@ -294,25 +304,43 @@
 </li>
       <li><a href="core.html#shekels.core.config.ConformAction">ConformAction (class in shekels.core.config)</a>
 </li>
+      <li><a href="cli.html#cli.container_id_command">container_id_command() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.coverage">coverage() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.coverage_command">coverage_command() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.create_package_repo">create_package_repo() (in module cli)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="core.html#shekels.core.database.Database.data">data() (shekels.core.database.Database property)</a>
+      <li><a href="core.html#shekels.core.database.Database.data">data (shekels.core.database.Database property)</a>
 </li>
       <li><a href="core.html#id3">data_path (shekels.core.config.Config attribute)</a>, <a href="core.html#shekels.core.config.Config.data_path">[1]</a>
 </li>
       <li><a href="server.html#shekels.server.server_tools.data_query_event">data_query_event() (in module shekels.server.server_tools)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#shekels.core.database.Database">Database (class in shekels.core.database)</a>
 </li>
       <li><a href="core.html#id24">datetime_column (shekels.core.config.GroupAction attribute)</a>, <a href="core.html#shekels.core.config.GroupAction.datetime_column">[1]</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#id4">default_query (shekels.core.config.Config attribute)</a>, <a href="core.html#shekels.core.config.Config.default_query">[1]</a>
+</li>
+      <li><a href="cli.html#cli.destroy_dev_command">destroy_dev_command() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.destroy_prod_command">destroy_prod_command() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.docker_down">docker_down() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.docker_exec">docker_exec() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.docs_command">docs_command() (in module cli)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -324,13 +352,17 @@
 </li>
       <li><a href="enforce.html#shekels.enforce.enforce_tools.enforce_columns_in_dataframe">enforce_columns_in_dataframe() (in module shekels.enforce.enforce_tools)</a>
 </li>
+      <li><a href="enforce.html#shekels.enforce.enforce_tools.enforce_dataframes_are_equal">enforce_dataframes_are_equal() (in module shekels.enforce.enforce_tools)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="enforce.html#shekels.enforce.enforce_tools.enforce_dataframes_are_equal">enforce_dataframes_are_equal() (in module shekels.enforce.enforce_tools)</a>
+      <li><a href="cli.html#cli.enter_repo">enter_repo() (in module cli)</a>
 </li>
       <li><a href="server.html#shekels.server.server_tools.error_to_response">error_to_response() (in module shekels.server.server_tools)</a>
 </li>
       <li><a href="server.html#shekels.server.event_listener.EventListener">EventListener (class in shekels.server.event_listener)</a>
+</li>
+      <li><a href="cli.html#cli.exit_repo">exit_repo() (in module cli)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -338,6 +370,8 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cli.html#cli.fast_test_command">fast_test_command() (in module cli)</a>
+</li>
       <li><a href="core.html#id29">figure (shekels.core.config.PlotItem attribute)</a>, <a href="core.html#shekels.core.config.PlotItem.figure">[1]</a>
 </li>
       <li><a href="core.html#shekels.core.config.FigureItem">FigureItem (class in shekels.core.config)</a>
@@ -354,6 +388,8 @@
 </li>
       <li><a href="core.html#shekels.core.database.Database.from_json">from_json() (shekels.core.database.Database static method)</a>
 </li>
+      <li><a href="cli.html#cli.full_docs_command">full_docs_command() (in module cli)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -364,21 +400,11 @@
 </li>
       <li><a href="server.html#shekels.server.app.get_app">get_app() (in module shekels.server.app)</a>
 </li>
-      <li><a href="cli.html#cli.get_app_command">get_app_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_architecture_diagram_command">get_architecture_diagram_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_build_production_image_command">get_build_production_image_command() (in module cli)</a>
-</li>
       <li><a href="server.html#shekels.server.components.get_button">get_button() (in module shekels.server.components)</a>
 </li>
       <li><a href="server.html#shekels.server.components.get_config_tab">get_config_tab() (in module shekels.server.components)</a>
 </li>
       <li><a href="server.html#shekels.server.components.get_configbar">get_configbar() (in module shekels.server.components)</a>
-</li>
-      <li><a href="cli.html#cli.get_container_id_command">get_container_id_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_coverage_command">get_coverage_command() (in module cli)</a>
 </li>
       <li><a href="server.html#shekels.server.components.get_dash_app">get_dash_app() (in module shekels.server.components)</a>
 </li>
@@ -386,71 +412,25 @@
 </li>
       <li><a href="server.html#shekels.server.components.get_datatable">get_datatable() (in module shekels.server.components)</a>
 </li>
-      <li><a href="cli.html#cli.get_destroy_production_container_command">get_destroy_production_container_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_docker_command">get_docker_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_docker_compose_command">get_docker_compose_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_docker_exec_command">get_docker_exec_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_docs_command">get_docs_command() (in module cli)</a>
-</li>
       <li><a href="server.html#shekels.server.components.get_dummy_elements">get_dummy_elements() (in module shekels.server.components)</a>
 </li>
       <li><a href="core.html#shekels.core.data_tools.get_figure">get_figure() (in module shekels.core.data_tools)</a>
 </li>
-      <li><a href="cli.html#cli.get_fix_permissions_command">get_fix_permissions_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_image_id_command">get_image_id_command() (in module cli)</a>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cli.html#cli.get_illegal_mode_command">get_illegal_mode_command() (in module cli)</a>
 </li>
       <li><a href="cli.html#cli.get_info">get_info() (in module cli)</a>
 </li>
       <li><a href="server.html#shekels.server.components.get_key_value_table">get_key_value_table() (in module shekels.server.components)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="cli.html#cli.get_lab_command">get_lab_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_lint_command">get_lint_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_package_command">get_package_command() (in module cli)</a>
-</li>
       <li><a href="server.html#shekels.server.components.get_plots">get_plots() (in module shekels.server.components)</a>
 </li>
       <li><a href="server.html#shekels.server.components.get_plots_tab">get_plots_tab() (in module shekels.server.components)</a>
 </li>
-      <li><a href="cli.html#cli.get_production_container_command">get_production_container_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_publish_command">get_publish_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_python_command">get_python_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_radon_metrics_command">get_radon_metrics_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_remove_image_command">get_remove_image_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_remove_pycache_command">get_remove_pycache_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_requirements_command">get_requirements_command() (in module cli)</a>
-</li>
       <li><a href="server.html#shekels.server.components.get_searchbar">get_searchbar() (in module shekels.server.components)</a>
 </li>
       <li><a href="core.html#shekels.core.data_tools.get_sql_grammar">get_sql_grammar() (in module shekels.core.data_tools)</a>
-</li>
-      <li><a href="cli.html#cli.get_start_command">get_start_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_state_command">get_state_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_stop_command">get_stop_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_test_command">get_test_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_tox_command">get_tox_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_type_checking_command">get_type_checking_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.get_zsh_command">get_zsh_command() (in module cli)</a>
 </li>
       <li><a href="core.html#id31">group (shekels.core.config.PlotItem attribute)</a>, <a href="core.html#shekels.core.config.PlotItem.group">[1]</a>
 </li>
@@ -480,6 +460,8 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cli.html#cli.image_id_command">image_id_command() (in module cli)</a>
+</li>
       <li><a href="core.html#id27">index (shekels.core.config.PivotAction attribute)</a>, <a href="core.html#shekels.core.config.PivotAction.index">[1]</a>
 </li>
       <li><a href="server.html#shekels.server.server_tools.init_event">init_event() (in module shekels.server.server_tools)</a>
@@ -488,10 +470,10 @@
 </li>
       <li><a href="core.html#shekels.core.config.is_bar_mode">is_bar_mode() (in module shekels.core.config)</a>
 </li>
-      <li><a href="core.html#shekels.core.config.is_color_scheme">is_color_scheme() (in module shekels.core.config)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="core.html#shekels.core.config.is_color_scheme">is_color_scheme() (in module shekels.core.config)</a>
+</li>
       <li><a href="core.html#shekels.core.config.is_comparator">is_comparator() (in module shekels.core.config)</a>
 </li>
       <li><a href="core.html#shekels.core.config.is_csv">is_csv() (in module shekels.core.config)</a>
@@ -516,7 +498,17 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cli.html#cli.lab_command">lab_command() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.line">line() (in module cli)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cli.html#cli.lint_command">lint_command() (in module cli)</a>
+</li>
       <li><a href="server.html#shekels.server.event_listener.EventListener.listen">listen() (shekels.server.event_listener.EventListener method)</a>
+</li>
+      <li><a href="server.html#shekels.server.app.liveness">liveness() (in module shekels.server.app)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -525,6 +517,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cli.html#cli.main">main() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.make_docs_dir">make_docs_dir() (in module cli)</a>
 </li>
       <li><a href="core.html#id8">mapping (shekels.core.config.ConformAction attribute)</a>, <a href="core.html#shekels.core.config.ConformAction.mapping">[1]</a>
 </li>
@@ -581,21 +575,33 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cli.html#cli.package_command">package_command() (in module cli)</a>
+</li>
       <li><a href="server.html#shekels.server.server_tools.parse_json_file_content">parse_json_file_content() (in module shekels.server.server_tools)</a>
 </li>
       <li><a href="core.html#shekels.core.data_tools.parse_rgba">parse_rgba() (in module shekels.core.data_tools)</a>
 </li>
       <li><a href="core.html#id33">pivot (shekels.core.config.PlotItem attribute)</a>, <a href="core.html#shekels.core.config.PlotItem.pivot">[1]</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#shekels.core.data_tools.pivot_data">pivot_data() (in module shekels.core.data_tools)</a>
 </li>
       <li><a href="core.html#shekels.core.config.PivotAction">PivotAction (class in shekels.core.config)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#shekels.core.config.PlotItem">PlotItem (class in shekels.core.config)</a>
 </li>
       <li><a href="core.html#id6">plots (shekels.core.config.Config attribute)</a>, <a href="core.html#shekels.core.config.Config.plots">[1]</a>
+</li>
+      <li><a href="cli.html#cli.PORT">PORT (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.prod_command">prod_command() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.publish_command">publish_command() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.push_command">push_command() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.python_command">python_command() (in module cli)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -621,11 +627,21 @@
         <li><a href="core.html#shekels.core.database.Database.read">(shekels.core.database.Database method)</a>
 </li>
       </ul></li>
+      <li><a href="server.html#shekels.server.app.readiness">readiness() (in module shekels.server.app)</a>
+</li>
+      <li><a href="cli.html#cli.remove_command">remove_command() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.remove_container">remove_container() (in module cli)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="server.html#shekels.server.server_tools.render_template">render_template() (in module shekels.server.server_tools)</a>
 </li>
-      <li><a href="cli.html#cli.REPO_PATH">REPO_PATH (in module cli)</a>
+      <li><a href="cli.html#cli.requirements_command">requirements_command() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.resolve">resolve() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.restart_command">restart_command() (in module cli)</a>
 </li>
       <li><a href="server.html#shekels.server.app.run">run() (in module shekels.server.app)</a>
 </li>
@@ -680,8 +696,6 @@
         <li><a href="server.html#module-shekels.server.api">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     shekels.server.app
 
@@ -689,6 +703,8 @@
         <li><a href="server.html#module-shekels.server.app">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     shekels.server.components
 
@@ -714,7 +730,15 @@
 </li>
       <li><a href="core.html#id9">source_column (shekels.core.config.ConformAction attribute)</a>, <a href="core.html#shekels.core.config.ConformAction.source_column">[1]</a>
 </li>
-      <li><a href="server.html#shekels.server.event_listener.EventListener.store">store() (shekels.server.event_listener.EventListener property)</a>
+      <li><a href="cli.html#cli.start">start() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.start_command">start_command() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.state_command">state_command() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.stop_command">stop_command() (in module cli)</a>
+</li>
+      <li><a href="server.html#shekels.server.event_listener.EventListener.store">store (shekels.server.event_listener.EventListener property)</a>
 </li>
       <li><a href="server.html#shekels.server.server_tools.store_key_is_valid">store_key_is_valid() (in module shekels.server.server_tools)</a>
 </li>
@@ -726,9 +750,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#id10">target_column (shekels.core.config.ConformAction attribute)</a>, <a href="core.html#shekels.core.config.ConformAction.target_column">[1]</a>
 </li>
+      <li><a href="cli.html#cli.test_command">test_command() (in module cli)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#id15">title (shekels.core.config.FigureItem attribute)</a>, <a href="core.html#shekels.core.config.FigureItem.title">[1]</a>
+</li>
+      <li><a href="cli.html#cli.tox_command">tox_command() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.tox_repo">tox_repo() (in module cli)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -758,11 +788,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#shekels.core.config.ConformAction.validate">validate() (shekels.core.config.ConformAction method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#id22">value (shekels.core.config.FilterAction attribute)</a>, <a href="core.html#shekels.core.config.FilterAction.value">[1]</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#id28">values (shekels.core.config.PivotAction attribute)</a>, <a href="core.html#shekels.core.config.PivotAction.values">[1]</a>
+</li>
+      <li><a href="cli.html#cli.version_up_command">version_up_command() (in module cli)</a>
+</li>
+      <li><a href="cli.html#cli.version_variable">version_variable() (in module cli)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -787,6 +821,14 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#id19">y_title (shekels.core.config.FigureItem attribute)</a>, <a href="core.html#shekels.core.config.FigureItem.y_title">[1]</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Z">Z</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cli.html#cli.zsh_command">zsh_command() (in module cli)</a>
 </li>
   </ul></td>
 </tr></table>

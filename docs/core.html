@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/style.css" type="text/css" />
 
   
@@ -30,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -64,7 +67,7 @@
             
             
               <div class="version">
-                1.0.2
+                1.0.3
               </div>
             
           
@@ -179,13 +182,13 @@
 <div class="section" id="module-shekels.core.config">
 <span id="config"></span><h2>config<a class="headerlink" href="#module-shekels.core.config" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="shekels.core.config.Config">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></code><code class="sig-name descname"><span class="pre">Config</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trusted_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.Config" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.Config">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></span><span class="sig-name descname"><span class="pre">Config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trusted_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.Config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">schematics.deprecated.patch_models.&lt;locals&gt;.Model</span></code></p>
 <p>Configuration of database.</p>
 <dl class="py attribute">
-<dt id="shekels.core.config.Config.data_path">
-<code class="sig-name descname"><span class="pre">data_path</span></code><a class="headerlink" href="#shekels.core.config.Config.data_path" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.Config.data_path">
+<span class="sig-name descname"><span class="pre">data_path</span></span><a class="headerlink" href="#shekels.core.config.Config.data_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Path to CSV file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -195,8 +198,8 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.Config.columns">
-<code class="sig-name descname"><span class="pre">columns</span></code><a class="headerlink" href="#shekels.core.config.Config.columns" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.Config.columns">
+<span class="sig-name descname"><span class="pre">columns</span></span><a class="headerlink" href="#shekels.core.config.Config.columns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Columns to be displayed in data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -206,8 +209,8 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.Config.default_query">
-<code class="sig-name descname"><span class="pre">default_query</span></code><a class="headerlink" href="#shekels.core.config.Config.default_query" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.Config.default_query">
+<span class="sig-name descname"><span class="pre">default_query</span></span><a class="headerlink" href="#shekels.core.config.Config.default_query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Placeholder SQL query string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -217,8 +220,8 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.Config.font_family">
-<code class="sig-name descname"><span class="pre">font_family</span></code><a class="headerlink" href="#shekels.core.config.Config.font_family" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.Config.font_family">
+<span class="sig-name descname"><span class="pre">font_family</span></span><a class="headerlink" href="#shekels.core.config.Config.font_family" title="Permalink to this definition">¶</a></dt>
 <dd><p>Font family.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -228,8 +231,8 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.Config.color_scheme">
-<code class="sig-name descname"><span class="pre">color_scheme</span></code><a class="headerlink" href="#shekels.core.config.Config.color_scheme" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.Config.color_scheme">
+<span class="sig-name descname"><span class="pre">color_scheme</span></span><a class="headerlink" href="#shekels.core.config.Config.color_scheme" title="Permalink to this definition">¶</a></dt>
 <dd><p>Color scheme.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -239,8 +242,8 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.Config.conform">
-<code class="sig-name descname"><span class="pre">conform</span></code><a class="headerlink" href="#shekels.core.config.Config.conform" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.Config.conform">
+<span class="sig-name descname"><span class="pre">conform</span></span><a class="headerlink" href="#shekels.core.config.Config.conform" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of conform actions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -250,8 +253,8 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.Config.plots">
-<code class="sig-name descname"><span class="pre">plots</span></code><a class="headerlink" href="#shekels.core.config.Config.plots" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.Config.plots">
+<span class="sig-name descname"><span class="pre">plots</span></span><a class="headerlink" href="#shekels.core.config.Config.plots" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of plots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -261,55 +264,55 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.Config._schema">
-<code class="sig-name descname"><span class="pre">_schema</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#shekels.core.config.Config._schema" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.Config._schema">
+<span class="sig-name descname"><span class="pre">_schema</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#shekels.core.config.Config._schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id0">
-<code class="sig-name descname"><span class="pre">color_scheme</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;DictType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'color_scheme'&gt;</span></em><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">color_scheme</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;DictType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'color_scheme'&gt;</span></em><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id1">
-<code class="sig-name descname"><span class="pre">columns</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'columns'&gt;</span></em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">columns</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'columns'&gt;</span></em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id2">
-<code class="sig-name descname"><span class="pre">conform</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(ModelType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'conform'&gt;</span></em><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">conform</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(ModelType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'conform'&gt;</span></em><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id3">
-<code class="sig-name descname"><span class="pre">data_path</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'data_path'&gt;</span></em><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">data_path</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'data_path'&gt;</span></em><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id4">
-<code class="sig-name descname"><span class="pre">default_query</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'default_query'&gt;</span></em><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">default_query</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'default_query'&gt;</span></em><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id5">
-<code class="sig-name descname"><span class="pre">font_family</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'font_family'&gt;</span></em><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">font_family</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'font_family'&gt;</span></em><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id6">
-<code class="sig-name descname"><span class="pre">plots</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(ModelType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'plots'&gt;</span></em><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">plots</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(ModelType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'plots'&gt;</span></em><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="shekels.core.config.ConformAction">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></code><code class="sig-name descname"><span class="pre">ConformAction</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trusted_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#ConformAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.ConformAction" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.ConformAction">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></span><span class="sig-name descname"><span class="pre">ConformAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trusted_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#ConformAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.ConformAction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">schematics.deprecated.patch_models.&lt;locals&gt;.Model</span></code></p>
 <p>Schematic for conform actions.</p>
 <dl class="py attribute">
-<dt id="shekels.core.config.ConformAction.action">
-<code class="sig-name descname"><span class="pre">action</span></code><a class="headerlink" href="#shekels.core.config.ConformAction.action" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.ConformAction.action">
+<span class="sig-name descname"><span class="pre">action</span></span><a class="headerlink" href="#shekels.core.config.ConformAction.action" title="Permalink to this definition">¶</a></dt>
 <dd><p>Must be ‘overwrite’ or ‘substitute’.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -319,8 +322,8 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.ConformAction.source_column">
-<code class="sig-name descname"><span class="pre">source_column</span></code><a class="headerlink" href="#shekels.core.config.ConformAction.source_column" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.ConformAction.source_column">
+<span class="sig-name descname"><span class="pre">source_column</span></span><a class="headerlink" href="#shekels.core.config.ConformAction.source_column" title="Permalink to this definition">¶</a></dt>
 <dd><p>Source column to be matched.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -330,8 +333,8 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.ConformAction.target_column">
-<code class="sig-name descname"><span class="pre">target_column</span></code><a class="headerlink" href="#shekels.core.config.ConformAction.target_column" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.ConformAction.target_column">
+<span class="sig-name descname"><span class="pre">target_column</span></span><a class="headerlink" href="#shekels.core.config.ConformAction.target_column" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target column to be overwritten.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -341,8 +344,8 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.ConformAction.mapping">
-<code class="sig-name descname"><span class="pre">mapping</span></code><a class="headerlink" href="#shekels.core.config.ConformAction.mapping" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.ConformAction.mapping">
+<span class="sig-name descname"><span class="pre">mapping</span></span><a class="headerlink" href="#shekels.core.config.ConformAction.mapping" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mapping of matched key in source column with replacement
 value in target column.</p>
 <dl class="field-list simple">
@@ -353,33 +356,33 @@ value in target column.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.ConformAction._schema">
-<code class="sig-name descname"><span class="pre">_schema</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#shekels.core.config.ConformAction._schema" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.ConformAction._schema">
+<span class="sig-name descname"><span class="pre">_schema</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#shekels.core.config.ConformAction._schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id7">
-<code class="sig-name descname"><span class="pre">action</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">ConformAction</span> <span class="pre">as</span> <span class="pre">'action'&gt;</span></em><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">action</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">ConformAction</span> <span class="pre">as</span> <span class="pre">'action'&gt;</span></em><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id8">
-<code class="sig-name descname"><span class="pre">mapping</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;DictType(UnionType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">ConformAction</span> <span class="pre">as</span> <span class="pre">'mapping'&gt;</span></em><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">mapping</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;DictType(UnionType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">ConformAction</span> <span class="pre">as</span> <span class="pre">'mapping'&gt;</span></em><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id9">
-<code class="sig-name descname"><span class="pre">source_column</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">ConformAction</span> <span class="pre">as</span> <span class="pre">'source_column'&gt;</span></em><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">source_column</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">ConformAction</span> <span class="pre">as</span> <span class="pre">'source_column'&gt;</span></em><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id10">
-<code class="sig-name descname"><span class="pre">target_column</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">ConformAction</span> <span class="pre">as</span> <span class="pre">'target_column'&gt;</span></em><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">target_column</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">ConformAction</span> <span class="pre">as</span> <span class="pre">'target_column'&gt;</span></em><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="shekels.core.config.ConformAction.validate">
-<code class="sig-name descname"><span class="pre">validate</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#ConformAction.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.ConformAction.validate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.ConformAction.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#ConformAction.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.ConformAction.validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the state of the model. If the data is invalid, raises a
 DataError with error messages. Also, performs a stricter validation on
 mapping if action is substitute.</p>
@@ -405,13 +408,13 @@ initial import). Default: True.</p></li>
 </dd></dl>
 
 <dl class="py class">
-<dt id="shekels.core.config.FigureItem">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></code><code class="sig-name descname"><span class="pre">FigureItem</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trusted_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#FigureItem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.FigureItem" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.FigureItem">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></span><span class="sig-name descname"><span class="pre">FigureItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trusted_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#FigureItem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.FigureItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">schematics.deprecated.patch_models.&lt;locals&gt;.Model</span></code></p>
 <p>Schematic for a plot figure.</p>
 <dl class="py attribute">
-<dt id="shekels.core.config.FigureItem.kind">
-<code class="sig-name descname"><span class="pre">kind</span></code><a class="headerlink" href="#shekels.core.config.FigureItem.kind" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.FigureItem.kind">
+<span class="sig-name descname"><span class="pre">kind</span></span><a class="headerlink" href="#shekels.core.config.FigureItem.kind" title="Permalink to this definition">¶</a></dt>
 <dd><p>Type of plot. Default: bar.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -421,8 +424,8 @@ initial import). Default: True.</p></li>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.FigureItem.color_scheme">
-<code class="sig-name descname"><span class="pre">color_scheme</span></code><a class="headerlink" href="#shekels.core.config.FigureItem.color_scheme" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.FigureItem.color_scheme">
+<span class="sig-name descname"><span class="pre">color_scheme</span></span><a class="headerlink" href="#shekels.core.config.FigureItem.color_scheme" title="Permalink to this definition">¶</a></dt>
 <dd><p>Color scheme for plot.
 Default: {‘grey1’: ‘#181818’, ‘bg’: ‘#242424’}.</p>
 <dl class="field-list simple">
@@ -433,8 +436,8 @@ Default: {‘grey1’: ‘#181818’, ‘bg’: ‘#242424’}.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.FigureItem.x_axis">
-<code class="sig-name descname"><span class="pre">x_axis</span></code><a class="headerlink" href="#shekels.core.config.FigureItem.x_axis" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.FigureItem.x_axis">
+<span class="sig-name descname"><span class="pre">x_axis</span></span><a class="headerlink" href="#shekels.core.config.FigureItem.x_axis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Column to use as x axis: Default: None.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -444,8 +447,8 @@ Default: {‘grey1’: ‘#181818’, ‘bg’: ‘#242424’}.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.FigureItem.y_axis">
-<code class="sig-name descname"><span class="pre">y_axis</span></code><a class="headerlink" href="#shekels.core.config.FigureItem.y_axis" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.FigureItem.y_axis">
+<span class="sig-name descname"><span class="pre">y_axis</span></span><a class="headerlink" href="#shekels.core.config.FigureItem.y_axis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Column to use as y axis: Default: None.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -455,8 +458,8 @@ Default: {‘grey1’: ‘#181818’, ‘bg’: ‘#242424’}.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.FigureItem.title">
-<code class="sig-name descname"><span class="pre">title</span></code><a class="headerlink" href="#shekels.core.config.FigureItem.title" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.FigureItem.title">
+<span class="sig-name descname"><span class="pre">title</span></span><a class="headerlink" href="#shekels.core.config.FigureItem.title" title="Permalink to this definition">¶</a></dt>
 <dd><p>Title of plot. Default: None.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -466,8 +469,8 @@ Default: {‘grey1’: ‘#181818’, ‘bg’: ‘#242424’}.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.FigureItem.x_title">
-<code class="sig-name descname"><span class="pre">x_title</span></code><a class="headerlink" href="#shekels.core.config.FigureItem.x_title" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.FigureItem.x_title">
+<span class="sig-name descname"><span class="pre">x_title</span></span><a class="headerlink" href="#shekels.core.config.FigureItem.x_title" title="Permalink to this definition">¶</a></dt>
 <dd><p>Title of plot x axis. Default: None.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -477,8 +480,8 @@ Default: {‘grey1’: ‘#181818’, ‘bg’: ‘#242424’}.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.FigureItem.y_title">
-<code class="sig-name descname"><span class="pre">y_title</span></code><a class="headerlink" href="#shekels.core.config.FigureItem.y_title" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.FigureItem.y_title">
+<span class="sig-name descname"><span class="pre">y_title</span></span><a class="headerlink" href="#shekels.core.config.FigureItem.y_title" title="Permalink to this definition">¶</a></dt>
 <dd><p>Title of plot y axis. Default: None.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -488,8 +491,8 @@ Default: {‘grey1’: ‘#181818’, ‘bg’: ‘#242424’}.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.FigureItem.bins">
-<code class="sig-name descname"><span class="pre">bins</span></code><a class="headerlink" href="#shekels.core.config.FigureItem.bins" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.FigureItem.bins">
+<span class="sig-name descname"><span class="pre">bins</span></span><a class="headerlink" href="#shekels.core.config.FigureItem.bins" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of bins if histogram. Default: 50.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -499,8 +502,8 @@ Default: {‘grey1’: ‘#181818’, ‘bg’: ‘#242424’}.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.FigureItem.bar_mode">
-<code class="sig-name descname"><span class="pre">bar_mode</span></code><a class="headerlink" href="#shekels.core.config.FigureItem.bar_mode" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.FigureItem.bar_mode">
+<span class="sig-name descname"><span class="pre">bar_mode</span></span><a class="headerlink" href="#shekels.core.config.FigureItem.bar_mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>How bars in bar graph are presented. Default: stack.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -510,65 +513,65 @@ Default: {‘grey1’: ‘#181818’, ‘bg’: ‘#242424’}.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.FigureItem._schema">
-<code class="sig-name descname"><span class="pre">_schema</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#shekels.core.config.FigureItem._schema" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.FigureItem._schema">
+<span class="sig-name descname"><span class="pre">_schema</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#shekels.core.config.FigureItem._schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id11">
-<code class="sig-name descname"><span class="pre">bar_mode</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'bar_mode'&gt;</span></em><a class="headerlink" href="#id11" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">bar_mode</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'bar_mode'&gt;</span></em><a class="headerlink" href="#id11" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id12">
-<code class="sig-name descname"><span class="pre">bins</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;IntType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'bins'&gt;</span></em><a class="headerlink" href="#id12" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id12">
+<span class="sig-name descname"><span class="pre">bins</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;IntType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'bins'&gt;</span></em><a class="headerlink" href="#id12" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id13">
-<code class="sig-name descname"><span class="pre">color_scheme</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;DictType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'color_scheme'&gt;</span></em><a class="headerlink" href="#id13" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">color_scheme</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;DictType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'color_scheme'&gt;</span></em><a class="headerlink" href="#id13" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id14">
-<code class="sig-name descname"><span class="pre">kind</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'kind'&gt;</span></em><a class="headerlink" href="#id14" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id14">
+<span class="sig-name descname"><span class="pre">kind</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'kind'&gt;</span></em><a class="headerlink" href="#id14" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id15">
-<code class="sig-name descname"><span class="pre">title</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'title'&gt;</span></em><a class="headerlink" href="#id15" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id15">
+<span class="sig-name descname"><span class="pre">title</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'title'&gt;</span></em><a class="headerlink" href="#id15" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id16">
-<code class="sig-name descname"><span class="pre">x_axis</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'x_axis'&gt;</span></em><a class="headerlink" href="#id16" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id16">
+<span class="sig-name descname"><span class="pre">x_axis</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'x_axis'&gt;</span></em><a class="headerlink" href="#id16" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id17">
-<code class="sig-name descname"><span class="pre">x_title</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'x_title'&gt;</span></em><a class="headerlink" href="#id17" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id17">
+<span class="sig-name descname"><span class="pre">x_title</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'x_title'&gt;</span></em><a class="headerlink" href="#id17" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id18">
-<code class="sig-name descname"><span class="pre">y_axis</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'y_axis'&gt;</span></em><a class="headerlink" href="#id18" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id18">
+<span class="sig-name descname"><span class="pre">y_axis</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'y_axis'&gt;</span></em><a class="headerlink" href="#id18" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id19">
-<code class="sig-name descname"><span class="pre">y_title</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'y_title'&gt;</span></em><a class="headerlink" href="#id19" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id19">
+<span class="sig-name descname"><span class="pre">y_title</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FigureItem</span> <span class="pre">as</span> <span class="pre">'y_title'&gt;</span></em><a class="headerlink" href="#id19" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="shekels.core.config.FilterAction">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></code><code class="sig-name descname"><span class="pre">FilterAction</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trusted_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#FilterAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.FilterAction" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.FilterAction">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></span><span class="sig-name descname"><span class="pre">FilterAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trusted_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#FilterAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.FilterAction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">schematics.deprecated.patch_models.&lt;locals&gt;.Model</span></code></p>
 <p>Schematic for filter actions.</p>
 <dl class="py attribute">
-<dt id="shekels.core.config.FilterAction.column">
-<code class="sig-name descname"><span class="pre">column</span></code><a class="headerlink" href="#shekels.core.config.FilterAction.column" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.FilterAction.column">
+<span class="sig-name descname"><span class="pre">column</span></span><a class="headerlink" href="#shekels.core.config.FilterAction.column" title="Permalink to this definition">¶</a></dt>
 <dd><p>Column name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -578,8 +581,8 @@ Default: {‘grey1’: ‘#181818’, ‘bg’: ‘#242424’}.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.FilterAction.comparator">
-<code class="sig-name descname"><span class="pre">comparator</span></code><a class="headerlink" href="#shekels.core.config.FilterAction.comparator" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.FilterAction.comparator">
+<span class="sig-name descname"><span class="pre">comparator</span></span><a class="headerlink" href="#shekels.core.config.FilterAction.comparator" title="Permalink to this definition">¶</a></dt>
 <dd><p>String representation of comparator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -589,8 +592,8 @@ Default: {‘grey1’: ‘#181818’, ‘bg’: ‘#242424’}.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.FilterAction.value">
-<code class="sig-name descname"><span class="pre">value</span></code><a class="headerlink" href="#shekels.core.config.FilterAction.value" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.FilterAction.value">
+<span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#shekels.core.config.FilterAction.value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Value to be compared.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -600,35 +603,35 @@ Default: {‘grey1’: ‘#181818’, ‘bg’: ‘#242424’}.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.FilterAction._schema">
-<code class="sig-name descname"><span class="pre">_schema</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#shekels.core.config.FilterAction._schema" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.FilterAction._schema">
+<span class="sig-name descname"><span class="pre">_schema</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#shekels.core.config.FilterAction._schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id20">
-<code class="sig-name descname"><span class="pre">column</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FilterAction</span> <span class="pre">as</span> <span class="pre">'column'&gt;</span></em><a class="headerlink" href="#id20" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id20">
+<span class="sig-name descname"><span class="pre">column</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FilterAction</span> <span class="pre">as</span> <span class="pre">'column'&gt;</span></em><a class="headerlink" href="#id20" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id21">
-<code class="sig-name descname"><span class="pre">comparator</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FilterAction</span> <span class="pre">as</span> <span class="pre">'comparator'&gt;</span></em><a class="headerlink" href="#id21" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id21">
+<span class="sig-name descname"><span class="pre">comparator</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FilterAction</span> <span class="pre">as</span> <span class="pre">'comparator'&gt;</span></em><a class="headerlink" href="#id21" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id22">
-<code class="sig-name descname"><span class="pre">value</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;BaseType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FilterAction</span> <span class="pre">as</span> <span class="pre">'value'&gt;</span></em><a class="headerlink" href="#id22" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id22">
+<span class="sig-name descname"><span class="pre">value</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;BaseType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">FilterAction</span> <span class="pre">as</span> <span class="pre">'value'&gt;</span></em><a class="headerlink" href="#id22" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="shekels.core.config.GroupAction">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></code><code class="sig-name descname"><span class="pre">GroupAction</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trusted_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#GroupAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.GroupAction" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.GroupAction">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></span><span class="sig-name descname"><span class="pre">GroupAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trusted_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#GroupAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.GroupAction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">schematics.deprecated.patch_models.&lt;locals&gt;.Model</span></code></p>
 <p>Schematic for group actions.</p>
 <dl class="py attribute">
-<dt id="shekels.core.config.GroupAction.columns">
-<code class="sig-name descname"><span class="pre">columns</span></code><a class="headerlink" href="#shekels.core.config.GroupAction.columns" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.GroupAction.columns">
+<span class="sig-name descname"><span class="pre">columns</span></span><a class="headerlink" href="#shekels.core.config.GroupAction.columns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Columns to group data by.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -638,8 +641,8 @@ Default: {‘grey1’: ‘#181818’, ‘bg’: ‘#242424’}.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.GroupAction.metric">
-<code class="sig-name descname"><span class="pre">metric</span></code><a class="headerlink" href="#shekels.core.config.GroupAction.metric" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.GroupAction.metric">
+<span class="sig-name descname"><span class="pre">metric</span></span><a class="headerlink" href="#shekels.core.config.GroupAction.metric" title="Permalink to this definition">¶</a></dt>
 <dd><p>Aggregation metric.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -649,8 +652,8 @@ Default: {‘grey1’: ‘#181818’, ‘bg’: ‘#242424’}.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.GroupAction.datetime_column">
-<code class="sig-name descname"><span class="pre">datetime_column</span></code><a class="headerlink" href="#shekels.core.config.GroupAction.datetime_column" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.GroupAction.datetime_column">
+<span class="sig-name descname"><span class="pre">datetime_column</span></span><a class="headerlink" href="#shekels.core.config.GroupAction.datetime_column" title="Permalink to this definition">¶</a></dt>
 <dd><p>Datetime column for time grouping.
 Default: date.</p>
 <dl class="field-list simple">
@@ -661,35 +664,35 @@ Default: date.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.GroupAction._schema">
-<code class="sig-name descname"><span class="pre">_schema</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#shekels.core.config.GroupAction._schema" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.GroupAction._schema">
+<span class="sig-name descname"><span class="pre">_schema</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#shekels.core.config.GroupAction._schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id23">
-<code class="sig-name descname"><span class="pre">columns</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GroupAction</span> <span class="pre">as</span> <span class="pre">'columns'&gt;</span></em><a class="headerlink" href="#id23" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id23">
+<span class="sig-name descname"><span class="pre">columns</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GroupAction</span> <span class="pre">as</span> <span class="pre">'columns'&gt;</span></em><a class="headerlink" href="#id23" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id24">
-<code class="sig-name descname"><span class="pre">datetime_column</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GroupAction</span> <span class="pre">as</span> <span class="pre">'datetime_column'&gt;</span></em><a class="headerlink" href="#id24" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id24">
+<span class="sig-name descname"><span class="pre">datetime_column</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GroupAction</span> <span class="pre">as</span> <span class="pre">'datetime_column'&gt;</span></em><a class="headerlink" href="#id24" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id25">
-<code class="sig-name descname"><span class="pre">metric</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GroupAction</span> <span class="pre">as</span> <span class="pre">'metric'&gt;</span></em><a class="headerlink" href="#id25" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id25">
+<span class="sig-name descname"><span class="pre">metric</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GroupAction</span> <span class="pre">as</span> <span class="pre">'metric'&gt;</span></em><a class="headerlink" href="#id25" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="shekels.core.config.PivotAction">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></code><code class="sig-name descname"><span class="pre">PivotAction</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trusted_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#PivotAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.PivotAction" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.PivotAction">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></span><span class="sig-name descname"><span class="pre">PivotAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trusted_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#PivotAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.PivotAction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">schematics.deprecated.patch_models.&lt;locals&gt;.Model</span></code></p>
 <p>Schematic for group actions.</p>
 <dl class="py attribute">
-<dt id="shekels.core.config.PivotAction.columns">
-<code class="sig-name descname"><span class="pre">columns</span></code><a class="headerlink" href="#shekels.core.config.PivotAction.columns" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.PivotAction.columns">
+<span class="sig-name descname"><span class="pre">columns</span></span><a class="headerlink" href="#shekels.core.config.PivotAction.columns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Columns whose unique values become separate traces
 within a plot.</p>
 <dl class="field-list simple">
@@ -700,8 +703,8 @@ within a plot.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.PivotAction.values">
-<code class="sig-name descname"><span class="pre">values</span></code><a class="headerlink" href="#shekels.core.config.PivotAction.values" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.PivotAction.values">
+<span class="sig-name descname"><span class="pre">values</span></span><a class="headerlink" href="#shekels.core.config.PivotAction.values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Columns whose values become the values
 within each trace of a plot. Default: [].</p>
 <dl class="field-list simple">
@@ -712,8 +715,8 @@ within each trace of a plot. Default: [].</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.PivotAction.index">
-<code class="sig-name descname"><span class="pre">index</span></code><a class="headerlink" href="#shekels.core.config.PivotAction.index" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.PivotAction.index">
+<span class="sig-name descname"><span class="pre">index</span></span><a class="headerlink" href="#shekels.core.config.PivotAction.index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Column whose values become the y axis values of a
 plot. Default: None.</p>
 <dl class="field-list simple">
@@ -724,35 +727,35 @@ plot. Default: None.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.PivotAction._schema">
-<code class="sig-name descname"><span class="pre">_schema</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#shekels.core.config.PivotAction._schema" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.PivotAction._schema">
+<span class="sig-name descname"><span class="pre">_schema</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#shekels.core.config.PivotAction._schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id26">
-<code class="sig-name descname"><span class="pre">columns</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PivotAction</span> <span class="pre">as</span> <span class="pre">'columns'&gt;</span></em><a class="headerlink" href="#id26" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id26">
+<span class="sig-name descname"><span class="pre">columns</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PivotAction</span> <span class="pre">as</span> <span class="pre">'columns'&gt;</span></em><a class="headerlink" href="#id26" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id27">
-<code class="sig-name descname"><span class="pre">index</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PivotAction</span> <span class="pre">as</span> <span class="pre">'index'&gt;</span></em><a class="headerlink" href="#id27" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id27">
+<span class="sig-name descname"><span class="pre">index</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PivotAction</span> <span class="pre">as</span> <span class="pre">'index'&gt;</span></em><a class="headerlink" href="#id27" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id28">
-<code class="sig-name descname"><span class="pre">values</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PivotAction</span> <span class="pre">as</span> <span class="pre">'values'&gt;</span></em><a class="headerlink" href="#id28" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id28">
+<span class="sig-name descname"><span class="pre">values</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PivotAction</span> <span class="pre">as</span> <span class="pre">'values'&gt;</span></em><a class="headerlink" href="#id28" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="shekels.core.config.PlotItem">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></code><code class="sig-name descname"><span class="pre">PlotItem</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trusted_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#PlotItem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.PlotItem" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.PlotItem">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></span><span class="sig-name descname"><span class="pre">PlotItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trusted_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#PlotItem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.PlotItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">schematics.deprecated.patch_models.&lt;locals&gt;.Model</span></code></p>
 <p>Schematic for a plot.</p>
 <dl class="py attribute">
-<dt id="shekels.core.config.PlotItem.filters">
-<code class="sig-name descname"><span class="pre">filters</span></code><a class="headerlink" href="#shekels.core.config.PlotItem.filters" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.PlotItem.filters">
+<span class="sig-name descname"><span class="pre">filters</span></span><a class="headerlink" href="#shekels.core.config.PlotItem.filters" title="Permalink to this definition">¶</a></dt>
 <dd><p>How data is filtered. Default: [].</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -762,8 +765,8 @@ plot. Default: None.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.PlotItem.group">
-<code class="sig-name descname"><span class="pre">group</span></code><a class="headerlink" href="#shekels.core.config.PlotItem.group" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.PlotItem.group">
+<span class="sig-name descname"><span class="pre">group</span></span><a class="headerlink" href="#shekels.core.config.PlotItem.group" title="Permalink to this definition">¶</a></dt>
 <dd><p>How data is grouped. Default: {}.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -773,8 +776,8 @@ plot. Default: None.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.PlotItem.pivot">
-<code class="sig-name descname"><span class="pre">pivot</span></code><a class="headerlink" href="#shekels.core.config.PlotItem.pivot" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.PlotItem.pivot">
+<span class="sig-name descname"><span class="pre">pivot</span></span><a class="headerlink" href="#shekels.core.config.PlotItem.pivot" title="Permalink to this definition">¶</a></dt>
 <dd><p>How data is pivoted. Default: {}.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -784,8 +787,8 @@ plot. Default: None.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.PlotItem.figure">
-<code class="sig-name descname"><span class="pre">figure</span></code><a class="headerlink" href="#shekels.core.config.PlotItem.figure" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.PlotItem.figure">
+<span class="sig-name descname"><span class="pre">figure</span></span><a class="headerlink" href="#shekels.core.config.PlotItem.figure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot figure details. Default: {}.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -795,8 +798,8 @@ plot. Default: None.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.PlotItem.min_width">
-<code class="sig-name descname"><span class="pre">min_width</span></code><a class="headerlink" href="#shekels.core.config.PlotItem.min_width" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.PlotItem.min_width">
+<span class="sig-name descname"><span class="pre">min_width</span></span><a class="headerlink" href="#shekels.core.config.PlotItem.min_width" title="Permalink to this definition">¶</a></dt>
 <dd><p>Minimum width of plot. Default: 0.25.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -806,40 +809,40 @@ plot. Default: None.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="shekels.core.config.PlotItem._schema">
-<code class="sig-name descname"><span class="pre">_schema</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#shekels.core.config.PlotItem._schema" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.PlotItem._schema">
+<span class="sig-name descname"><span class="pre">_schema</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#shekels.core.config.PlotItem._schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id29">
-<code class="sig-name descname"><span class="pre">figure</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ModelType(FigureItem)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PlotItem</span> <span class="pre">as</span> <span class="pre">'figure'&gt;</span></em><a class="headerlink" href="#id29" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id29">
+<span class="sig-name descname"><span class="pre">figure</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ModelType(FigureItem)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PlotItem</span> <span class="pre">as</span> <span class="pre">'figure'&gt;</span></em><a class="headerlink" href="#id29" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id30">
-<code class="sig-name descname"><span class="pre">filters</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(ModelType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PlotItem</span> <span class="pre">as</span> <span class="pre">'filters'&gt;</span></em><a class="headerlink" href="#id30" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id30">
+<span class="sig-name descname"><span class="pre">filters</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ListType(ModelType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PlotItem</span> <span class="pre">as</span> <span class="pre">'filters'&gt;</span></em><a class="headerlink" href="#id30" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id31">
-<code class="sig-name descname"><span class="pre">group</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ModelType(GroupAction)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PlotItem</span> <span class="pre">as</span> <span class="pre">'group'&gt;</span></em><a class="headerlink" href="#id31" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id31">
+<span class="sig-name descname"><span class="pre">group</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ModelType(GroupAction)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PlotItem</span> <span class="pre">as</span> <span class="pre">'group'&gt;</span></em><a class="headerlink" href="#id31" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id32">
-<code class="sig-name descname"><span class="pre">min_width</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;FloatType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PlotItem</span> <span class="pre">as</span> <span class="pre">'min_width'&gt;</span></em><a class="headerlink" href="#id32" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id32">
+<span class="sig-name descname"><span class="pre">min_width</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;FloatType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PlotItem</span> <span class="pre">as</span> <span class="pre">'min_width'&gt;</span></em><a class="headerlink" href="#id32" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id33">
-<code class="sig-name descname"><span class="pre">pivot</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ModelType(PivotAction)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PlotItem</span> <span class="pre">as</span> <span class="pre">'pivot'&gt;</span></em><a class="headerlink" href="#id33" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id33">
+<span class="sig-name descname"><span class="pre">pivot</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ModelType(PivotAction)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">PlotItem</span> <span class="pre">as</span> <span class="pre">'pivot'&gt;</span></em><a class="headerlink" href="#id33" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt id="shekels.core.config.is_bar_mode">
-<code class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></code><code class="sig-name descname"><span class="pre">is_bar_mode</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#is_bar_mode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.is_bar_mode" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.is_bar_mode">
+<span class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></span><span class="sig-name descname"><span class="pre">is_bar_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#is_bar_mode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.is_bar_mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures mode is a legal bar mode.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -852,8 +855,8 @@ plot. Default: None.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="shekels.core.config.is_color_scheme">
-<code class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></code><code class="sig-name descname"><span class="pre">is_color_scheme</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/shekels/core/config.html#is_color_scheme"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.is_color_scheme" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.is_color_scheme">
+<span class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></span><span class="sig-name descname"><span class="pre">is_color_scheme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/shekels/core/config.html#is_color_scheme"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.is_color_scheme" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determines if given dict is a valid color scheme.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -866,8 +869,8 @@ plot. Default: None.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="shekels.core.config.is_comparator">
-<code class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></code><code class="sig-name descname"><span class="pre">is_comparator</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/shekels/core/config.html#is_comparator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.is_comparator" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.is_comparator">
+<span class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></span><span class="sig-name descname"><span class="pre">is_comparator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/shekels/core/config.html#is_comparator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.is_comparator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that given string is a legal comparator.</p>
 <p>Legal comparators:</p>
 <blockquote>
@@ -893,8 +896,8 @@ plot. Default: None.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="shekels.core.config.is_csv">
-<code class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></code><code class="sig-name descname"><span class="pre">is_csv</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/shekels/core/config.html#is_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.is_csv" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.is_csv">
+<span class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></span><span class="sig-name descname"><span class="pre">is_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/shekels/core/config.html#is_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.is_csv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determines if given filepath is a CSV.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -907,8 +910,8 @@ plot. Default: None.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="shekels.core.config.is_metric">
-<code class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></code><code class="sig-name descname"><span class="pre">is_metric</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/shekels/core/config.html#is_metric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.is_metric" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.is_metric">
+<span class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></span><span class="sig-name descname"><span class="pre">is_metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/shekels/core/config.html#is_metric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.is_metric" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that given string is a legal metric.</p>
 <p>Legal metrics:</p>
 <blockquote>
@@ -933,8 +936,8 @@ plot. Default: None.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="shekels.core.config.is_percentage">
-<code class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></code><code class="sig-name descname"><span class="pre">is_percentage</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#is_percentage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.is_percentage" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.is_percentage">
+<span class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></span><span class="sig-name descname"><span class="pre">is_percentage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#is_percentage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.is_percentage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures number is between 0 and 100.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -947,8 +950,8 @@ plot. Default: None.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="shekels.core.config.is_plot_kind">
-<code class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></code><code class="sig-name descname"><span class="pre">is_plot_kind</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#is_plot_kind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.is_plot_kind" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.config.is_plot_kind">
+<span class="sig-prename descclassname"><span class="pre">shekels.core.config.</span></span><span class="sig-name descname"><span class="pre">is_plot_kind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/config.html#is_plot_kind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.config.is_plot_kind" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures item is a kind of plotly plot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -964,14 +967,14 @@ plot. Default: None.</p>
 <div class="section" id="module-shekels.core.database">
 <span id="database"></span><h2>database<a class="headerlink" href="#module-shekels.core.database" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="shekels.core.database.Database">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">shekels.core.database.</span></code><code class="sig-name descname"><span class="pre">Database</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/database.html#Database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.database.Database" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.database.Database">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">shekels.core.database.</span></span><span class="sig-name descname"><span class="pre">Database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/database.html#Database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.database.Database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Database is a class for wrapping a mint transaction DataFrame with a simple
 CRUD-like API. API methods include: update, read and search.</p>
 <dl class="py method">
-<dt id="shekels.core.database.Database.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/shekels/core/database.html#Database.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.database.Database.__init__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.database.Database.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/shekels/core/database.html#Database.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.database.Database.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs a Database instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -981,8 +984,8 @@ CRUD-like API. API methods include: update, read and search.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="shekels.core.database.Database._to_records">
-<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">_to_records</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/shekels/core/database.html#Database._to_records"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.database.Database._to_records" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.database.Database._to_records">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">_to_records</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/shekels/core/database.html#Database._to_records"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.database.Database._to_records" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts given DataFrame to a list of JSONifiable dicts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -997,9 +1000,9 @@ CRUD-like API. API methods include: update, read and search.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt id="shekels.core.database.Database.config">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">config</span></code><a class="headerlink" href="#shekels.core.database.Database.config" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="shekels.core.database.Database.config">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">config</span></span><a class="headerlink" href="#shekels.core.database.Database.config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a copy of this instance’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -1011,9 +1014,9 @@ CRUD-like API. API methods include: update, read and search.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt id="shekels.core.database.Database.data">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">data</span></code><a class="headerlink" href="#shekels.core.database.Database.data" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="shekels.core.database.Database.data">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#shekels.core.database.Database.data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a copy of this instance’s data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -1026,8 +1029,8 @@ CRUD-like API. API methods include: update, read and search.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="shekels.core.database.Database.from_json">
-<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">from_json</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#shekels.core.database.Database" title="shekels.core.database.Database"><span class="pre">shekels.core.database.Database</span></a><a class="reference internal" href="_modules/shekels/core/database.html#Database.from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.database.Database.from_json" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.database.Database.from_json">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#shekels.core.database.Database" title="shekels.core.database.Database"><span class="pre">shekels.core.database.Database</span></a><a class="reference internal" href="_modules/shekels/core/database.html#Database.from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.database.Database.from_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs a Database instance from a given JSON filepath.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1043,8 +1046,8 @@ CRUD-like API. API methods include: update, read and search.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="shekels.core.database.Database.read">
-<code class="sig-name descname"><span class="pre">read</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/shekels/core/database.html#Database.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.database.Database.read" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.database.Database.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/shekels/core/database.html#Database.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.database.Database.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns data if update has been called.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
@@ -1060,8 +1063,8 @@ CRUD-like API. API methods include: update, read and search.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="shekels.core.database.Database.search">
-<code class="sig-name descname"><span class="pre">search</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/shekels/core/database.html#Database.search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.database.Database.search" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.database.Database.search">
+<span class="sig-name descname"><span class="pre">search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/shekels/core/database.html#Database.search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.database.Database.search" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search data according to given SQL query.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1077,8 +1080,8 @@ CRUD-like API. API methods include: update, read and search.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="shekels.core.database.Database.update">
-<code class="sig-name descname"><span class="pre">update</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#shekels.core.database.Database" title="shekels.core.database.Database"><span class="pre">shekels.core.database.Database</span></a><a class="reference internal" href="_modules/shekels/core/database.html#Database.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.database.Database.update" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.database.Database.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#shekels.core.database.Database" title="shekels.core.database.Database"><span class="pre">shekels.core.database.Database</span></a><a class="reference internal" href="_modules/shekels/core/database.html#Database.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.database.Database.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads CSV found in config’s data_path into self._data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -1096,8 +1099,8 @@ CRUD-like API. API methods include: update, read and search.</p>
 <div class="section" id="module-shekels.core.data_tools">
 <span id="data-tools"></span><h2>data_tools<a class="headerlink" href="#module-shekels.core.data_tools" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt id="shekels.core.data_tools.conform">
-<code class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></code><code class="sig-name descname"><span class="pre">conform</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#conform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.conform" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.data_tools.conform">
+<span class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></span><span class="sig-name descname"><span class="pre">conform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#conform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.conform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Conform given mint transaction data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1123,8 +1126,8 @@ CRUD-like API. API methods include: update, read and search.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="shekels.core.data_tools.conform_figure">
-<code class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></code><code class="sig-name descname"><span class="pre">conform_figure</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_scheme</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#conform_figure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.conform_figure" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.data_tools.conform_figure">
+<span class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></span><span class="sig-name descname"><span class="pre">conform_figure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_scheme</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#conform_figure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.conform_figure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Conforms given figure to use given color scheme.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1143,8 +1146,8 @@ CRUD-like API. API methods include: update, read and search.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="shekels.core.data_tools.filter_data">
-<code class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></code><code class="sig-name descname"><span class="pre">filter_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comparator</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#filter_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.filter_data" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.data_tools.filter_data">
+<span class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></span><span class="sig-name descname"><span class="pre">filter_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comparator</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#filter_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.filter_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters given data via comparator(column value, value).</p>
 <p>Legal comparators:</p>
 <blockquote>
@@ -1187,8 +1190,8 @@ CRUD-like API. API methods include: update, read and search.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="shekels.core.data_tools.get_figure">
-<code class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></code><code class="sig-name descname"><span class="pre">get_figure</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pivot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bar'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bar_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'stack'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#get_figure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.get_figure" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.data_tools.get_figure">
+<span class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></span><span class="sig-name descname"><span class="pre">get_figure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pivot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bar'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bar_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'stack'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#get_figure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.get_figure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates a plotly figure dictionary from given data and manipulations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1226,8 +1229,8 @@ Default: stack.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="shekels.core.data_tools.get_sql_grammar">
-<code class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></code><code class="sig-name descname"><span class="pre">get_sql_grammar</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#get_sql_grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.get_sql_grammar" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.data_tools.get_sql_grammar">
+<span class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></span><span class="sig-name descname"><span class="pre">get_sql_grammar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#get_sql_grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.get_sql_grammar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a grammar for parsing SQL queries.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -1240,8 +1243,8 @@ Default: stack.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="shekels.core.data_tools.group_data">
-<code class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></code><code class="sig-name descname"><span class="pre">group_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime_column</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'date'</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#group_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.group_data" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.data_tools.group_data">
+<span class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></span><span class="sig-name descname"><span class="pre">group_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetime_column</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'date'</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#group_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.group_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Groups given data by given columns according to given metric.
 If a legal time interval is given in the columns, then an additional special
 column of that same name is added to the data for grouping.</p>
@@ -1303,8 +1306,8 @@ Default: date.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="shekels.core.data_tools.parse_rgba">
-<code class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></code><code class="sig-name descname"><span class="pre">parse_rgba</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#parse_rgba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.parse_rgba" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.data_tools.parse_rgba">
+<span class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></span><span class="sig-name descname"><span class="pre">parse_rgba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#parse_rgba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.parse_rgba" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses rgb and rgba strings into tuples of numbers.</p>
 <p class="rubric">Example</p>
 <p>&gt;&gt;&gt;parse_rgba(‘rgb(255, 0, 0)’)
@@ -1327,8 +1330,8 @@ True</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="shekels.core.data_tools.pivot_data">
-<code class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></code><code class="sig-name descname"><span class="pre">pivot_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#pivot_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.pivot_data" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.data_tools.pivot_data">
+<span class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></span><span class="sig-name descname"><span class="pre">pivot_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#pivot_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.pivot_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pivots a given dataframe via a list of columns.</p>
 <p>Legal time columns:</p>
 <blockquote>
@@ -1379,8 +1382,8 @@ plot. Default: None.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="shekels.core.data_tools.query_data">
-<code class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></code><code class="sig-name descname"><span class="pre">query_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#query_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.query_data" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.data_tools.query_data">
+<span class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></span><span class="sig-name descname"><span class="pre">query_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#query_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.query_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses SQL + regex query and applies it to given data.</p>
 <p>Regex operators:</p>
 <blockquote>
@@ -1406,8 +1409,8 @@ plot. Default: None.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="shekels.core.data_tools.query_dict">
-<code class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></code><code class="sig-name descname"><span class="pre">query_dict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#query_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.query_dict" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="shekels.core.data_tools.query_dict">
+<span class="sig-prename descclassname"><span class="pre">shekels.core.data_tools.</span></span><span class="sig-name descname"><span class="pre">query_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="reference internal" href="_modules/shekels/core/data_tools.html#query_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#shekels.core.data_tools.query_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Query a given diction with a given SQL query.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
