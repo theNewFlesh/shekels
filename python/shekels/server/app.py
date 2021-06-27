@@ -31,11 +31,13 @@ Shekels app used for displaying and interacting with database.
 
 
 def liveness():
+    # type: () -> None
     '''Liveness probe for kubernetes.'''
     pass
 
 
 def readiness():
+    # type: () -> None
     '''
     Readiness probe for kubernetes.
 
