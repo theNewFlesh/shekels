@@ -13,7 +13,7 @@ import re
 # python2.7 doesn't have pathlib module
 REPO_PATH = os.path.join(os.sep, *os.path.realpath(__file__).split(os.sep)[:-2])
 REPO = os.path.split(REPO_PATH)[-1]
-GITHUB_USER = 'thenewflesh'
+GITHUB_USER = 'theNewFlesh'
 USER = 'ubuntu:ubuntu'
 PORT = 8080
 # ------------------------------------------------------------------------------
@@ -898,6 +898,8 @@ def test_command():
         exit_repo(),
     ]
     return resolve(cmds)
+
+
 def tox_command():
     # type: () -> str
     '''
@@ -1025,7 +1027,6 @@ def main():
     mode, args = get_info()
     lut = {
         'app': app_command(),
-
         'build': build_dev_command(),
         'build-prod': build_prod_command(),
         'container': container_id_command(),

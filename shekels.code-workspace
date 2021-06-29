@@ -1,5 +1,5 @@
 {
-    "folders": [{ "path": "./" }],
+    "folders": [{"path": "./"}],
     "settings": {
         "debug.allowBreakpointsEverywhere": true,
         "python.languageServer": "Pylance",
@@ -73,7 +73,6 @@
                 "command": [
                     "mkdir -p docs && ",
                     "pytest python -c docker/pytest.ini --cov=python --cov-config=docker/pytest.ini --cov-report=html:docs/htmlcov --headless"
-
                 ],
                 "type": "shell"
             },

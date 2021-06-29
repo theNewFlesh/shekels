@@ -20,8 +20,8 @@ with open('../pip/version.txt') as f:
 # -- Project information -----------------------------------------------------
 
 project = 'shekels'
-copyright = '2021, Alex Braun <alexander.g.braun@email.com>'
-author = 'Alex Braun <alexander.g.braun@email.com>'
+copyright = '2019, Alex Braun <alexander.g.braun@gmail.com>'
+author = 'Alex Braun <alexander.g.braun@gmail.com>'
 version = VERSION
 # release = ''
 
