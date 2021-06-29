@@ -10,7 +10,6 @@ jinja2==2.10.3
 jupyterlab_henanigans>=0.2.1
 jupyterlab_sublime
 jupyterlab-git
-jupyterlab==1.2.3
 jupyterlab>=3.0.0
 lunchbox
 mypy
