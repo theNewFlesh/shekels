@@ -33,7 +33,8 @@ RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${CLEAR}"; \
 RUN echo "\n${CYAN}SETUP PYTHON3.7${CLEAR}"; \
     add-apt-repository -y ppa:deadsnakes/ppa && \
     apt update && \
-    apt install --fix-missing -y python3.7 && \
+    apt install --fix-missing -y \
+        python3.7 && \
     wget https://bootstrap.pypa.io/get-pip.py && \
     python3.7 get-pip.py && \
     rm -rf /home/ubuntu/get-pip.py
@@ -44,8 +45,7 @@ ENV REPO='shekels'
 ENV PYTHONPATH "${PYTHONPATH}:/home/ubuntu/$REPO/python"
 RUN echo "\n${CYAN}INSTALL $REPO${CLEAR}"; \
     pip3.7 install shekels
-
 ENTRYPOINT [\
-    "python3.7",\
-    "/home/ubuntu/.local/lib/python3.7/site-packages/shekels/server/app.py"\
+    "python3.7", \
+    "/home/ubuntu/.local/lib/python3.7/site-packages/shekels/server/app.py" \
 ]

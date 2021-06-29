@@ -72,7 +72,8 @@
                 "label": "coverage",
                 "command": [
                     "mkdir -p docs && ",
-                    "pytest python -c docker/pytest.ini --headless --cov=python --cov-config=docker/pytest.ini --cov-report=html:docs/htmlcov && "
+                    "pytest python -c docker/pytest.ini --cov=python --cov-config=docker/pytest.ini --cov-report=html:docs/htmlcov --headless"
+
                 ],
                 "type": "shell"
             },
@@ -96,7 +97,12 @@
             {
                 "label": "full-docs",
                 "dependsOrder": "sequence",
-                "dependsOn": ["docs", "coverage", "architecture", "metrics"],
+                "dependsOn": [
+                    "docs",
+                    "coverage",
+                    "architecture",
+                    "metrics"
+                ],
                 "type": "shell"
             },
             {
@@ -199,18 +205,24 @@
             },
             {
                 "label": "tox",
-                "command": ["unset REPO_ENV && ", "cd /tmp/$REPO && ", "tox"],
+                "command": [
+                    "unset REPO_ENV && ",
+                    "cd /tmp/$REPO && ",
+                    "tox"
+                ],
                 "dependsOrder": "sequence",
-                "dependsOn": ["tox-repo"],
+                "dependsOn": [
+                    "tox-repo"
+                ],
                 "type": "shell"
             },
             {
                 "label": "version",
                 "dependsOrder": "sequence",
                 "dependsOn": [
-                        "lint",
-                        "full-docs",
-                        "requirements"
+                    "lint",
+                    "full-docs",
+                    "requirements"
                 ],
                 "type": "shell"
             }

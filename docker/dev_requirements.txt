@@ -7,9 +7,14 @@ ipython-genutils
 ipython==7.9.0
 ipywidgets
 jinja2==2.10.3
+jupyterlab_henanigans>=0.2.1
+jupyterlab_sublime
+jupyterlab-git
 jupyterlab==1.2.3
-nbconvert==5.6.1
+jupyterlab>=3.0.0
+lunchbox
 mypy
+nbconvert==5.6.1
 nbformat==4.4.0
 notebook==6.0.2
 percy
@@ -19,8 +24,8 @@ pytest-forked==0.2
 pytest-xdist==1.20.1
 pytest==4.5.0
 pytz==2018.4
-requests==2.22.0
 radon==4.0.0
+requests==2.22.0
 sphinx
 sphinx-rtd-theme
 sphinxcontrib-napoleon

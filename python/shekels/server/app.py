@@ -70,7 +70,7 @@ def get_app():
     # flask monitoring
     fmdb.config.link = 'monitor'
     fmdb.config.monitor_level = 3
-    fmdb.config.git = 'https://thenewflesh.github.io/shekels/'
+    fmdb.config.git = 'https://theNewFlesh.github.io/shekels/'
     fmdb.bind(flask_app)
 
     app = svc.get_dash_app(flask_app)
@@ -278,7 +278,7 @@ def on_get_tab(tab, store):
     elif tab == 'docs':  # pragma: no cover
         return dcc.Location(
             id='docs',
-            href='https://thenewflesh.github.io/shekels/'
+            href='https://theNewFlesh.github.io/shekels/'
         )
 
     elif tab == 'monitor':  # pragma: no cover

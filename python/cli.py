@@ -48,35 +48,36 @@ def get_info():
         nargs=1,
         action='store',
         help='''Command to run in {repo} app.
-
-    app          - Run Flask app inside {repo} container
+    app          - Run app inside {repo} container
     build        - Build image of {repo}
     build-prod   - Build production image of {repo}
-    container    - Display the Docker container id for {repo} app
-    coverage     - Generate coverage report for {repo} app
-    destroy      - Shutdown {repo} app and destroy its Docker image
-    destroy-prod - Shutdown {repo} production app and destroy its Docker image
-    docs         - Generate documentation for {repo} app
-    fast-test    - Run testing on {repo} app skipping tests marked as slow
+    container    - Display the Docker container id of {repo}
+    coverage     - Generate coverage report for {repo}
+    destroy      - Shutdown {repo} container and destroy its image
+    destroy-prod - Shutdown {repo} production container and destroy its image
+    docs         - Generate documentation for {repo}
+    fast-test    - Run testing on {repo} skipping tests marked as slow
     full-docs    - Generates documentation, coverage report and metrics
-    image        - Display the Docker image id for {repo} app
+    image        - Display the Docker image id of {repo}
     lab          - Start a Jupyter lab server
-    lint         - Run linting and type checking on {repo} app code
+    lint         - Run linting and type checking on {repo}
     package      - Build {repo} pip package
-    prod         - Start {repo} production app
-    publish      - Publish repository to python package index.
-    push         - Push production of {repo} image to Dockerhub
+    prod         - Start {repo} production container
+    publish      - Publish {repo} repository to python package index
+    push         - Push {repo} production image to Dockerhub
     python       - Run python interpreter session inside {repo} container
-    remove       - Remove {repo} app Docker image
-    restart      - Restart {repo} app
+    remove       - Remove {repo} Docker image
+    restart      - Restart {repo} container
     requirements - Write frozen requirements to disk
-    start        - Start {repo} app
-    state        - State of {repo} app
-    stop         - Stop {repo} app
-    test         - Run testing on {repo} app
+    start        - Start {repo} container
+    state        - State of {repo} container
+    stop         - Stop {repo} container
+    test         - Run testing on {repo}
     tox          - Run tox tests on {repo}
     version-up   - Updates version and runs full-docs and requirements
     zsh          - Run ZSH session inside {repo} container
+    zsh-complete - Generate oh-my-zsh completions
+    zsh-root     - Run ZSH session as root inside {repo} container
 '''.format(repo=REPO))
 
     parser.add_argument(
@@ -138,14 +139,15 @@ def resolve(commands):
     return cmd
 
 
-def line(text):
-    # type: (str) -> str
+def line(text, sep=' '):
+    # type: (str, str) -> str
     '''
     Convenience function for formatting a given block of text as series of
     commands.
 
     Args:
         text (text): Block of text.
+        sep (str, optional): Line separator. Default: ' '.
 
     Returns:
         str: Formatted command.
@@ -153,7 +155,7 @@ def line(text):
     output = re.sub('^\n|\n$', '', text)  # type: Any
     output = output.split('\n')
     output = [re.sub('^ +| +$', '', x) for x in output]
-    output = ' '.join(output) + ' '
+    output = sep.join(output) + sep
     return output
 
 
@@ -262,8 +264,8 @@ def coverage():
                 --cov /home/ubuntu/{repo}/python
                 --cov-config /home/ubuntu/{repo}/docker/pytest.ini
                 --cov-report html:/home/ubuntu/{repo}/docs/htmlcov
-                --headless'''
-    )
+                --headless
+    ''')
     return cmd
 
 
@@ -516,8 +518,8 @@ def fast_test_command():
                 pytest
                     /home/ubuntu/{repo}/python
                     -c /home/ubuntu/{repo}/docker/pytest.ini
-                    --headless'''
-        ),
+                    --headless
+        '''),
         exit_repo(),
     ]
     return resolve(cmds)
@@ -830,6 +832,14 @@ def state_command():
         'export IMAGE_EXISTS=`docker images {repo} | grep -v REPOSITORY`',
         'export CONTAINER_EXISTS=`docker ps -a -f name={repo} | grep -v CONTAINER`',
         'export RUNNING=`docker ps -a -f name={repo} -f status=running | grep -v CONTAINER`',
+        line(r'''
+            export PORTS=`docker ps -a -f name={repo}
+                --format '{{{{.Ports}}}}'
+            | sed -E 's/[0-9.]+:|:|\/[a-z]+//g'
+            | sed 's/, /\n/g' | uniq
+            | sed 's/->/{clear}->{blue}/'
+            | parallel "echo -n {{}} ' '"`
+        '''),
         line('''
             if [ -z "$IMAGE_EXISTS" ];
                 then export IMAGE_STATE="{red}absent{clear}";
@@ -847,7 +857,8 @@ def state_command():
         line('''echo
             "app: {cyan}{repo}{clear}:{yellow}$VERSION{clear} -
             image: $IMAGE_STATE -
-            container: $CONTAINER_STATE"
+            container: $CONTAINER_STATE -
+            ports: {blue}$PORTS{clear}"
         '''),
         exit_repo(),
     ]
@@ -882,13 +893,11 @@ def test_command():
                 pytest
                     /home/ubuntu/{repo}/python
                     -c /home/ubuntu/{repo}/docker/pytest.ini
-                    --headless'''
-        ),
+                    --headless
+        '''),
         exit_repo(),
     ]
     return resolve(cmds)
-
-
 def tox_command():
     # type: () -> str
     '''
@@ -944,6 +953,53 @@ def zsh_command():
     return resolve(cmds)
 
 
+def zsh_complete_command():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to generate and install zsh completions.
+    '''
+    cmds = [
+        'export _COMP=~/.oh-my-zsh/custom/plugins/zsh-completions/src/_{repo}',
+        'touch $_COMP',
+        'echo "#compdef {repo} rec" > $_COMP',
+        'echo "" >> $_COMP',
+        'echo "local -a _subcommands" >> $_COMP',
+        'echo "_subcommands=(" >> $_COMP',
+        line('''
+            bin/{repo} --help
+                | grep '    - '
+                | sed -E 's/ +- /:/g'
+                | sed -E 's/^ +//g'
+                | sed -E "s/(.*)/    '\\1'/g"
+                | parallel "echo {{}} >> $_COMP"
+        '''),
+        'echo ")" >> $_COMP',
+        'echo "" >> $_COMP',
+        'echo "local expl" >> $_COMP',
+        'echo "" >> $_COMP',
+        'echo "_arguments \\\\" >> $_COMP',
+        'echo "    \'(-h --help)\'{{-h,--help}}\'[show help message]\' \\\\" >> $_COMP',
+        'echo "    \'(-d --dryrun)\'{{-d,--dryrun}}\'[print command]\' \\\\" >> $_COMP',
+        'echo "    \'*:: :->subcmds\' && return 0" >> $_COMP',
+        'echo "\n" >> $_COMP',
+        'echo "if (( CURRENT == 1 )); then" >> $_COMP',
+        'echo "    _describe -t commands \\"{repo} subcommand\\" _subcommands\" >> $_COMP',
+        'echo "    return" >> $_COMP',
+        'echo "fi" >> $_COMP',
+    ]
+    return resolve(cmds)
+
+
+def zsh_root_command():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to run a zsh session as root inside container.
+    '''
+    return re.sub('ubuntu:ubuntu', 'root:root', zsh_command())
+
+
 def get_illegal_mode_command():
     # type: () -> str
     '''
@@ -969,6 +1025,7 @@ def main():
     mode, args = get_info()
     lut = {
         'app': app_command(),
+
         'build': build_dev_command(),
         'build-prod': build_prod_command(),
         'container': container_id_command(),
@@ -996,6 +1053,9 @@ def main():
         'tox': tox_command(),
         'version-up': version_up_command(args),
         'zsh': zsh_command(),
+        'zsh-root': zsh_root_command(),
+        'zsh-complete': zsh_complete_command(),
+        'zsh-root': zsh_root_command(),
     }
     cmd = lut.get(mode, get_illegal_mode_command())
 
