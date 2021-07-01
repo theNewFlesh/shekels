@@ -43,7 +43,7 @@ RUN echo "\n${CYAN}SETUP PYTHON3.7${CLEAR}"; \
 USER ubuntu
 ENV REPO='shekels'
 ENV PYTHONPATH "${PYTHONPATH}:/home/ubuntu/$REPO/python"
-RUN echo "\n${CYAN}INSTALL $REPO${CLEAR}"; \
+RUN echo "\n${CYAN}INSTALL SHEKELS{CLEAR}"; \
     pip3.7 install shekels
 
 ENTRYPOINT [\
