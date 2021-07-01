@@ -148,7 +148,7 @@
                 "label": "package-repo",
                 "command": [
                     "cd /tmp/$REPO &&",
-                    "find /tmp/$REPO | grep -E '.*test.*\\.py$|mock.*\\.py$' | parallel 'rm -rf {}' &&",
+                    "find /tmp/$REPO | grep -E '.*test.*\\.py$|mock.*\\.py$' | parallel 'rm -rf {}'",
                 ],
                 "dependsOrder": "sequence",
                 "dependsOn": [

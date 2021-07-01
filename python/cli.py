@@ -128,6 +128,7 @@ def resolve(commands):
         pythonpath='{PYTHONPATH}',
         repo_path=REPO_PATH,
         repo=REPO,
+        repo_=re.sub('-', '_', REPO),
         user=USER,
     )
     args = {}
@@ -294,34 +295,45 @@ def docker_exec():
     return cmd
 
 
-def create_package_repo():
+def tmp_repo():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to build repo in /tmp.
+    '''
+    cmd = line('''
+        cd /home/ubuntu/{repo} &&
+        rm -rf /tmp/{repo} &&
+        mkdir /tmp/{repo} &&
+        cp -R python/{repo_} /tmp/{repo}/ &&
+        cp -R templates /tmp/{repo}/{repo_}/ &&
+        cp -R resources /tmp/{repo}/{repo_}/ &&
+        cp README.md /tmp/{repo}/ &&
+        cp LICENSE /tmp/{repo}/ &&
+        cp docker/dev_requirements.txt /tmp/{repo}/ &&
+        cp docker/prod_requirements.txt /tmp/{repo}/ &&
+        cp -R pip/* /tmp/{repo}/ &&
+        find /tmp/{repo}/{repo_}/resources -type f | grep -vE 'icon|test_'
+            | parallel 'rm -rf {{}}' &&
+        find /tmp/{repo} | grep -E '__pycache__|flask_monitor|cli.py'
+            | parallel 'rm -rf {{}}' &&
+        find /tmp/{repo} -type f | grep __init__.py
+            | parallel 'rm -rf {{}}; touch {{}}'
+    ''')
+    return cmd
+
+
+def package_repo():
     # type: () -> str
     '''
     Returns:
         str: Command to create a temporary repo in /tmp.
     '''
-    cmd = line(
-        docker_exec() + r'''{repo} zsh -c "
-            rm -rf /tmp/{repo} &&
-            cp -R /home/ubuntu/{repo}/python /tmp/{repo} &&
-            cp /home/ubuntu/{repo}/README.md /tmp/{repo}/README.md &&
-            cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/LICENSE &&
-            cp /home/ubuntu/{repo}/pip/MANIFEST.in /tmp/{repo}/MANIFEST.in &&
-            cp /home/ubuntu/{repo}/pip/setup.cfg /tmp/{repo}/ &&
-            cp /home/ubuntu/{repo}/pip/setup.py /tmp/{repo}/ &&
-            cp /home/ubuntu/{repo}/pip/version.txt /tmp/{repo}/ &&
-            cp /home/ubuntu/{repo}/docker/dev_requirements.txt /tmp/{repo}/ &&
-            cp /home/ubuntu/{repo}/docker/prod_requirements.txt /tmp/{repo}/ &&
-            cp -r /home/ubuntu/{repo}/templates /tmp/{repo}/{repo} &&
-            cp -r /home/ubuntu/{repo}/resources /tmp/{repo}/{repo} &&
-            find /tmp/{repo}/{repo}/resources -type f | grep -vE 'icon|test_'
-                | parallel 'rm -rf {{}}' &&
-            find /tmp/{repo} | grep -E '.*test.*\.py$|mock.*\.py$|__pycache__'
-                | parallel 'rm -rf {{}}' &&
-            find /tmp/{repo} -type f | grep __init__.py
-                | parallel 'rm -rf {{}};touch {{}}'
-        "
+    pkg = line('''
+        find /tmp/$REPO | grep -E '.*test.*\\.py$|mock.*\\.py$'
+            | parallel 'rm -rf {{}}'
     ''')
+    cmd = docker_exec() + ' {repo} zsh -c "' + tmp_repo() + ' && ' + pkg + '"'
     return cmd
 
 
@@ -331,22 +343,14 @@ def tox_repo():
     Returns:
         str: Command to build tox repo.
     '''
-    cmd = line(
-        docker_exec() + r'''{repo} zsh -c "
-            rm -rf /tmp/{repo} &&
-            cp -R /home/ubuntu/{repo}/python /tmp/{repo} &&
-            cp -R /home/ubuntu/{repo}/docker/* /tmp/{repo}/ &&
-            cp -R /home/ubuntu/{repo}/resources /tmp/{repo}/{repo} &&
-            cp /home/ubuntu/{repo}/pip/* /tmp/{repo}/ &&
-            cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/ &&
-            cp /home/ubuntu/{repo}/README.md /tmp/{repo}/ &&
-            find /tmp/{repo}/{repo}/resources -type f
-                | grep -vE 'icon|test_' | parallel 'rm -rf {{}}' &&
-            cp -R /home/ubuntu/{repo}/templates /tmp/{repo}/{repo} &&
-            cp -R /home/ubuntu/{repo}/python/conftest.py /tmp/{repo}/ &&
-            find /tmp/{repo} | grep -E '__pycache__|\.pyc$' | parallel 'rm -rf'
-        "
+    tox = line('''
+        cp docker/flake8.ini /tmp/{repo} &&
+        cp docker/mypy.ini /tmp/{repo} &&
+        cp docker/pytest.ini /tmp/{repo} &&
+        cp docker/tox.ini /tmp/{repo} &&
+        cp python/conftest.py /tmp/{repo}
     ''')
+    cmd = docker_exec() + ' {repo} zsh -c "' + tmp_repo() + ' && ' + tox + '"'
     return cmd
 
 
@@ -665,7 +669,7 @@ def package_command():
     cmds = [
         enter_repo(),
         start(),
-        create_package_repo(),
+        package_repo(),
         docker_exec() + ' -w /tmp/{repo} {repo} python3.7 setup.py sdist',
         exit_repo(),
     ]
@@ -713,7 +717,7 @@ def publish_command():
         start(),
         tox_repo(),
         docker_exec() + '{repo} zsh -c "cd /tmp/{repo} && tox"',
-        create_package_repo(),
+        package_repo(),
         docker_exec() + ' -w /tmp/{repo} {repo} python3.7 setup.py sdist',
         docker_exec() + ' -w /tmp/{repo} {repo} twine upload dist/*',
         docker_exec() + ' {repo} rm -rf /tmp/{repo}',
@@ -910,7 +914,7 @@ def tox_command():
         enter_repo(),
         start(),
         tox_repo(),
-        docker_exec() + '{repo} zsh -c "cd /tmp/{repo} && tox"',
+        # docker_exec() + '{repo} zsh -c "cd /tmp/{repo} && tox"',
         exit_repo(),
     ]
     return resolve(cmds)
