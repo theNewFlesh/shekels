@@ -2,51 +2,11 @@ from typing import Any, Optional
 
 from multiprocessing import Pipe, Pool
 from multiprocessing.managers import BaseManager
-from pprint import pformat
 import datetime
 import json
-import time
-import traceback
+
+import shekels.server.server_tools as svt
 # ------------------------------------------------------------------------------
-
-
-def error_to_dict(error):
-    args = []  # type: Any
-    for arg in error.args:
-        if hasattr(arg, 'items'):
-            for key, val in arg.items():
-                args.append(pformat({key: pformat(val)}))
-        else:
-            args.append(str(arg))
-    args = ['    ' + x for x in args]
-    args = '\n'.join(args)
-    klass = error.__class__.__name__
-    msg = f'{klass}(\n{args}\n)'
-    return dict(
-        error=error.__class__.__name__,
-        args=list(map(str, error.args)),
-        message=msg,
-        code=500,
-        traceback=traceback.format_exc()
-    )
-
-
-class Database:
-    def __init__(self, logger, *args, **kwargs):
-        self._logger = logger
-        self.data = []
-
-    def update(self, fail=False):
-        data = []
-        total = 10
-        for i in range(total):
-            time.sleep(0.1)
-            data.append(i)
-            self._logger.log('update', iterator=i, total=total)
-            if fail and i == 5:
-                raise ValueError('Deliberate failure')
-        self.data = data
-        return self
 
 
 class ConnectionLogger:
@@ -146,12 +106,12 @@ class DatabaseConnection:
     __instance = None
 
     @staticmethod
-    def _request(logger, database, command, args, kwargs):
+    def _request(database, command, args, kwargs):
         try:
             result = getattr(database, command)(*args, **kwargs)
-            logger.log(command, status='completed')
+            database.log(command, status='completed')
         except Exception as e:
-            logger.log(command, status='failed', data=error_to_dict(e))
+            database.log(command, status='failed', data=svt.error_to_dict(e))
         return result
 
     def __new__(cls, *args, **kwargs):
@@ -159,27 +119,27 @@ class DatabaseConnection:
             cls.__instance = super().__new__(DatabaseConnection)
         return cls.__instance
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, database, *args, **kwargs):
         class DatabaseManager(BaseManager):
             pass
 
-        attrs = list(filter(lambda x: not x.startswith('_'), dir(Database)))
-        DatabaseManager.register('Database', callable=Database, exposed=attrs)
+        attrs = list(filter(lambda x: not x.startswith('_'), dir(database)))
+        DatabaseManager.register('Database', callable=database, exposed=attrs)
         self._manager = DatabaseManager()
         self._manager.start()
 
         self._pool = None
         self._response = None
         self._parent, self._child = Pipe(duplex=False)
-        self._logger = ConnectionLogger(self._child)
-        self._database = self._manager.Database(self._logger, *args, **kwargs)
-        self._logger.log('initialize', status='completed')
+        self._database = self._manager.Database(*args, **kwargs)
+        self._database.set_logger(ConnectionLogger(self._child))
+        self._database.log('initialize', status='completed')
 
     def request(self, command, *args, **kwargs):
         self._pool = Pool(1)
         self._response = self._pool.apply_async(
             func=DatabaseConnection._request,
-            args=(self._logger, self._database, command, args, kwargs),
+            args=(self._database, command, args, kwargs),
         )
 
     def shutdown(self):
@@ -192,15 +152,14 @@ class DatabaseConnection:
 
     @property
     def response(self):
-        if self.pending:
-            return None
+        # if self.pending:
+        #     return None
         if self._pool is not None:
             self._pool.close()
             self._pool.join()
             self._pool.terminate()
             self._pool = None
-            return self._response.get()
-        return None
+        return self._response.get()
 
     @property
     def state(self):
@@ -209,29 +168,3 @@ class DatabaseConnection:
     @property
     def pending(self):
         return self.state['status'] == 'pending'
-
-
-DBC = DatabaseConnection(Database, fail=True)
-
-
-def endpoint(event='interval'):
-    if event == 'click':
-        DBC.request('update')
-
-    DBC.refresh()
-    if DBC.pending:
-        return DBC.state
-
-    r = DBC.response
-    if r is not None:
-        return r.data
-    return None
-
-
-print(endpoint())
-endpoint('click')
-for i in range(10):
-    print(endpoint())
-print(endpoint())
-
-DBC.shutdown()
