@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from multiprocessing import Pipe, Pool
 from multiprocessing.managers import BaseManager
-from pprint import pprint, pformat
+from pprint import pformat
 import datetime
 import json
 import time
@@ -31,60 +31,9 @@ def error_to_dict(error):
     )
 
 
-def log_status(
-    process, message=None, iterator=0, total=None, data=None, status='pending'
-):
-    # type: (str, Optional[str], int, Optional[int], Optional[Any], str) -> str
-    '''
-    Create a state log dictionary.
-
-    Args:
-        process (str): Process being logged.
-        message (str, optional): Stateful message. Default: None.
-        iterator (int): Current iteration in loop. Default: None.
-        total (int, optional): Total iterations. Default: None.
-        data (object, optional): Data related to state. Default: None.
-        status (str, optional): Status of process. Default: 'pending'.
-    '''
-    iter_ = iterator + 1
-    percent = None
-    if total is not None:
-        percent = round((iter_ / float(total)) * 100, 2)
-
-    timestamp = datetime.datetime.now().isoformat()
-
-    # create message
-    if message is None:
-        message = '{process}'
-        if total is not None:
-            message = '{process} {status} - {percent}% ({iterator} of {total})'
-    message = message.format(
-        process=process,
-        status=status,
-        message=message,
-        iterator=iter_,
-        total=total,
-        percent=percent,
-        data=data,
-        timestamp=timestamp,
-    )
-
-    log = json.dumps(dict(
-        status=status,
-        process=process,
-        message=message,
-        iterator=iterator,
-        total=total,
-        percent=percent,
-        data=data,
-        timestamp=timestamp,
-    ))
-    return log
-
-
 class Database:
-    def __init__(self, connection, *args, **kwargs):
-        self.connection = connection
+    def __init__(self, logger, *args, **kwargs):
+        self._logger = logger
         self.data = []
 
     def update(self, fail=False):
@@ -93,27 +42,116 @@ class Database:
         for i in range(total):
             time.sleep(0.1)
             data.append(i)
-            self.connection.send(log_status(
-                'update', iterator=i, total=total
-            ))
+            self._logger.log('update', iterator=i, total=total)
             if fail and i == 5:
                 raise ValueError('Deliberate failure')
         self.data = data
         return self
 
 
+class ConnectionLogger:
+    def __init__(self, connection):
+        self._connection = connection
+
+    def get_log_dict(
+        self,
+        process,
+        message=None,
+        iterator=0,
+        total=None,
+        data=None,
+        status='pending',
+    ):
+        # type: (str, Optional[str], int, Optional[int], Optional[Any], str) -> str
+        '''
+        Create a state log dictionary.
+
+        Args:
+            process (str): Process being logged.
+            message (str, optional): Stateful message. Default: None.
+            iterator (int): Current iteration in loop. Default: None.
+            total (int, optional): Total iterations. Default: None.
+            data (object, optional): Data related to state. Default: None.
+            status (str, optional): Status of process. Default: 'pending'.
+        '''
+        i = iterator + 1
+        percent = None
+        if total is not None:
+            percent = round((i / float(total)) * 100, 2)
+
+        timestamp = datetime.datetime.now().isoformat()
+
+        # create message
+        if message is None:
+            message = '{process}'
+            if total is not None:
+                message = '{process} {status} - {percent}% ({iterator} of {total})'
+        message = message.format(
+            process=process,
+            status=status,
+            message=message,
+            iterator=i,
+            total=total,
+            percent=percent,
+            data=data,
+            timestamp=timestamp,
+        )
+
+        log = json.dumps(dict(
+            status=status,
+            process=process,
+            message=message,
+            iterator=iterator,
+            total=total,
+            percent=percent,
+            data=data,
+            timestamp=timestamp,
+        ))
+        return log
+
+    def log(
+        self,
+        process,
+        message=None,
+        iterator=0,
+        total=None,
+        data=None,
+        status='pending',
+    ):
+        # type: (str, Optional[str], int, Optional[int], Optional[Any], str) -> str
+        '''
+        Create a state log dictionary.
+
+        Args:
+            process (str): Process being logged.
+            message (str, optional): Stateful message. Default: None.
+            iterator (int): Current iteration in loop. Default: None.
+            total (int, optional): Total iterations. Default: None.
+            data (object, optional): Data related to state. Default: None.
+            status (str, optional): Status of process. Default: 'pending'.
+        '''
+        self._connection.send(
+            self.get_log_dict(
+                process,
+                message=message,
+                iterator=iterator,
+                total=total,
+                data=data,
+                status=status,
+            )
+        )
+
+
 class DatabaseConnection:
     __instance = None
 
     @staticmethod
-    def _request(connection, database, command, args, kwargs):
+    def _request(logger, database, command, args, kwargs):
         try:
             result = getattr(database, command)(*args, **kwargs)
-            connection.send(log_status(command, status='completed'))
+            logger.log(command, status='completed')
         except Exception as e:
-            connection.send(log_status(
-                command, status='failed', data=error_to_dict(e)
-            ))
+            logger.log(command, status='failed', data=error_to_dict(e))
         return result
 
     def __new__(cls, *args, **kwargs):
@@ -133,14 +171,15 @@ class DatabaseConnection:
         self._pool = None
         self._response = None
         self._parent, self._child = Pipe(duplex=False)
-        self._database = self._manager.Database(self._child, *args, **kwargs)
-        self._child.send(log_status('initialize', status='completed'))
+        self._logger = ConnectionLogger(self._child)
+        self._database = self._manager.Database(self._logger, *args, **kwargs)
+        self._logger.log('initialize', status='completed')
 
     def request(self, command, *args, **kwargs):
         self._pool = Pool(1)
         self._response = self._pool.apply_async(
             func=DatabaseConnection._request,
-            args=(self._child, self._database, command, args, kwargs),
+            args=(self._logger, self._database, command, args, kwargs),
         )
 
     def shutdown(self):
@@ -181,12 +220,13 @@ def endpoint(event='interval'):
 
     DBC.refresh()
     if DBC.pending:
-        return DBC.state['message']
+        return DBC.state
 
     r = DBC.response
     if r is not None:
         return r.data
     return None
+
 
 print(endpoint())
 endpoint('click')
