@@ -28,16 +28,16 @@ if 'REPO_ENV' in os.environ.keys():
     TEMPLATE_DIR = lbt.relative_path(__file__, '../../../templates').as_posix()
 
 
-def error_to_response(error):
-    # type: (Exception) -> flask.Response
+def error_to_dict(error):
+    # type: (Exception) -> Dict[str, Any]
     '''
-    Convenience function for formatting a given exception as a Flask Response.
+    Convenience function for formatting a given exception as a dictionary.
 
     Args:
         error (Exception): Error to be formatted.
 
     Returns:
-        flask.Response: Flask response.
+        Dict[str, Any]: Error dictionary.
     '''
     args = []  # type: Any
     for arg in error.args:
@@ -50,14 +50,28 @@ def error_to_response(error):
     args = '\n'.join(args)
     klass = error.__class__.__name__
     msg = f'{klass}(\n{args}\n)'
+    return dict(
+        error=error.__class__.__name__,
+        args=list(map(str, error.args)),
+        message=msg,
+        code=500,
+        traceback=traceback.format_exc(),
+    )
+
+
+def error_to_response(error):
+    # type: (Exception) -> flask.Response
+    '''
+    Convenience function for formatting a given exception as a Flask Response.
+
+    Args:
+        error (Exception): Error to be formatted.
+
+    Returns:
+        flask.Response: Flask response.
+    '''
     return flask.Response(
-        response=json.dumps(dict(
-            error=error.__class__.__name__,
-            args=list(map(str, error.args)),
-            message=msg,
-            code=500,
-            traceback=traceback.format_exc(),
-        )),
+        response=json.dumps(error_to_dict(error)),
         mimetype='application/json',
         status=500,
     )

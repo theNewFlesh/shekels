@@ -6,7 +6,8 @@ downloaded from mint.intuit.com. It conforms this data into a database,
 and displays it as a searchable table and dashboard of configurable
 plots in web frontend.
 
-See `documentation <https://theNewFlesh.github.io/shekels/>` for details.
+See `documentation <https://theNewFlesh.github.io/shekels/>`__ for
+details.
 
 Installation
 ============
@@ -20,20 +21,20 @@ Docker
 ~~~~~~
 
 1. Install
-   `docker <https://docs.docker.com/v17.09/engine/installation>`
+   `docker <https://docs.docker.com/v17.09/engine/installation>`__
 2. Install
-   `docker-machine <https://docs.docker.com/machine/install-machine>`
+   `docker-machine <https://docs.docker.com/machine/install-machine>`__
    (if running on macOS or Windows)
-3. ``docker pull thenewflesh/shekels:[version]``
-4. ``docker run --name shekels-prod --volume [path to shekels directory]:/mnt/storage --publish 5000:80 thenewflesh/shekels:[version]``
+3. ``docker pull theNewFlesh/shekels:[version]``
+4. ``docker run --rm --name shekels-prod --volume [path to shekels directory]:/mnt/storage --publish 1080:80 theNewFlesh/shekels:[version]``
 
 Docker For Developers
 ~~~~~~~~~~~~~~~~~~~~~
 
 1. Install
-   `docker <https://docs.docker.com/v17.09/engine/installation>`
+   `docker <https://docs.docker.com/v17.09/engine/installation>`__
 2. Install
-   `docker-machine <https://docs.docker.com/machine/install-machine>`
+   `docker-machine <https://docs.docker.com/machine/install-machine>`__
    (if running on macOS or Windows)
 3. Ensure docker-machine has at least 4 GB of memory allocated to it.
 4. ``git clone git@github.com:theNewFlesh/shekels.git``
