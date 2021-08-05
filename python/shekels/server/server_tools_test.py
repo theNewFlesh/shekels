@@ -23,6 +23,13 @@ if 'REPO_ENV' in os.environ.keys():
 
 
 class ServerToolsTests(unittest.TestCase):
+    def test_error_to_dict(self):
+        error = TypeError('foo')
+        result = svt.error_to_dict(error)
+        self.assertEqual(result['error'], 'TypeError')
+        self.assertEqual(result['args'], ['foo'])
+        self.assertEqual(result['message'], 'TypeError(\n    foo\n)')
+
     def test_error_to_response(self):
         error = TypeError('foo')
         result = svt.error_to_response(error)
