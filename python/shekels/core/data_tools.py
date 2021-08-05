@@ -16,7 +16,6 @@ import pyparsing as pp
 import rolling_pin.blob_etl as rpb
 import webcolors
 
-from shekels.core.app_state import AppState
 from shekels.core.config import ConformAction
 import shekels.core.config as cfg
 import shekels.enforce.enforce_tools as eft
@@ -86,16 +85,8 @@ def conform(data, actions=[], columns=[]):
     Returns:
         DataFrame: Conformed DataFrame.
     '''
-    total = len(actions)
-    for i, action in enumerate(actions):
+    for action in actions:
         ConformAction(action).validate()
-        AppState.log(
-            'conform',
-            message='Validating action {iterator} of {total}.',
-            iterator=i,
-            total=total,
-            data=action,
-        )
 
     data.rename(lbt.to_snakecase, axis=1, inplace=True)
     lut = dict(
@@ -109,9 +100,7 @@ def conform(data, actions=[], columns=[]):
         .apply(lambda x: re.sub('&', 'and', lbt.to_snakecase(x)))
     data.account = data.account.apply(lbt.to_snakecase)
 
-    AppState.log('conform', message='Raw data generated.')
-
-    for i, action in enumerate(actions):
+    for action in actions:
         source = action['source_column']
         if source not in data.columns:
             msg = f'Source column {source} not found in columns. '
@@ -130,14 +119,6 @@ def conform(data, actions=[], columns=[]):
             elif action['action'] == 'substitute':
                 data[target] = data[source] \
                     .apply(lambda x: re.sub(regex, val, str(x), flags=re.I))
-
-        AppState.log(
-            'conform',
-            message='Running conform action {iterator} of {total}.',
-            iterator=i,
-            total=total,
-            data=action,
-        )
 
     if columns != []:
         data = data[columns]
