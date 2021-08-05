@@ -3,6 +3,7 @@ from typing import List, Union
 from copy import deepcopy
 from functools import lru_cache
 from pathlib import Path
+import logging
 
 import jsoncomment as jsonc
 import numpy as np
@@ -46,6 +47,7 @@ class Database:
         config.validate()
         self._config = config.to_primitive()
         self._data = None  # type: Union[None, pd.DataFrame]
+        self._logger = logging.getLogger(__name__)
 
     @staticmethod
     def _to_records(data):
@@ -64,6 +66,12 @@ class Database:
         data = data.replace({np.nan: None}).to_dict(orient='records')
         return data
 
+    def set_logger(self, logger):
+        self._logger = logger
+
+    def log(self, *args, **kwargs):
+        self._logger.log(*args, **kwargs)
+
     @property
     def config(self):
         # type: () -> dict
@@ -74,6 +82,9 @@ class Database:
             dict: Copy of config.
         '''
         return deepcopy(self._config)
+
+    def get_config(self):
+        return self.config
 
     @property
     def data(self):
@@ -101,6 +112,7 @@ class Database:
             data,
             actions=self._config['conform'],
             columns=self._config['columns'],
+            logger=self._logger,
         )
         return self
 

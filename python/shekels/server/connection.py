@@ -43,7 +43,7 @@ class ConnectionLogger:
 
         # create message
         if message is None:
-            message = '{process}'
+            message = '{process} {status}'
             if total is not None:
                 message = '{process} {status} - {percent}% ({iterator} of {total})'
         message = message.format(
@@ -107,6 +107,7 @@ class DatabaseConnection:
 
     @staticmethod
     def _request(database, command, args, kwargs):
+        result = None
         try:
             result = getattr(database, command)(*args, **kwargs)
             database.log(command, status='completed')
@@ -134,6 +135,7 @@ class DatabaseConnection:
         self._database = self._manager.Database(*args, **kwargs)
         self._database.set_logger(ConnectionLogger(self._child))
         self._database.log('initialize', status='completed')
+        self.refresh()
 
     def request(self, command, *args, **kwargs):
         self._pool = Pool(1)
@@ -141,6 +143,7 @@ class DatabaseConnection:
             func=DatabaseConnection._request,
             args=(self._database, command, args, kwargs),
         )
+        self.refresh()
 
     def shutdown(self):
         self._parent.close()

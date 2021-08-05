@@ -68,8 +68,8 @@ COLOR_COERCION_LUT = {
 }
 
 
-def conform(data, actions=[], columns=[]):
-    # type: (DataFrame, List[dict], List[str]) -> DataFrame
+def conform(data, actions=[], columns=[], logger=None):
+    # type: (DataFrame, List[dict], List[str], Optional[Any]) -> DataFrame
     '''
     Conform given mint transaction data.
 
@@ -77,6 +77,7 @@ def conform(data, actions=[], columns=[]):
         data (DataFrame): Mint transactions DataFrame.
         actions (list[dict], optional): List of conform actions. Default: [].
         columns (list[str], optional): List of columns. Default: [].
+        logger (object, optional): Instance with log method. Default: None.
 
     Raises:
         DataError: If invalid conform action given.
@@ -85,8 +86,17 @@ def conform(data, actions=[], columns=[]):
     Returns:
         DataFrame: Conformed DataFrame.
     '''
-    for action in actions:
+    total = len(actions)
+    for i, action in enumerate(actions):
         ConformAction(action).validate()
+        if logger is not None:
+            logger.log(
+                'conform',
+                'validating actions - {percent}% ({iterator} of {total})',
+                iterator=i,
+                total=total,
+                data=action,
+            )
 
     data.rename(lbt.to_snakecase, axis=1, inplace=True)
     lut = dict(
@@ -100,7 +110,11 @@ def conform(data, actions=[], columns=[]):
         .apply(lambda x: re.sub('&', 'and', lbt.to_snakecase(x)))
     data.account = data.account.apply(lbt.to_snakecase)
 
-    for action in actions:
+    if logger is not None:
+        logger.log('conform', 'created dataframe')
+
+    total = len(actions)
+    for i, action in enumerate(actions):
         source = action['source_column']
         if source not in data.columns:
             msg = f'Source column {source} not found in columns. '
@@ -119,6 +133,15 @@ def conform(data, actions=[], columns=[]):
             elif action['action'] == 'substitute':
                 data[target] = data[source] \
                     .apply(lambda x: re.sub(regex, val, str(x), flags=re.I))
+
+        if logger is not None:
+            logger.log(
+                'conform',
+                'conform action - {percent}% ({iterator} of {total})',
+                iterator=i,
+                total=total,
+                data=action,
+            )
 
     if columns != []:
         data = data[columns]

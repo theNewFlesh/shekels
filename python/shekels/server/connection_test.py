@@ -2,16 +2,13 @@ import time
 import logging
 
 from shekels.server.connection import DatabaseConnection
-
-
-LOGGER = logging.getLogger(__name__)
 # ------------------------------------------------------------------------------
 
 
 class Database:
     def __init__(self, *args, **kwargs):
         self._data = []
-        self._logger = LOGGER
+        self._logger = logging.getLogger(__name__)
 
     def set_logger(self, logger):
         self._logger = logger

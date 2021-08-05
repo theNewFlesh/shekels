@@ -9,6 +9,7 @@ import flasgger as swg
 import flask
 
 from shekels.core.database import Database
+from shekels.server.connection import DatabaseConnection
 import shekels.server.server_tools as svt
 # ------------------------------------------------------------------------------
 
@@ -97,8 +98,12 @@ def initialize():
     if not isinstance(config, dict):
         raise RuntimeError(msg)
 
-    API.database = Database(config)
-    API.config = API.database.config
+    API.database = DatabaseConnection(Database, config)
+    print(API.database.state['message'])
+    API.database.request('get_config')
+    print(API.database.state['message'])
+
+    API.config = API.database.response
 
     return flask.Response(
         response=json.dumps(dict(
@@ -137,7 +142,11 @@ def update():
         msg = 'Database not initialized. Please call initialize.'
         raise RuntimeError(msg)
 
-    API.database.update()
+    API.database.request('update')
+    while API.database.pending:
+        API.database.refresh()
+        print(API.database.state['message'])
+
     return flask.Response(
         response=json.dumps(dict(
             message='Database updated.',
@@ -177,7 +186,10 @@ def read():
 
     response = {}  # type: Any
     try:
-        response = API.database.read()
+        API.database.request('read')
+        while API.database.pending:
+            API.database.refresh()
+        response = API.database.response
     except Exception as error:
         return svt.error_to_response(error)
 
@@ -229,11 +241,22 @@ def search():
         msg = 'Database not initialized. Please call initialize.'
         raise RuntimeError(msg)
 
-    if API.database.data is None:
+    API.database.request('read')
+    while API.database.pending:
+        print(API.database.state['message'])
+        API.database.refresh()
+    print(API.database.state['message'])
+    response = API.database.response
+    if response is None:
         msg = 'Database not updated. Please call update.'
         raise RuntimeError(msg)
 
-    response = API.database.search(query)  # type: Any
+    API.database.request('search', query)
+    while API.database.pending:
+        print(API.database.state['message'])
+        API.database.refresh()
+
+    response = API.database.response  # type: Any
     response = {'response': response}
     return flask.Response(
         response=json.dumps(response),
