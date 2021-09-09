@@ -13,7 +13,7 @@
         "python.linting.pycodestylePath": "/home/ubuntu/.local/bin/pycodestyle",
         "python.linting.pylintEnabled": false,
         "python.pythonPath": "/usr/bin/python3.7",
-        "python.testing.pytestArgs": [],
+        "python.testing.pytestArgs": ["--headless"],
         "python.testing.pytestEnabled": true,
         "python.testing.unittestEnabled": false,
         "todo-tree.filtering.excludeGlobs": ["**/docs/**/*.*"],
@@ -72,7 +72,7 @@
                 "label": "coverage",
                 "command": [
                     "mkdir -p docs &&",
-                    "pytest python -c docker/pytest.ini --cov=python --cov-config=docker/pytest.ini --cov-report=html:docs/htmlcov"
+                    "pytest python -c docker/pytest.ini --cov=python --cov-config=docker/pytest.ini --cov-report=html:docs/htmlcov --headless"
                 ],
                 "type": "shell"
             },
@@ -122,7 +122,7 @@
             {
                 "label": "metrics",
                 "command": [
-                    "python3.7 -c \"from rolling_pin.radon_etl import RadonETL; etl = RadonETL('python'); etl.write_plots('docs/plots.html'); etl.write_tables('docs')\""
+                    "python3.7 -c \"import rolling_pin.repo_etl as rpo; rpo.write_repo_plots_and_tables('/home/ubuntu/$REPO/python', '/home/ubuntu/$REPO/docs/plots.html', '/home/ubuntu/$REPO/docs')\""
                 ],
                 "type": "shell"
             },
