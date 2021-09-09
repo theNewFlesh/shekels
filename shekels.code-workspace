@@ -13,7 +13,7 @@
         "python.linting.pycodestylePath": "/home/ubuntu/.local/bin/pycodestyle",
         "python.linting.pylintEnabled": false,
         "python.pythonPath": "/usr/bin/python3.7",
-        "python.testing.pytestArgs": ["--headless"],
+        "python.testing.pytestArgs": [],
         "python.testing.pytestEnabled": true,
         "python.testing.unittestEnabled": false,
         "todo-tree.filtering.excludeGlobs": ["**/docs/**/*.*"],
@@ -64,7 +64,7 @@
             {
                 "label": "architecture",
                 "command": [
-                    "python3.7 -c \"import re; from rolling_pin.repo_etl import RepoETL; etl = RepoETL('/home/ubuntu/$REPO/python'); regex = 'test|mock'; data = etl._data.copy(); func = lambda x: not bool(re.search(regex, x)); mask = data.node_name.apply(func); data = data[mask]; data.reset_index(inplace=True, drop=True); data.dependencies = data.dependencies.apply(lambda x: list(filter(func, x))); etl._data = data; etl.write('docs/architecture.svg', orient='lr')\""
+                    "python3.7 -c \"import rolling_pin.repo_etl as rpo; rpo.write_repo_architecture('/home/ubuntu/$REPO/python', '/home/ubuntu/$REPO/docs/architecture.svg', exclude_regex='test|mock', orient='lr')\""
                 ],
                 "type": "shell"
             },
@@ -72,7 +72,7 @@
                 "label": "coverage",
                 "command": [
                     "mkdir -p docs &&",
-                    "pytest python -c docker/pytest.ini --cov=python --cov-config=docker/pytest.ini --cov-report=html:docs/htmlcov --headless"
+                    "pytest python -c docker/pytest.ini --cov=python --cov-config=docker/pytest.ini --cov-report=html:docs/htmlcov"
                 ],
                 "type": "shell"
             },

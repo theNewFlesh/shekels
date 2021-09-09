@@ -18,7 +18,7 @@ pandas
 pandasql
 plotly
 requests
-rolling-pin
+rolling-pin>=0.4.2
 schematics
 scikit-learn
 selenium
