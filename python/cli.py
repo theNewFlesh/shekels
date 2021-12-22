@@ -49,6 +49,7 @@ def get_info():
         action='store',
         help='''Command to run in {repo} app.
     app          - Run app inside {repo} container
+    app-no-debug - Run app inside {repo} container with debug_mode set to false
     build        - Build image of {repo}
     build-prod   - Build production image of {repo}
     container    - Display the Docker container id of {repo}
@@ -355,21 +356,24 @@ def tox_repo():
 
 
 # COMMANDS----------------------------------------------------------------------
-def app_command():
-    # type: () -> str
+def app_command(debug_mode=True):
+    # type: (bool) -> str
     '''
+    Args:
+        debug_mode (bool, optional): Debug mode. Default: True.
+
     Returns:
         str: Command to start app.
     '''
+    cmd = '''
+        -e REPO_ENV=True {repo}
+        python3.7 /home/ubuntu/{repo}/python/{repo}/server/app.py'''
+    if debug_mode:
+        cmd = '-e DEBUG_MODE=True ' + cmd
     cmds = [
         enter_repo(),
         start(),
-        line(
-            docker_exec() + '''
-                -e DEBUG_MODE=True
-                -e REPO_ENV=True {repo}
-                python3.7 /home/ubuntu/{repo}/python/{repo}/server/app.py'''
-        ),
+        line(docker_exec() + cmd),
         exit_repo(),
     ]
     return resolve(cmds)
@@ -1029,6 +1033,7 @@ def main():
     mode, args = get_info()
     lut = {
         'app': app_command(),
+        'app-no-debug': app_command(debug_mode=False),
         'build': build_dev_command(),
         'build-prod': build_prod_command(),
         'container': container_id_command(),
