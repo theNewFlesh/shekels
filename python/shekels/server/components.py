@@ -7,9 +7,9 @@ from lunchbox.enforce import Enforce, EnforceError
 from pandas import DataFrame, DatetimeIndex
 from schematics.exceptions import DataError
 import dash
-import dash_core_components as dcc
-import dash_html_components as html
-import dash_table
+from dash import dash_table
+from dash import dcc
+from dash import html
 import flask
 import lunchbox.tools as lbt
 import rolling_pin.blob_etl as rpb

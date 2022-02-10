@@ -8,9 +8,9 @@ import os
 from dash.dependencies import Input, Output, State
 from flask_caching import Cache
 import dash
-import dash_core_components as dcc
-import dash_html_components as html
-import dash_table
+from dash import dash_table
+from dash import dcc
+from dash import html
 from flask_healthz import healthz, HealthError
 import flasgger as swg
 import flask

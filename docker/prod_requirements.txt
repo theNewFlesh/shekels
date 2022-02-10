@@ -1,9 +1,6 @@
 apispec
 beautifulsoup4
-dash
-dash-core-components
-dash-html-components
-dash-table
+dash>=2.0.0
 flasgger
 flask
 flask-healthz
