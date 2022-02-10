@@ -1,6 +1,5 @@
 # ansible
-devops/ansible/**/*.retry
-docker/password.txt
+ansible/password.txt
 
 # c
 *.so
@@ -42,7 +41,7 @@ var
 
 # personal data
 resources/shekels_config.json
-resources/transactions.csv
+resources/*transactions.csv
 
 # python
 __pycache__
