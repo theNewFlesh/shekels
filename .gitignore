@@ -1,5 +1,6 @@
 # ansible
 devops/ansible/**/*.retry
+docker/password.txt
 
 # c
 *.so

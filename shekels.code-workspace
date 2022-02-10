@@ -1,6 +1,7 @@
 {
     "folders": [{"path": "./"}],
     "settings": {
+        "ansibleVault.keyfile": "ansible/password.txt",
         "debug.allowBreakpointsEverywhere": true,
         "python.languageServer": "Pylance",
         "python.linting.enabled": true,

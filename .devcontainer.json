@@ -47,6 +47,7 @@
         "bibhasdn.unique-lines",
         "christian-kohler.path-intellisense",
         "compulim.indent4to2",
+        "dhoeric.ansible-vault",
         "eamodio.gitlens",
         "esbenp.prettier-vscode",
         "euskadi31.json-pretty-printer",

@@ -73,6 +73,11 @@ RUN echo "\n${CYAN}INSTALL NODE.JS${CLEAR}"; \
     apt install -y nodejs && \
     rm -rf /var/lib/apt/lists/*
 
+# install ansible
+RUN echo "\n${CYAN}INSTALL ANSIBLE${CLEAR}"; \
+    apt-add-repository -y --update ppa:ansible/ansible && \
+    apt install -y ansible
+
 USER ubuntu
 ENV PATH="/home/ubuntu/.local/bin:$PATH"
 COPY ./henanigans.zsh-theme .oh-my-zsh/custom/themes/henanigans.zsh-theme
