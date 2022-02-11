@@ -217,7 +217,7 @@ class ConfigSchematicTests(unittest.TestCase):
         # action
         bad = deepcopy(ow)
         bad['action'] = 'foo'
-        expected = 'action.*Value must be one of.*overwrite.*substitute'
+        expected = 'action.*Value.*must be one of.*overwrite.*substitute'
         with self.assertRaisesRegexp(DataError, expected):
             cfg.ConformAction(bad).validate()
 
@@ -375,7 +375,7 @@ class ConfigSchematicTests(unittest.TestCase):
             bad = deepcopy(ow)
             bad['action'] = 'foo'
             config['conform'] = [ow, sub, bad]
-            expected = 'action.*Value must be one of.*overwrite.*substitute'
+            expected = 'action.*Value.*must be one of .*overwrite.*substitute'
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(config).validate()
 
