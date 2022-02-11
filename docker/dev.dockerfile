@@ -25,7 +25,6 @@ RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${CLEAR}"; \
     apt update && \
     apt install -y \
         curl \
-        chromium-chromedriver \
         git \
         graphviz \
         npm \
@@ -37,6 +36,11 @@ RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${CLEAR}"; \
         tree \
         vim \
         wget
+
+# install chrome driver
+RUN echo "\n${CYAN}INSTALL CHROME DRIVER${CLEAR}"; \
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    apt install -y google-chrome-stable_current_amd64.deb 
 
 # install zsh
 RUN echo "\n${CYAN}SETUP ZSH${CLEAR}"; \
