@@ -39,8 +39,10 @@ RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${CLEAR}"; \
 
 # install chrome driver
 RUN echo "\n${CYAN}INSTALL CHROME DRIVER${CLEAR}"; \
-    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-    apt install -y google-chrome-stable_current_amd64.deb 
+    apt update && \
+    curl -fsSL https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+        -o google-chrome.deb && \
+    apt install -y --fix-missing ./google-chrome.deb
 
 # install zsh
 RUN echo "\n${CYAN}SETUP ZSH${CLEAR}"; \
