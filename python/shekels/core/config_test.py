@@ -40,7 +40,7 @@ class ConfigValidatorTests(unittest.TestCase):
             cfg.is_color_scheme(cs)
 
     def test_is_comparator(self):
-        comps = ['==', '!=', '>', '>=', '<', '=<', '~', '!~']
+        comps = ['==', '!=', '>', '>=', '<', '<=', '~', '!~']
         for comp in comps:
             cfg.is_comparator(comp)
 

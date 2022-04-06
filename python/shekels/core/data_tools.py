@@ -137,7 +137,7 @@ def filter_data(data, column, comparator, value):
         *  > ``lambda a, b: a > b``
         * >= ``lambda a, b: a >= b``
         *  < ``lambda a, b: a < b``
-        * =< ``lambda a, b: a <= b``
+        * <= ``lambda a, b: a <= b``
         *  ~ ``lambda a, b: bool(re.search(a, b, flags=re.I))``
         * !~ ``lambda a, b: not bool(re.search(a, b, flags=re.I))``
 

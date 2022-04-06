@@ -87,7 +87,7 @@ def is_comparator(item):
         * >
         * >=
         * <
-        * =<
+        * <=
         * ~
         * !~
 
@@ -97,7 +97,7 @@ def is_comparator(item):
     Raises:
         ValidationError: If item is not a legal comparator.
     '''
-    comps = ['==', '!=', '>', '>=', '<', '=<', '~', '!~']
+    comps = ['==', '!=', '>', '>=', '<', '<=', '~', '!~']
     if item not in comps:
         msg = f'{item} is not a legal comparator. Legal comparators: {comps}.'
         raise ValidationError(msg)
