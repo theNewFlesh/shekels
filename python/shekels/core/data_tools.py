@@ -485,6 +485,12 @@ def get_figure(
     figure['layout']['yaxis']['title']['font']['color'] = '#F4F4F4'
     if color_scheme != {}:
         figure = conform_figure(figure, color_scheme)
+
+    # makes area traces stackable
+    if kind == 'area':
+        for trace in figure['data']:
+            trace['stackgroup'] = 1
+
     return figure
 
 
