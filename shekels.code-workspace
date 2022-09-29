@@ -249,9 +249,7 @@
             {
                 "label": "requirements",
                 "command": [
-                    "python3.7",
-                        "-m pip list",
-                        "--format freeze",
+                    "python3.7 -m pip list --format freeze",
                     "> docker/frozen_requirements.txt"
                 ],
                 "type": "shell"
