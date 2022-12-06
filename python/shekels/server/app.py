@@ -71,9 +71,14 @@ def get_app():
     fmdb.config.link = 'monitor'
     fmdb.config.monitor_level = 3
     fmdb.config.git = 'https://theNewFlesh.github.io/shekels/'
-    fmdb.config.username = 'admin'
-    fmdb.config.password = 'password'
-    fmdb.bind(flask_app)
+    fmdb.config.brand_name = 'Shekels Monitoring Dashboard'
+    fmdb.config.title_name = 'Shekels Monitoring Dashboard'
+    fmdb.config.description = 'Monitor Shekels App Performance'
+    fmdb.config.enable_logging = False
+    fmdb.config.show_login_banner = True
+    fmdb.config.show_login_footer = True
+    fmdb.config.database_name = 'sqlite:////tmp/shekels_monitor.db'
+    fmdb.bind(app)
 
     app = svc.get_dash_app(flask_app)
     app.api = API
