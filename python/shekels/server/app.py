@@ -78,7 +78,7 @@ def get_app():
     fmdb.config.show_login_banner = True
     fmdb.config.show_login_footer = True
     fmdb.config.database_name = 'sqlite:////tmp/shekels_monitor.db'
-    fmdb.bind(app)
+    fmdb.bind(flask_app)
 
     app = svc.get_dash_app(flask_app)
     app.api = API
