@@ -549,6 +549,7 @@ x_test_coverage () {
         --cov=$REPO_DIR/python \
         --cov-config=$CONFIG_DIR/pyproject.toml \
         --cov-report=html:$REPO_DIR/docs/htmlcov \
+        --headless \
         $REPO_SUBPACKAGE;
 }
 
@@ -562,6 +563,7 @@ x_test_dev () {
         --numprocesses $TEST_PROCS \
         --verbosity $TEST_VERBOSITY \
         --durations 20 \
+        --headless \
         $REPO_SUBPACKAGE;
 }
 
@@ -575,6 +577,7 @@ x_test_fast () {
         -c $CONFIG_DIR/pyproject.toml \
         --numprocesses $TEST_PROCS \
         --verbosity $TEST_VERBOSITY \
+        --headless \
         $REPO_SUBPACKAGE;
 }
 
@@ -608,6 +611,7 @@ x_test_run () {
         -c pyproject.toml \
         --numprocesses $TEST_PROCS \
         --verbosity $TEST_VERBOSITY \
+        --headless \
         $REPO_SUBPACKAGE;
     exit_code=`_x_resolve_exit_code $exit_code $?`;
 
