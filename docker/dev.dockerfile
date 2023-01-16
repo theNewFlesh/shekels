@@ -135,6 +135,16 @@ RUN echo "\n${CYAN}INSTALL PROD ENVIRONMENTS${CLEAR}"; \
     x_env_init prod 3.9 && \
     x_env_init prod 3.8
 
+# install chrome driver
+USER root
+RUN echo "\n${CYAN}INSTALL CHROME DRIVER${CLEAR}"; \
+    apt update && \
+    curl -fsSL https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+        -o google-chrome.deb && \
+    apt install -y --fix-missing ./google-chrome.deb && \
+    rm -rf /var/lib/apt/lists/*
+
+USER ubuntu
 WORKDIR /home/ubuntu
 RUN echo "\n${CYAN}REMOVE DIRECTORIES${CLEAR}"; \
     rm -rf config scripts
