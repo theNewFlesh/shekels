@@ -60,12 +60,7 @@ def get_dash_app(server, storage_type='memory'):
         fullscreen=True,
     )
 
-    # path to resources inside pip package
-    assets = lbt.relative_path(__file__, "../resources")
-
-    # path to resources inside repo
-    if 'REPO_ENV' in os.environ.keys():
-        assets = lbt.relative_path(__file__, "../../../resources")
+    assets = lbt.relative_path(__file__, "../../../resources")
 
     app = dash.Dash(
         name='Shekels',

@@ -23,9 +23,7 @@ import shekels.server.components as svc
 # ------------------------------------------------------------------------------
 
 
-TEMPLATE_DIR = lbt.relative_path(__file__, '../templates').as_posix()
-if 'REPO_ENV' in os.environ.keys():
-    TEMPLATE_DIR = lbt.relative_path(__file__, '../../../templates').as_posix()
+TEMPLATE_DIR = lbt.relative_path(__file__, '../../../templates').as_posix()
 
 
 def error_to_dict(error):
