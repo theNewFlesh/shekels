@@ -1,6 +1,6 @@
 # VARIABLES---------------------------------------------------------------------
 export HOME="/home/ubuntu"
-export REPO="rolling-pin"
+export REPO="shekels"
 export REPO_DIR="$HOME/$REPO"
 export REPO_SNAKE_CASE=`echo $REPO | sed 's/-/_/g'`
 export REPO_SUBPACKAGE="$REPO_DIR/python/$REPO_SNAKE_CASE"
@@ -36,12 +36,6 @@ export WHITE='\033[0;97m'
 export YELLOW1='\033[0;33m'
 export YELLOW2='\033[0;93m'
 export CLEAR='\033[0m'
-
-# ROLLING-PIN-------------------------------------------------------------------
-# If command.py is available use it, otherwise expect pip installed rolling-pin
-if [ -f "$REPO_COMMAND_FILE" ]; then
-    alias rolling-pin="python3 $REPO_COMMAND_FILE";
-fi;
 
 # GENERATE-FUNCTIONS------------------------------------------------------------
 _x_repeat () {
@@ -240,7 +234,9 @@ _x_build () {
     # args: type (test or prod)
     x_env_activate_dev;
     rm -rf $BUILD_DIR;
-    rolling-pin conform $CONFIG_DIR/build.yaml --groups base,$1;
+    rolling-pin conform \
+        $CONFIG_DIR/build.yaml \
+        --groups base,$1;
     _x_gen_pyproject $1 > $BUILD_DIR/repo/pyproject.toml;
     touch $BUILD_DIR/repo/$REPO_SNAKE_CASE/py.typed;
 }
@@ -352,8 +348,10 @@ x_docs_metrics () {
     echo "${CYAN2}GENERATING METRICS${CLEAR}\n";
     x_env_activate_dev;
     cd $REPO_DIR;
-    rolling-pin plot $REPO_DIR/python $REPO_DIR/docs/plots.html;
-    rolling-pin table $REPO_DIR/python $REPO_DIR/docs;
+    rolling-pin plot \
+        $REPO_DIR/python $REPO_DIR/docs/plots.html;
+    rolling-pin table \
+        $REPO_DIR/python $REPO_DIR/docs;
 }
 
 # LIBRARY-FUNCTIONS-------------------------------------------------------------
