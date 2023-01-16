@@ -1,10 +1,8 @@
-version: "3.4"
-volumes:
-  cache:
+version: "3.8"
 services:
   shekels:
     container_name: shekels
-    image: shekels
+    image: shekels:dev
     build:
       context: .
       dockerfile: dev.dockerfile
@@ -14,11 +12,11 @@ services:
     userns_mode: "host"
     user: ubuntu
     volumes:
-      - ../resources:/mnt/storage
       - ../:/home/ubuntu/shekels
-      - ./jupyter:/home/ubuntu/.jupyter
-      - ./ipython:/home/ubuntu/.ipython
+      - ~/.ssh:/home/ubuntu/.ssh:ro
+      - ./config/jupyter:/home/ubuntu/.jupyter
+      - ./config/zshrc:/home/ubuntu/.zshrc
       - ../artifacts:/tmp/dash_artifacts
-      - ~/.ssh:/home/ubuntu/.ssh
+      - ../resources:/mnt/storage
     working_dir: "/home/ubuntu"
     command: "tail -f /dev/null"
