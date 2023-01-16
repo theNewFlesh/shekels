@@ -1,5 +1,8 @@
+# OH-MY-ZSH---------------------------------------------------------------------
+export SHELL=`which zsh`
 ZSH_THEME="henanigans"
 export ZSH="/home/ubuntu/.oh-my-zsh"
+fpath=(~/.oh-my-zsh/custom/completions $fpath)
 DISABLE_UPDATE_PROMPT=true
 plugins=(
     aws
@@ -15,6 +18,36 @@ plugins=(
     zsh-history-enquirer
 )
 source $ZSH/oh-my-zsh.sh
-echo 'will cite' | parallel --citation >> /dev/null 2>&1
+
+# X-TOOLS-----------------------------------------------------------------------
+source /home/ubuntu/rolling-pin/docker/scripts/x_tools.sh
+
+# ALIASES-----------------------------------------------------------------------
+alias l='ls -hl'
 alias ll='ls -hlA'
-alias tree='tree -Ca'
+
+# exa aliases
+if [[ `which exa` != "* not found" ]]; then
+    alias l='exa --long --header';
+    alias ll='exa --long --header --all';
+    alias tree='exa --tree --all';
+fi;
+
+# batcat aliases
+if [[ `which batcat` != "* not found" ]]; then
+    alias cat='batcat';
+    alias pcat='batcat --plain --color never';
+    alias xcat='batcat --show-all';
+fi;
+
+# MISC--------------------------------------------------------------------------
+# remove parallel nagware
+if [[ `which parallel` != "* not found" ]]; then
+    echo 'will cite' | parallel --citation >> /dev/null 2>&1;
+fi;
+
+# fix git permissions
+git config --global --add safe.directory /home/ubuntu/rolling-pin
+
+# activate dev env
+x_env_activate_dev;
