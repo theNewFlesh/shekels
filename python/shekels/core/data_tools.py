@@ -386,39 +386,20 @@ def pivot_data(data, columns, values=[], index=None):
     return data
 
 
-def get_figure(
+def transform_data(
     data,              # type: DataFrame
     filters=[],        # type: List[dict]
     group=None,        # type: Optional[dict]
     pivot=None,        # type: Optional[dict]
-    kind='bar',        # type: str
-    color_scheme={},   # type: Dict[str, str]
-    x_axis=None,       # type: Optional[str]
-    y_axis=None,       # type: Optional[str]
-    title=None,        # type: Optional[str]
-    x_title=None,      # type: Optional[str]
-    y_title=None,      # type: Optional[str]
-    bins=50,           # type: int
-    bar_mode='stack',  # type: str
 ):
     '''
-    Generates a plotly figure dictionary from given data and manipulations.
+    Transforms given DataFrame into custom format for plotting.
 
     Args:
         data (DataFrame): Data.
         filters (list[dict], optional): List of filters for data. Default: [].
         group (dict, optional): Grouping operation. Default: None.
         pivot (dict, optional): Pivot operation. Default: None.
-        kind (str, optional): Kind of plot. Default: bar.
-        color_scheme (dict[str, str], optional): Color scheme. Default: {}.
-        x_axis (str): Column to use as x axis: Default: None.
-        y_axis (str): Column to use as y axis: Default: None.
-        title (str, optional): Title of plot. Default: None.
-        x_title (str, optional): Title of x axis. Default: None.
-        y_title (str, optional): Title of y axis. Default: None.
-        bins (int, optional): Number of bins if histogram. Default: 50.
-        bar_mode (str, optional): How bars in bar graph are presented.
-            Default: stack.
 
     Raises:
         DataError: If any filter in filters is invalid.
@@ -474,6 +455,49 @@ def get_figure(
             data, pvt['columns'], values=pvt['values'], index=pvt['index']
         )
 
+    data.dropna(how='all', axis=1, inplace=True)
+    return data
+
+
+def get_figure(
+    data,              # type: DataFrame
+    filters=[],        # type: List[dict]
+    group=None,        # type: Optional[dict]
+    pivot=None,        # type: Optional[dict]
+    kind='bar',        # type: str
+    color_scheme={},   # type: Dict[str, str]
+    x_axis=None,       # type: Optional[str]
+    y_axis=None,       # type: Optional[str]
+    title=None,        # type: Optional[str]
+    x_title=None,      # type: Optional[str]
+    y_title=None,      # type: Optional[str]
+    bins=50,           # type: int
+    bar_mode='stack',  # type: str
+):
+    '''
+    Generates a plotly figure dictionary from given data and manipulations.
+
+    Args:
+        data (DataFrame): Data.
+        filters (list[dict], optional): List of filters for data. Default: [].
+        group (dict, optional): Grouping operation. Default: None.
+        pivot (dict, optional): Pivot operation. Default: None.
+        kind (str, optional): Kind of plot. Default: bar.
+        color_scheme (dict[str, str], optional): Color scheme. Default: {}.
+        x_axis (str): Column to use as x axis: Default: None.
+        y_axis (str): Column to use as y axis: Default: None.
+        title (str, optional): Title of plot. Default: None.
+        x_title (str, optional): Title of x axis. Default: None.
+        y_title (str, optional): Title of y axis. Default: None.
+        bins (int, optional): Number of bins if histogram. Default: 50.
+        bar_mode (str, optional): How bars in bar graph are presented.
+            Default: stack.
+
+    Returns:
+        dict: Plotly Figure as dictionary.
+    '''
+    data = transform_data(data, filters=filters, group=group, pivot=pivot)
+
     # create figure
     figure = data.iplot(
         kind=kind, asFigure=True, theme='henanigans', colorscale='henanigans',
@@ -490,6 +514,13 @@ def get_figure(
     if kind == 'area':
         for trace in figure['data']:
             trace['stackgroup'] = 1
+
+    # fix bar width to a minimum of 4
+    # if kind == 'bar':
+    #     min_width = 4
+    #     for trace in figure['data']:
+    #         width = trace['marker']['line'].get('width', min_width)
+    #         trace['marker']['line']['width'] = max(width, min_width)
 
     return figure
 
