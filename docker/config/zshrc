@@ -20,7 +20,7 @@ plugins=(
 source $ZSH/oh-my-zsh.sh
 
 # X-TOOLS-----------------------------------------------------------------------
-source /home/ubuntu/rolling-pin/docker/scripts/x_tools.sh
+source /home/ubuntu/shekels/docker/scripts/x_tools.sh
 
 # ALIASES-----------------------------------------------------------------------
 alias l='ls -hl'
@@ -47,7 +47,17 @@ if [[ `which parallel` != "* not found" ]]; then
 fi;
 
 # fix git permissions
-git config --global --add safe.directory /home/ubuntu/rolling-pin
+git config --global --add safe.directory /home/ubuntu/shekels
 
 # activate dev env
 x_env_activate_dev;
+
+# ROLLING-PIN-------------------------------------------------------------------
+# if rolling-pin cli exists install its zsh completions if they do not exist
+if [[ `which rolling-pin` != "* not found" ]]; then
+    if [ ! -f "$ZSH/custom/completions/_rolling-pin" ]; then
+        mkdir -p $ZSH/custom/completions;
+        rolling-pin zsh-completion > $ZSH/custom/completions/_rolling-pin && \
+        echo 'rolling-pin zsh-completions installed';
+    fi;
+fi;
