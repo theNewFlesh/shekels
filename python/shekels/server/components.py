@@ -1,7 +1,7 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional  # noqa: F401
+import flask  # noqa: F401
 
 from copy import copy
-import os
 
 from lunchbox.enforce import Enforce, EnforceError
 from pandas import DataFrame, DatetimeIndex
@@ -10,7 +10,6 @@ import dash
 from dash import dash_table
 from dash import dcc
 from dash import html
-import flask
 import lunchbox.tools as lbt
 import rolling_pin.blob_etl as rpb
 

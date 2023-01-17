@@ -1,8 +1,8 @@
-from typing import List, Union
+from typing import List, Union  # noqa: F401
+from pathlib import Path  # noqa: F401
 
 from copy import deepcopy
 from functools import lru_cache
-from pathlib import Path
 
 import jsoncomment as jsonc
 import numpy as np

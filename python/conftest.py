@@ -1,5 +1,4 @@
 import logging
-import os
 
 from selenium.webdriver.chrome.options import Options
 import lunchbox.tools as lbt
