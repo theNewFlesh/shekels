@@ -294,7 +294,7 @@ def get_key_value_table(
     # transform data
     data = [dict(key=k, value=data[k]) for k in keys]
 
-    cols = []  # type: Any
+    cols = []
     if len(data) > 0:
         cols = data[0].keys()
     cols = [{'name': x, 'id': x} for x in cols]

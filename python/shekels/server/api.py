@@ -92,7 +92,7 @@ def initialize():
     if len(flask.request.get_data()) == 0:
         raise RuntimeError(msg)
 
-    config = flask.request.get_json()
+    config = flask.request.get_json()  # type: Any
     config = json.loads(config)
     if not isinstance(config, dict):
         raise RuntimeError(msg)
