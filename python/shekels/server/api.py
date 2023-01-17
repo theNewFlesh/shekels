@@ -88,11 +88,11 @@ def initialize():
     Returns:
         Response: Flask Response instance.
     '''
-    config = flask.request.get_json()
     msg = 'Please supply a config dictionary.'
-    if config is None:
+    if len(flask.request.get_data()) == 0:
         raise RuntimeError(msg)
 
+    config = flask.request.get_json()
     config = json.loads(config)
     if not isinstance(config, dict):
         raise RuntimeError(msg)
