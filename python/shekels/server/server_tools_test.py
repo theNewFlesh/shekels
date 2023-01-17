@@ -423,7 +423,7 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
             self.assertTrue(config_path.is_file())
 
             with open(CONFIG_PATH) as f:
-                result = json.load(f)
+                result = jsonc.JsonComment().load(f)
             self.assertEqual(result, config)
 
     def test_save_event_error(self):
