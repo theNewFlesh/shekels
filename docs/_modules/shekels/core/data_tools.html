@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
@@ -30,9 +32,9 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -62,7 +64,7 @@
             
             
               <div class="version">
-                0.8.7
+                1.0.4
               </div>
             
           
@@ -87,16 +89,22 @@
               
             
             
-              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#production-cli">Production CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#development-cli">Development CLI</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Python API</span></p>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../enforce.html">enforce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development CLI</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
 </ul>
 
@@ -164,7 +172,8 @@
            <div itemprop="articleBody">
             
   <h1>Source code for shekels.core.data_tools</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>  <span class="c1"># noqa: F401</span>
+<span class="kn">import</span> <span class="nn">cufflinks</span> <span class="k">as</span> <span class="nn">cf</span>  <span class="c1"># noqa: F401</span>
 
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
@@ -174,12 +183,11 @@
 <span class="kn">from</span> <span class="nn">lunchbox.enforce</span> <span class="kn">import</span> <span class="n">Enforce</span>
 <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">DatetimeIndex</span>
 <span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">DataError</span>
-<span class="kn">import</span> <span class="nn">cufflinks</span> <span class="k">as</span> <span class="nn">cf</span>  <span class="c1"># noqa: F401</span>
 <span class="kn">import</span> <span class="nn">lunchbox.tools</span> <span class="k">as</span> <span class="nn">lbt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandasql</span>
 <span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
-<span class="kn">import</span> <span class="nn">rolling_pin.blob_etl</span> <span class="k">as</span> <span class="nn">rpblob</span>
+<span class="kn">import</span> <span class="nn">rolling_pin.blob_etl</span> <span class="k">as</span> <span class="nn">rpb</span>
 <span class="kn">import</span> <span class="nn">webcolors</span>
 
 <span class="kn">from</span> <span class="nn">shekels.core.config</span> <span class="kn">import</span> <span class="n">ConformAction</span>
@@ -236,7 +244,7 @@
 
 <div class="viewcode-block" id="conform"><a class="viewcode-back" href="../../../core.html#shekels.core.data_tools.conform">[docs]</a><span class="k">def</span> <span class="nf">conform</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">actions</span><span class="o">=</span><span class="p">[],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[]):</span>
     <span class="c1"># type: (DataFrame, List[dict], List[str]) -&gt; DataFrame</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Conform given mint transaction data.</span>
 
 <span class="sd">    Args:</span>
@@ -293,7 +301,7 @@
 
 <div class="viewcode-block" id="filter_data"><a class="viewcode-back" href="../../../core.html#shekels.core.data_tools.filter_data">[docs]</a><span class="k">def</span> <span class="nf">filter_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">comparator</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="c1"># type: (DataFrame, str, str, Any) -&gt; DataFrame</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Filters given data via comparator(column value, value).</span>
 
 <span class="sd">    Legal comparators:</span>
@@ -303,7 +311,7 @@
 <span class="sd">        *  &gt; ``lambda a, b: a &gt; b``</span>
 <span class="sd">        * &gt;= ``lambda a, b: a &gt;= b``</span>
 <span class="sd">        *  &lt; ``lambda a, b: a &lt; b``</span>
-<span class="sd">        * =&lt; ``lambda a, b: a &lt;= b``</span>
+<span class="sd">        * &lt;= ``lambda a, b: a &lt;= b``</span>
 <span class="sd">        *  ~ ``lambda a, b: bool(re.search(a, b, flags=re.I))``</span>
 <span class="sd">        * !~ ``lambda a, b: not bool(re.search(a, b, flags=re.I))``</span>
 
@@ -354,7 +362,7 @@
 
 <div class="viewcode-block" id="group_data"><a class="viewcode-back" href="../../../core.html#shekels.core.data_tools.group_data">[docs]</a><span class="k">def</span> <span class="nf">group_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">datetime_column</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">):</span>
     <span class="c1"># type: (DataFrame, Union[str, List[str]], str, str) -&gt; DataFrame</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Groups given data by given columns according to given metric.</span>
 <span class="sd">    If a legal time interval is given in the columns, then an additional special</span>
 <span class="sd">    column of that same name is added to the data for grouping.</span>
@@ -485,7 +493,7 @@
 
 <div class="viewcode-block" id="pivot_data"><a class="viewcode-back" href="../../../core.html#shekels.core.data_tools.pivot_data">[docs]</a><span class="k">def</span> <span class="nf">pivot_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[],</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="c1"># type: (DataFrame, List[str], List[str], Optional[str]) -&gt; DataFrame</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Pivots a given dataframe via a list of columns.</span>
 
 <span class="sd">    Legal time columns:</span>
@@ -567,7 +575,7 @@
     <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>           <span class="c1"># type: int</span>
     <span class="n">bar_mode</span><span class="o">=</span><span class="s1">&#39;stack&#39;</span><span class="p">,</span>  <span class="c1"># type: str</span>
 <span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Generates a plotly figure dictionary from given data and manipulations.</span>
 
 <span class="sd">    Args:</span>
@@ -651,11 +659,17 @@
     <span class="n">figure</span><span class="p">[</span><span class="s1">&#39;layout&#39;</span><span class="p">][</span><span class="s1">&#39;yaxis&#39;</span><span class="p">][</span><span class="s1">&#39;title&#39;</span><span class="p">][</span><span class="s1">&#39;font&#39;</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;#F4F4F4&#39;</span>
     <span class="k">if</span> <span class="n">color_scheme</span> <span class="o">!=</span> <span class="p">{}:</span>
         <span class="n">figure</span> <span class="o">=</span> <span class="n">conform_figure</span><span class="p">(</span><span class="n">figure</span><span class="p">,</span> <span class="n">color_scheme</span><span class="p">)</span>
+
+    <span class="c1"># makes area traces stackable</span>
+    <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;area&#39;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">trace</span> <span class="ow">in</span> <span class="n">figure</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]:</span>
+            <span class="n">trace</span><span class="p">[</span><span class="s1">&#39;stackgroup&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
     <span class="k">return</span> <span class="n">figure</span></div>
 
 
 <div class="viewcode-block" id="parse_rgba"><a class="viewcode-back" href="../../../core.html#shekels.core.data_tools.parse_rgba">[docs]</a><span class="k">def</span> <span class="nf">parse_rgba</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Parses rgb and rgba strings into tuples of numbers.</span>
 
 <span class="sd">    Example:</span>
@@ -688,7 +702,7 @@
 
 
 <div class="viewcode-block" id="conform_figure"><a class="viewcode-back" href="../../../core.html#shekels.core.data_tools.conform_figure">[docs]</a><span class="k">def</span> <span class="nf">conform_figure</span><span class="p">(</span><span class="n">figure</span><span class="p">,</span> <span class="n">color_scheme</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Conforms given figure to use given color scheme.</span>
 
 <span class="sd">    Args:</span>
@@ -705,7 +719,7 @@
             <span class="n">lut</span><span class="p">[</span><span class="n">val</span><span class="p">]</span> <span class="o">=</span> <span class="n">color_scheme</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
 
     <span class="c1"># rgba? to hex --&gt; coerce to standard colors --&gt; coerce with color_scheme</span>
-    <span class="n">figure</span> <span class="o">=</span> <span class="n">rpblob</span><span class="o">.</span><span class="n">BlobETL</span><span class="p">(</span><span class="n">figure</span><span class="p">)</span> \
+    <span class="n">figure</span> <span class="o">=</span> <span class="n">rpb</span><span class="o">.</span><span class="n">BlobETL</span><span class="p">(</span><span class="n">figure</span><span class="p">)</span> \
         <span class="o">.</span><span class="n">set</span><span class="p">(</span>
             <span class="n">predicate</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;rgb&#39;</span> <span class="ow">in</span> <span class="n">v</span><span class="p">,</span>
             <span class="n">value_setter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">webcolors</span><span class="o">.</span><span class="n">rgb_to_hex</span><span class="p">(</span><span class="n">parse_rgba</span><span class="p">(</span><span class="n">v</span><span class="p">)[:</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span> \
@@ -721,27 +735,27 @@
 
 <span class="c1"># SQL-PARSING-------------------------------------------------------------------</span>
 <div class="viewcode-block" id="get_sql_grammar"><a class="viewcode-back" href="../../../core.html#shekels.core.data_tools.get_sql_grammar">[docs]</a><span class="k">def</span> <span class="nf">get_sql_grammar</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Creates a grammar for parsing SQL queries.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">       MatchFirst: SQL parser.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">select</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;select&#39;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span> \
-        <span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="s1">&#39;select&#39;</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="s1">&#39;select&#39;</span><span class="p">)</span> \
         <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;operator&#39;</span><span class="p">)</span>
     <span class="n">from_</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;from&#39;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">))</span>
     <span class="n">table</span> <span class="o">=</span> <span class="p">(</span><span class="n">from_</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;[a-z]+&#39;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">))</span> \
-        <span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> \
+        <span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> \
         <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;table&#39;</span><span class="p">)</span>
-    <span class="n">regex</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;~|regex&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="s1">&#39;~&#39;</span><span class="p">)</span>
-    <span class="n">not_regex</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;!~|not regex&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="s1">&#39;!~&#39;</span><span class="p">)</span>
+    <span class="n">regex</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;~|regex&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="s1">&#39;~&#39;</span><span class="p">)</span>
+    <span class="n">not_regex</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;!~|not regex&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="s1">&#39;!~&#39;</span><span class="p">)</span>
     <span class="n">any_op</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;[^ ]*&#39;</span><span class="p">)</span>
     <span class="n">operator</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Or</span><span class="p">([</span><span class="n">not_regex</span><span class="p">,</span> <span class="n">regex</span><span class="p">,</span> <span class="n">any_op</span><span class="p">])</span><span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;operator&#39;</span><span class="p">)</span>
     <span class="n">quote</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">))</span>
     <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">quote</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;[^</span><span class="se">\&#39;</span><span class="s1">]+&#39;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span> <span class="o">+</span> <span class="n">quote</span><span class="p">)</span> \
         <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span> \
-        <span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">columns</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">delimitedList</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;[^, ]*&#39;</span><span class="p">),</span> <span class="n">delim</span><span class="o">=</span><span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;, *&#39;</span><span class="p">))</span> \
         <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;display_columns&#39;</span><span class="p">)</span>
     <span class="n">column</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;[a-z]+&#39;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span><span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;column&#39;</span><span class="p">)</span>
@@ -752,7 +766,7 @@
 
 
 <div class="viewcode-block" id="query_data"><a class="viewcode-back" href="../../../core.html#shekels.core.data_tools.query_data">[docs]</a><span class="k">def</span> <span class="nf">query_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Parses SQL + regex query and applies it to given data.</span>
 
 <span class="sd">    Regex operators:</span>
@@ -821,6 +835,29 @@
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">break</span>
     <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="query_dict"><a class="viewcode-back" href="../../../core.html#shekels.core.data_tools.query_dict">[docs]</a><span class="k">def</span> <span class="nf">query_dict</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+    <span class="c1"># type: (dict, str) -&gt; dict</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Query a given diction with a given SQL query.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (dict): Dictionary to be queried.</span>
+<span class="sd">        query (str): SQL query.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Queried dictionary.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">data_</span> <span class="o">=</span> <span class="n">data</span>  <span class="c1"># type: Any</span>
+    <span class="n">data_</span> <span class="o">=</span> <span class="n">rpb</span><span class="o">.</span><span class="n">BlobETL</span><span class="p">(</span><span class="n">data_</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">to_flat_dict</span><span class="p">()</span> \
+        <span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="n">data_</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data_</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">])</span>
+    <span class="n">data_</span> <span class="o">=</span> <span class="n">query_data</span><span class="p">(</span><span class="n">data_</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+    <span class="n">data_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">data_</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">data_</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
+    <span class="n">data_</span> <span class="o">=</span> <span class="n">rpb</span><span class="o">.</span><span class="n">BlobETL</span><span class="p">(</span><span class="n">data_</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">data_</span></div>
 </pre></div>
 
            </div>
@@ -832,7 +869,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Alex Braun &lt;TheNewFlesh@github.com&gt;.
+        &#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.
 
     </p>
   </div>

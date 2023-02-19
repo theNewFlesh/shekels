@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
@@ -30,9 +32,9 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -62,7 +64,7 @@
             
             
               <div class="version">
-                1.0.2
+                1.0.4
               </div>
             
           
@@ -87,16 +89,22 @@
               
             
             
-              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#production-cli">Production CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#development-cli">Development CLI</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Python API</span></p>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../enforce.html">enforce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development CLI</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
 </ul>
 
@@ -164,19 +172,18 @@
            <div itemprop="articleBody">
             
   <h1>Source code for shekels.server.components</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>  <span class="c1"># noqa: F401</span>
+<span class="kn">import</span> <span class="nn">flask</span>  <span class="c1"># noqa: F401</span>
 
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
-<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">from</span> <span class="nn">lunchbox.enforce</span> <span class="kn">import</span> <span class="n">Enforce</span><span class="p">,</span> <span class="n">EnforceError</span>
 <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">DatetimeIndex</span>
 <span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">DataError</span>
 <span class="kn">import</span> <span class="nn">dash</span>
-<span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="nn">dcc</span>
-<span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="k">as</span> <span class="nn">html</span>
-<span class="kn">import</span> <span class="nn">dash_table</span>
-<span class="kn">import</span> <span class="nn">flask</span>
+<span class="kn">from</span> <span class="nn">dash</span> <span class="kn">import</span> <span class="n">dash_table</span>
+<span class="kn">from</span> <span class="nn">dash</span> <span class="kn">import</span> <span class="n">dcc</span>
+<span class="kn">from</span> <span class="nn">dash</span> <span class="kn">import</span> <span class="n">html</span>
 <span class="kn">import</span> <span class="nn">lunchbox.tools</span> <span class="k">as</span> <span class="nn">lbt</span>
 <span class="kn">import</span> <span class="nn">rolling_pin.blob_etl</span> <span class="k">as</span> <span class="nn">rpb</span>
 
@@ -190,7 +197,7 @@
 <span class="c1"># APP---------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="get_dash_app"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_dash_app">[docs]</a><span class="k">def</span> <span class="nf">get_dash_app</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">storage_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">):</span>
     <span class="c1"># type: (flask.Flask, str) -&gt; dash.Dash</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Generate Dash Flask app instance.</span>
 
 <span class="sd">    Args:</span>
@@ -226,12 +233,7 @@
         <span class="n">fullscreen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="c1"># path to resources inside pip package</span>
-    <span class="n">assets</span> <span class="o">=</span> <span class="n">lbt</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s2">&quot;../resources&quot;</span><span class="p">)</span>
-
-    <span class="c1"># path to resources inside repo</span>
-    <span class="k">if</span> <span class="s1">&#39;REPO_ENV&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">assets</span> <span class="o">=</span> <span class="n">lbt</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s2">&quot;../../../resources&quot;</span><span class="p">)</span>
+    <span class="n">assets</span> <span class="o">=</span> <span class="n">lbt</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s2">&quot;../../../resources&quot;</span><span class="p">)</span>
 
     <span class="n">app</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">Dash</span><span class="p">(</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Shekels&#39;</span><span class="p">,</span>
@@ -249,7 +251,7 @@
 <span class="c1"># TABS--------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="get_data_tab"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_data_tab">[docs]</a><span class="k">def</span> <span class="nf">get_data_tab</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="c1"># type: (Optional[str]) -&gt; List</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Get tab element for Shekels data.</span>
 
 <span class="sd">    Args:</span>
@@ -267,7 +269,7 @@
 
 <div class="viewcode-block" id="get_plots_tab"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_plots_tab">[docs]</a><span class="k">def</span> <span class="nf">get_plots_tab</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="c1"># type: (Optional[str]) -&gt; List</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Get tab element for Shekels plots.</span>
 
 <span class="sd">    Args:</span>
@@ -287,7 +289,7 @@
 
 <div class="viewcode-block" id="get_config_tab"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_config_tab">[docs]</a><span class="k">def</span> <span class="nf">get_config_tab</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
     <span class="c1"># type: (Dict) -&gt; List</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Get tab element for Shekels config.</span>
 
 <span class="sd">    Args:</span>
@@ -310,7 +312,7 @@
 <span class="c1"># MENUBARS----------------------------------------------------------------------</span>
 <div class="viewcode-block" id="get_searchbar"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_searchbar">[docs]</a><span class="k">def</span> <span class="nf">get_searchbar</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="c1"># type: (Optional[str]) -&gt; html.Div</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Get a row of elements used for querying Shekels data.</span>
 
 <span class="sd">    Args:</span>
@@ -347,7 +349,7 @@
 
 <div class="viewcode-block" id="get_dummy_elements"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_dummy_elements">[docs]</a><span class="k">def</span> <span class="nf">get_dummy_elements</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; List</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Returns a list of all elements with callbacks so that the client will not</span>
 <span class="sd">    throw errors in each tab.</span>
 
@@ -369,7 +371,7 @@
 
 <div class="viewcode-block" id="get_configbar"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_configbar">[docs]</a><span class="k">def</span> <span class="nf">get_configbar</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;select * from config&#39;</span><span class="p">):</span>
     <span class="c1"># type: (Dict, Optional[str]) -&gt; html.Div</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Get a row of elements used for configuring Shekels.</span>
 
 <span class="sd">    Args:</span>
@@ -411,7 +413,7 @@
 <span class="c1"># ELEMENTS----------------------------------------------------------------------</span>
 <div class="viewcode-block" id="get_button"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_button">[docs]</a><span class="k">def</span> <span class="nf">get_button</span><span class="p">(</span><span class="n">title</span><span class="p">):</span>
     <span class="c1"># type: (str) -&gt; html.Button</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Get a html button with a given title.</span>
 
 <span class="sd">    Args:</span>
@@ -433,7 +435,7 @@
     <span class="n">data</span><span class="p">,</span> <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;key-value&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">editable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">key_order</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">):</span>
     <span class="c1"># type (dict, Optional(str), str, bool, Optional(List[str])) -&gt; DataTable</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Gets a Dash DataTable element representing given dictionary.</span>
 
 <span class="sd">    Args:</span>
@@ -465,7 +467,7 @@
     <span class="c1"># transform data</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">]</span>
 
-    <span class="n">cols</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: Any</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">cols</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
     <span class="n">cols</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">}</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">]</span>
@@ -489,7 +491,7 @@
 
 <div class="viewcode-block" id="get_datatable"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_datatable">[docs]</a><span class="k">def</span> <span class="nf">get_datatable</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">color_scheme</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">COLOR_SCHEME</span><span class="p">,</span> <span class="n">editable</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="c1"># type: (List[Dict], Dict[str, str], bool) -&gt; dash_table.DataTable</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Gets a Dash DataTable element using given data.</span>
 <span class="sd">    Assumes dict element has all columns of table as keys.</span>
 
@@ -524,7 +526,7 @@
 
 <div class="viewcode-block" id="get_plots"><a class="viewcode-back" href="../../../server.html#shekels.server.components.get_plots">[docs]</a><span class="k">def</span> <span class="nf">get_plots</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">plots</span><span class="p">):</span>
     <span class="c1"># type: (List[dict], List[dict]) -&gt; List[dcc.Graph]</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Gets a Dash plots using given dicts.</span>
 <span class="sd">    Assumes dict element has all columns of table as keys.</span>
 
@@ -601,7 +603,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Alex Braun &lt;TheNewFlesh@github.com&gt;.
+        &#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.
 
     </p>
   </div>

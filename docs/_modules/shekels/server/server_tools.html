@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
@@ -30,9 +32,9 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -62,7 +64,7 @@
             
             
               <div class="version">
-                0.10.2
+                1.0.4
               </div>
             
           
@@ -87,16 +89,22 @@
               
             
             
-              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#production-cli">Production CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#development-cli">Development CLI</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Python API</span></p>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../enforce.html">enforce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development CLI</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
 </ul>
 
@@ -164,23 +172,23 @@
            <div itemprop="articleBody">
             
   <h1>Source code for shekels.server.server_tools</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>  <span class="c1"># noqa: F401</span>
+<span class="kn">import</span> <span class="nn">dash</span>  <span class="c1"># noqa: F401</span>
 
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pformat</span>
 <span class="kn">import</span> <span class="nn">base64</span>
 <span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
 
 <span class="kn">from</span> <span class="nn">dash.exceptions</span> <span class="kn">import</span> <span class="n">PreventUpdate</span>
 <span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">DataError</span>
-<span class="kn">import</span> <span class="nn">dash</span>
 <span class="kn">import</span> <span class="nn">flask</span>
 <span class="kn">import</span> <span class="nn">jinja2</span>
 <span class="kn">import</span> <span class="nn">jsoncomment</span> <span class="k">as</span> <span class="nn">jsonc</span>
 <span class="kn">import</span> <span class="nn">lunchbox.tools</span> <span class="k">as</span> <span class="nn">lbt</span>
+<span class="kn">import</span> <span class="nn">rolling_pin.blob_etl</span> <span class="k">as</span> <span class="nn">rpb</span>
 
 <span class="kn">import</span> <span class="nn">shekels.core.config</span> <span class="k">as</span> <span class="nn">cfg</span>
 <span class="kn">import</span> <span class="nn">shekels.core.data_tools</span> <span class="k">as</span> <span class="nn">sdt</span>
@@ -188,16 +196,19 @@
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
-<div class="viewcode-block" id="error_to_response"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.error_to_response">[docs]</a><span class="k">def</span> <span class="nf">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
-    <span class="c1"># type: (Exception) -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Convenience function for formatting a given exception as a Flask Response.</span>
+<span class="n">TEMPLATE_DIR</span> <span class="o">=</span> <span class="n">lbt</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s1">&#39;../../../templates&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="error_to_dict"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.error_to_dict">[docs]</a><span class="k">def</span> <span class="nf">error_to_dict</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+    <span class="c1"># type: (Exception) -&gt; Dict[str, Any]</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Convenience function for formatting a given exception as a dictionary.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        error (Exception): Error to be formatted.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        flask.Response: Flask response.</span>
+<span class="sd">        Dict[str, Any]: Error dictionary.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: Any</span>
     <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">error</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
@@ -210,22 +221,36 @@
     <span class="n">args</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="n">klass</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
     <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">klass</span><span class="si">}</span><span class="s1">(</span><span class="se">\n</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="se">\n</span><span class="s1">)&#39;</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">args</span><span class="p">)),</span>
+        <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">,</span>
+        <span class="n">code</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+        <span class="n">traceback</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="error_to_response"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.error_to_response">[docs]</a><span class="k">def</span> <span class="nf">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+    <span class="c1"># type: (Exception) -&gt; flask.Response</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Convenience function for formatting a given exception as a Flask Response.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        error (Exception): Error to be formatted.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        flask.Response: Flask response.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
-        <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
-            <span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-            <span class="n">args</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">args</span><span class="p">)),</span>
-            <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">,</span>
-            <span class="n">code</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
-            <span class="n">traceback</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span>
-        <span class="p">)),</span>
+        <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">error_to_dict</span><span class="p">(</span><span class="n">error</span><span class="p">)),</span>
         <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
         <span class="n">status</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="render_template"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.render_template">[docs]</a><span class="k">def</span> <span class="nf">render_template</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="s1">&#39;../../../templates&#39;</span><span class="p">):</span>
-    <span class="c1"># type: (str, Dict[str, Any], str) -&gt; bytes</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="render_template"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.render_template">[docs]</a><span class="k">def</span> <span class="nf">render_template</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># type: (str, Dict[str, Any], Optional[str]) -&gt; bytes</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Renders a jinja2 template given by filename with given parameters.</span>
 
 <span class="sd">    Args:</span>
@@ -237,13 +262,8 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        bytes: HTML.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
-
-    <span class="c1"># path to templates inside pip package</span>
-    <span class="n">tempdir</span> <span class="o">=</span> <span class="n">lbt</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s1">&#39;../templates&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
-
-    <span class="c1"># path to templates inside repo</span>
-    <span class="k">if</span> <span class="s1">&#39;REPO_ENV&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="n">tempdir</span> <span class="o">=</span> <span class="n">TEMPLATE_DIR</span>
+    <span class="k">if</span> <span class="n">directory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">tempdir</span> <span class="o">=</span> <span class="n">lbt</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
 
     <span class="n">env</span> <span class="o">=</span> <span class="n">jinja2</span><span class="o">.</span><span class="n">Environment</span><span class="p">(</span>
@@ -256,7 +276,7 @@
 
 <div class="viewcode-block" id="parse_json_file_content"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.parse_json_file_content">[docs]</a><span class="k">def</span> <span class="nf">parse_json_file_content</span><span class="p">(</span><span class="n">raw_content</span><span class="p">):</span>
     <span class="c1"># type: (str) -&gt; Dict</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Parses JSON file content as supplied by HTML request.</span>
 
 <span class="sd">    Args:</span>
@@ -281,7 +301,7 @@
 
 <div class="viewcode-block" id="update_store"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.update_store">[docs]</a><span class="k">def</span> <span class="nf">update_store</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="c1"># type (FlaskClient, dict, str, Optional(dict)) -&gt; None</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Updates store with data from given endpoint.</span>
 <span class="sd">    Makes a post call to endpoint with client.</span>
 
@@ -299,7 +319,7 @@
 
 <div class="viewcode-block" id="store_key_is_valid"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.store_key_is_valid">[docs]</a><span class="k">def</span> <span class="nf">store_key_is_valid</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
     <span class="c1"># type: (dict, str) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Determines if given key is in store and does not have an error.</span>
 
 <span class="sd">    Args:</span>
@@ -322,14 +342,15 @@
 
 <div class="viewcode-block" id="solve_component_state"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.solve_component_state">[docs]</a><span class="k">def</span> <span class="nf">solve_component_state</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="c1"># type (dict) -&gt; Optional(html.Div)</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Solves what component to return given the state of the given store.</span>
 
-<span class="sd">    Returns a key value card component embedded with a relevant message or error</span>
+<span class="sd">    Returns a key value table component embedded with a relevant message or error</span>
 <span class="sd">    if a required key is not found in the store, or it contain a dictionary with</span>
 <span class="sd">    am &quot;error&quot; key in it. Those required keys are as follows:</span>
 
 <span class="sd">        * /config</span>
+<span class="sd">        * /config/search</span>
 <span class="sd">        * /api/initialize</span>
 <span class="sd">        * /api/update</span>
 <span class="sd">        * /api/search</span>
@@ -340,11 +361,12 @@
 <span class="sd">            Default: False.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Div: Key value card if store values are not present or have errors,</span>
+<span class="sd">        Div: Key value table if store values are not present or have errors,</span>
 <span class="sd">            otherwise, none.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">states</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;/config/search&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
         <span class="p">[</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="s1">&#39;Please call init or update.&#39;</span><span class="p">],</span>
         <span class="p">[</span><span class="s1">&#39;/api/update&#39;</span><span class="p">,</span> <span class="s1">&#39;Please call update.&#39;</span><span class="p">],</span>
         <span class="p">[</span><span class="s1">&#39;/api/search&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
@@ -373,7 +395,7 @@
 <span class="c1"># EVENTS------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="config_query_event"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.config_query_event">[docs]</a><span class="k">def</span> <span class="nf">config_query_event</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
     <span class="c1"># type: (str, dict, dash.Dash) -&gt; dict</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Updates given store given a config query.</span>
 
 <span class="sd">    Args:</span>
@@ -387,15 +409,44 @@
     <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="ow">or</span> <span class="s1">&#39;select * from config&#39;</span>
     <span class="n">value</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;from config&#39;</span><span class="p">,</span> <span class="s1">&#39;from data&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sdt</span><span class="o">.</span><span class="n">query_dict</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config/search&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sdt</span><span class="o">.</span><span class="n">query_dict</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
+        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config/search&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
+    <span class="k">return</span> <span class="n">store</span></div>
+
+
+<div class="viewcode-block" id="config_edit_event"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.config_edit_event">[docs]</a><span class="k">def</span> <span class="nf">config_edit_event</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
+    <span class="c1"># type: (dict, dict, dash.Dash) -&gt; dict</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Saves given edits to store.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value (dict): Config table.</span>
+<span class="sd">        store (dict): Dash store.</span>
+<span class="sd">        app (dash.Dash): Dash app.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Modified store.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">new</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="s1">&#39;new&#39;</span><span class="p">]</span>
+    <span class="n">old_key</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="s1">&#39;old&#39;</span><span class="p">][</span><span class="s1">&#39;key&#39;</span><span class="p">]</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/config&#39;</span><span class="p">,</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config</span><span class="p">))</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s1">&#39;/config&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;/config/search&#39;</span><span class="p">,</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/config/search&#39;</span><span class="p">,</span> <span class="n">config</span><span class="p">)),</span>
+    <span class="p">]</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="n">rpb</span><span class="o">.</span><span class="n">BlobETL</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="o">.</span><span class="n">to_flat_dict</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">old_key</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">item</span><span class="p">[</span><span class="n">old_key</span><span class="p">]</span>
+            <span class="n">item</span><span class="p">[</span><span class="n">new</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">new</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">store</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">rpb</span><span class="o">.</span><span class="n">BlobETL</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">store</span></div>
 
 
 <div class="viewcode-block" id="data_query_event"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.data_query_event">[docs]</a><span class="k">def</span> <span class="nf">data_query_event</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
     <span class="c1"># type: (str, dict, dash.Dash) -&gt; dict</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Updates given store given a data query.</span>
 
 <span class="sd">    Args:</span>
@@ -413,7 +464,7 @@
 
 <div class="viewcode-block" id="init_event"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.init_event">[docs]</a><span class="k">def</span> <span class="nf">init_event</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
     <span class="c1"># type: (None, dict, dash.Dash) -&gt; dict</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Initializes app database.</span>
 
 <span class="sd">    Args:</span>
@@ -427,12 +478,14 @@
     <span class="n">update_store</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
     <span class="k">if</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">]:</span>
         <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">store</span></div>
 
 
 <div class="viewcode-block" id="update_event"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.update_event">[docs]</a><span class="k">def</span> <span class="nf">update_event</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
     <span class="c1"># type: (None, dict, dash.Dash) -&gt; dict</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Update app database.</span>
 
 <span class="sd">    Args:</span>
@@ -455,7 +508,7 @@
 
 <div class="viewcode-block" id="upload_event"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.upload_event">[docs]</a><span class="k">def</span> <span class="nf">upload_event</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
     <span class="c1"># type: (str, dict, dash.Dash) -&gt; dict</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Uploads config to app store.</span>
 
 <span class="sd">    Args:</span>
@@ -471,14 +524,15 @@
         <span class="n">config</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
         <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">to_primitive</span><span class="p">()</span>
+        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config/search&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">])</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
+        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config/search&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
     <span class="k">return</span> <span class="n">store</span></div>
 
 
 <div class="viewcode-block" id="save_event"><a class="viewcode-back" href="../../../server.html#shekels.server.server_tools.save_event">[docs]</a><span class="k">def</span> <span class="nf">save_event</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
     <span class="c1"># type: (None, dict, dash.Dash) -&gt; dict</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Save store config to app.api.config path.</span>
 
 <span class="sd">    Args:</span>
@@ -495,7 +549,8 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="n">DataError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
+        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/config/search&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
     <span class="k">return</span> <span class="n">store</span></div>
 </pre></div>
 
@@ -508,7 +563,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Alex Braun &lt;TheNewFlesh@github.com&gt;.
+        &#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.
 
     </p>
   </div>

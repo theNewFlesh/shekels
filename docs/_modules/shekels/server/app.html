@@ -33,9 +33,8 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -65,7 +64,7 @@
             
             
               <div class="version">
-                1.0.2
+                1.0.4
               </div>
             
           
@@ -90,16 +89,22 @@
               
             
             
-              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#production-cli">Production CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#development-cli">Development CLI</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Python API</span></p>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../enforce.html">enforce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development CLI</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
 </ul>
 
@@ -167,7 +172,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for shekels.server.app</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>  <span class="c1"># noqa: F401</span>
 
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
@@ -177,9 +182,9 @@
 <span class="kn">from</span> <span class="nn">dash.dependencies</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">State</span>
 <span class="kn">from</span> <span class="nn">flask_caching</span> <span class="kn">import</span> <span class="n">Cache</span>
 <span class="kn">import</span> <span class="nn">dash</span>
-<span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="nn">dcc</span>
-<span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="k">as</span> <span class="nn">html</span>
-<span class="kn">import</span> <span class="nn">dash_table</span>
+<span class="kn">from</span> <span class="nn">dash</span> <span class="kn">import</span> <span class="n">dash_table</span>
+<span class="kn">from</span> <span class="nn">dash</span> <span class="kn">import</span> <span class="n">dcc</span>
+<span class="kn">from</span> <span class="nn">dash</span> <span class="kn">import</span> <span class="n">html</span>
 <span class="kn">from</span> <span class="nn">flask_healthz</span> <span class="kn">import</span> <span class="n">healthz</span><span class="p">,</span> <span class="n">HealthError</span>
 <span class="kn">import</span> <span class="nn">flasgger</span> <span class="k">as</span> <span class="nn">swg</span>
 <span class="kn">import</span> <span class="nn">flask</span>
@@ -201,13 +206,13 @@
 
 <div class="viewcode-block" id="liveness"><a class="viewcode-back" href="../../../server.html#shekels.server.app.liveness">[docs]</a><span class="k">def</span> <span class="nf">liveness</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; None</span>
-    <span class="sd">&#39;&#39;&#39;Liveness probe for kubernetes.&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;Liveness probe for kubernetes.&#39;&#39;&#39;</span>
     <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="readiness"><a class="viewcode-back" href="../../../server.html#shekels.server.app.readiness">[docs]</a><span class="k">def</span> <span class="nf">readiness</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; None</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Readiness probe for kubernetes.</span>
 
 <span class="sd">    Raises:</span>
@@ -219,7 +224,7 @@
 
 <div class="viewcode-block" id="get_app"><a class="viewcode-back" href="../../../server.html#shekels.server.app.get_app">[docs]</a><span class="k">def</span> <span class="nf">get_app</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; dash.Dash</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Creates a Shekels app.</span>
 
 <span class="sd">    Returns:</span>
@@ -239,7 +244,14 @@
     <span class="c1"># flask monitoring</span>
     <span class="n">fmdb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="s1">&#39;monitor&#39;</span>
     <span class="n">fmdb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">monitor_level</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">fmdb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">git</span> <span class="o">=</span> <span class="s1">&#39;https://thenewflesh.github.io/shekels/&#39;</span>
+    <span class="n">fmdb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">git</span> <span class="o">=</span> <span class="s1">&#39;https://theNewFlesh.github.io/shekels/&#39;</span>
+    <span class="n">fmdb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">brand_name</span> <span class="o">=</span> <span class="s1">&#39;Shekels Monitoring Dashboard&#39;</span>
+    <span class="n">fmdb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">title_name</span> <span class="o">=</span> <span class="s1">&#39;Shekels Monitoring Dashboard&#39;</span>
+    <span class="n">fmdb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Monitor Shekels App Performance&#39;</span>
+    <span class="n">fmdb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">enable_logging</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">fmdb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">show_login_banner</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">fmdb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">show_login_footer</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">fmdb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database_name</span> <span class="o">=</span> <span class="s1">&#39;sqlite:////tmp/shekels_monitor.db&#39;</span>
     <span class="n">fmdb</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">flask_app</span><span class="p">)</span>
 
     <span class="n">app</span> <span class="o">=</span> <span class="n">svc</span><span class="o">.</span><span class="n">get_dash_app</span><span class="p">(</span><span class="n">flask_app</span><span class="p">)</span>
@@ -267,7 +279,7 @@
 <div class="viewcode-block" id="serve_stylesheet"><a class="viewcode-back" href="../../../server.html#shekels.server.app.serve_stylesheet">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/static/&lt;stylesheet&gt;&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">serve_stylesheet</span><span class="p">(</span><span class="n">stylesheet</span><span class="p">):</span>
     <span class="c1"># type: (str) -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Serve stylesheet to app.</span>
 
 <span class="sd">    Args:</span>
@@ -307,7 +319,7 @@
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">on_event</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">):</span>
     <span class="c1"># type: (Tuple[Any, ...]) -&gt; Dict[str, Any]</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Update database instance, and updates store with input data.</span>
 
 <span class="sd">    Args:</span>
@@ -336,7 +348,7 @@
 <span class="nd">@APP</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">memoize</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">on_plots_update</span><span class="p">(</span><span class="n">store</span><span class="p">):</span>
     <span class="c1"># type: (Dict) -&gt; dash_table.DataTable</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Updates plots with read information from store.</span>
 
 <span class="sd">    Args:</span>
@@ -360,7 +372,7 @@
 <span class="nd">@APP</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">memoize</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">on_datatable_update</span><span class="p">(</span><span class="n">store</span><span class="p">):</span>
     <span class="c1"># type: (Dict) -&gt; dash_table.DataTable</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Updates datatable with read information from store.</span>
 
 <span class="sd">    Args:</span>
@@ -382,7 +394,7 @@
 <span class="nd">@APP</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">memoize</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">on_config_update</span><span class="p">(</span><span class="n">store</span><span class="p">):</span>
     <span class="c1"># type: (Dict[str, Any]) -&gt; List[flask.Response]</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Updates config table with config information from store.</span>
 
 <span class="sd">    Args:</span>
@@ -417,7 +429,7 @@
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">on_get_tab</span><span class="p">(</span><span class="n">tab</span><span class="p">,</span> <span class="n">store</span><span class="p">):</span>
     <span class="c1"># type: (str, Dict) -&gt; Union[flask.Response, List, None]</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Serve content for app tabs.</span>
 
 <span class="sd">    Args:</span>
@@ -447,7 +459,7 @@
     <span class="k">elif</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;docs&#39;</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">return</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span>
             <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;docs&#39;</span><span class="p">,</span>
-            <span class="n">href</span><span class="o">=</span><span class="s1">&#39;https://thenewflesh.github.io/shekels/&#39;</span>
+            <span class="n">href</span><span class="o">=</span><span class="s1">&#39;https://theNewFlesh.github.io/shekels/&#39;</span>
         <span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;monitor&#39;</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
@@ -456,7 +468,7 @@
 
 
 <div class="viewcode-block" id="run"><a class="viewcode-back" href="../../../server.html#shekels.server.app.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">config_path</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Runs a given Shekels app.</span>
 
 <span class="sd">    Args:</span>
@@ -477,10 +489,11 @@
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-    <span class="n">config_path</span> <span class="o">=</span> <span class="s1">&#39;/mnt/storage/shekels_config.json&#39;</span>
-    <span class="k">if</span> <span class="s1">&#39;REPO_ENV&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">config_path</span> <span class="o">=</span> <span class="s1">&#39;/mnt/storage/test_config.json&#39;</span>
     <span class="n">debug</span> <span class="o">=</span> <span class="s1">&#39;DEBUG_MODE&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+    <span class="n">config_path</span> <span class="o">=</span> <span class="s1">&#39;/mnt/storage/shekels_config.json&#39;</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+        <span class="n">config_path</span> <span class="o">=</span> <span class="s1">&#39;/mnt/storage/test_config.json&#39;</span>
     <span class="n">run</span><span class="p">(</span><span class="n">APP</span><span class="p">,</span> <span class="n">config_path</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span>
 </pre></div>
 
@@ -493,7 +506,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Alex Braun &lt;TheNewFlesh@github.com&gt;.
+        &#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.
 
     </p>
   </div>
