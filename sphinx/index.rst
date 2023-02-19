@@ -1,6 +1,6 @@
 .. shekels documentation master file
 
-Welcome to shekels documentation!
+Welcome to shekels's documentation!
 =================================
 .. toctree::
    :maxdepth: 1
