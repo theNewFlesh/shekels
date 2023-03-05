@@ -38,8 +38,9 @@ dependencies = [
     "pandasql",
     "plotly",
     "pyparsing",
-    "schematics",
     "rolling-pin>=0.4.2",
+    "schematics",
+    "sqlalchemy<=1.4.46",
     "webcolors",
 ]
 

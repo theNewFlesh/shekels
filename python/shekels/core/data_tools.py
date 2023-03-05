@@ -591,7 +591,7 @@ def get_sql_grammar():
     return grammar
 
 
-def query_data(data, query):
+def query_data(data, query, uri='sqlite:///:memory:'):
     '''
     Parses SQL + regex query and applies it to given data.
 
@@ -619,7 +619,7 @@ def query_data(data, query):
 
     # if no regex operator is found just submit query to pandasql
     if not has_regex:
-        data = pandasql.sqldf(query, {'data': data})
+        data = pandasql.PandaSQL(uri)(query, locals())
 
     else:
         grammar = get_sql_grammar()
@@ -636,7 +636,7 @@ def query_data(data, query):
 
             # initial select statement
             if op == 'select':
-                data = pandasql.sqldf(q, {'data': data})
+                data = pandasql.PandaSQL(uri)(q, locals())
 
             # regex search
             elif op == '~':
