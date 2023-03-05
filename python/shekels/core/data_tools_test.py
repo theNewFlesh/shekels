@@ -151,7 +151,7 @@ class DataToolsTests(unittest.TestCase):
         expected += f"Legal columns include: \\[{cols}\\]\\."
         bad = deepcopy(sub)
         bad['source_column'] = 'bagel'
-        with self.assertRaisesRegexp(ValueError, expected):
+        with self.assertRaisesRegex(ValueError, expected):
             sdt.conform(data, actions=[ow, sub, bad])
 
     # FILTER-DATA---------------------------------------------------------------
@@ -179,28 +179,28 @@ class DataToolsTests(unittest.TestCase):
 
         # column
         expected = 'Column must be a str. 123 is not str.'
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             sdt.filter_data(data, 123, '==', 24)
 
         expected = 'Given columns not found in data. '
         expected += r"\['pizza'\] not in "
         expected += r"\['id', 'age', 'name', 'group', 'date'\]\."
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             sdt.filter_data(data, 'pizza', '==', 24)
 
         # comparator
         expected = 'Illegal comparator. '
         expected += r"= not in \[==, !=, >, >=, <, <=, ~, !~\]\."
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             sdt.filter_data(data, 'age', '=', 24)
 
         # regex comparator
         expected = 'Value must be string if comparator is ~ or !~. 24 is not str.'
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             sdt.filter_data(data, 'age', '~', 24)
 
         expected = 'Value must be string if comparator is ~ or !~. 24 is not str.'
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             sdt.filter_data(data, 'age', '!~', 24)
 
     def test_filter_data_eq(self):
@@ -274,13 +274,13 @@ class DataToolsTests(unittest.TestCase):
         expected = 'Given columns not found in data. '
         expected += r"\['pizza'\] not in "
         expected += r"\['id', 'age', 'name', 'group', 'date'\]\."
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             sdt.group_data(data, 'pizza', 'mean')
 
         # metric
         expected = 'foo is not a legal metric. Legal metrics: '
         expected += r"\['count', 'max', 'mean', 'min', 'std', 'sum', 'var'\]\."
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             sdt.group_data(data, ['age'], 'foo')
 
         # datetime_column
@@ -292,7 +292,7 @@ class DataToolsTests(unittest.TestCase):
         data['date'] = data.date.apply(str)
         expected = 'Datetime column of type .*, it must be of type .*datetime64'
         for key in keys:
-            with self.assertRaisesRegexp(EnforceError, expected):
+            with self.assertRaisesRegex(EnforceError, expected):
                 sdt.group_data(data, 'month', 'mean', datetime_column='date')
 
     def test_group_data(self):
@@ -395,7 +395,7 @@ class DataToolsTests(unittest.TestCase):
             sdt.pivot_data('id', 'age', 'mean')
 
         expected = 'DataFrame must be at least 1 in length. Given length: 0.'
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             d = DataFrame(columns=data.columns)
             sdt.pivot_data(d, 'age', 'mean')
 
@@ -403,21 +403,21 @@ class DataToolsTests(unittest.TestCase):
         expected = 'Given columns not found in data. '
         expected += r"\['pizza', 'taco'\] not in "
         expected += r"\['id', 'age', 'name', 'group', 'date'\]\."
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             sdt.pivot_data(data, ['pizza', 'taco'])
 
         # values
         expected = 'Given columns not found in data. '
         expected += r"\['pizza'\] not in "
         expected += r"\['id', 'age', 'name', 'group', 'date'\]\."
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             sdt.pivot_data(data, ['age'], values=['name', 'pizza'])
         sdt.pivot_data(data, ['age'], values=[])
 
         # index
         expected = r"pizza is not in legal column names: "
         expected += r"\['id.*year.*day.*\]\."
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             sdt.pivot_data(data, ['age'], values=['name'], index='pizza')
         sdt.pivot_data(data, ['age'], values=['name'], index=None)
 
@@ -474,7 +474,7 @@ class DataToolsTests(unittest.TestCase):
             value='amex|visa'
         )
         expected = 'Invalid filter.*column.*This field is required'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             sdt.get_figure(data, filters=[good, bad])
 
     def test_get_figure_filter_zero_length(self):
@@ -514,7 +514,7 @@ class DataToolsTests(unittest.TestCase):
             index='Date',
         )
         expected = 'DataFrame must be at least 1 in length. Given length: 0.'
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             sdt.get_figure(data, group=grp, pivot=pvt)
 
     def test_get_figure_group_error(self):
@@ -531,7 +531,7 @@ class DataToolsTests(unittest.TestCase):
             datetime_column='date',
         )
         expected = 'Invalid group.*columns.*This field is required'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             sdt.get_figure(data, group=bad)
 
     def test_get_figure_pivot_error(self):
@@ -548,7 +548,7 @@ class DataToolsTests(unittest.TestCase):
             index='Date',
         )
         expected = 'Invalid pivot.*columns.*This field is required'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             sdt.get_figure(data, pivot=bad)
 
     def test_get_figure_params(self):

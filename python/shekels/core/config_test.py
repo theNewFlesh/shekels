@@ -14,7 +14,7 @@ class ConfigValidatorTests(unittest.TestCase):
     def test_is_csv(self):
         csv_path = Path('/foo', 'bar.csv')
         expected = '/foo/bar.csv is not a valid CSV file.'
-        with self.assertRaisesRegexp(ValidationError, expected):
+        with self.assertRaisesRegex(ValidationError, expected):
             cfg.is_csv(csv_path)
 
         with TemporaryDirectory() as root:
@@ -22,7 +22,7 @@ class ConfigValidatorTests(unittest.TestCase):
             csv_path = Path(root, 'bar.txt')
             with open(csv_path, 'w') as f:
                 f.write('')
-            with self.assertRaisesRegexp(ValidationError, expected):
+            with self.assertRaisesRegex(ValidationError, expected):
                 cfg.is_csv(csv_path)
 
             csv_path = Path(root, 'bar.csv')
@@ -36,7 +36,7 @@ class ConfigValidatorTests(unittest.TestCase):
 
         cs['foo'] = 'bar'
         expected = r"Invalid color scheme keys: \['foo'\]\."
-        with self.assertRaisesRegexp(ValidationError, expected):
+        with self.assertRaisesRegex(ValidationError, expected):
             cfg.is_color_scheme(cs)
 
     def test_is_comparator(self):
@@ -87,11 +87,11 @@ class ConfigValidatorTests(unittest.TestCase):
         cfg.is_percentage(100)
 
         expected = '-4 is not a legal percentage. -4 is not between 0 and 100.'
-        with self.assertRaisesRegexp(ValidationError, expected):
+        with self.assertRaisesRegex(ValidationError, expected):
             cfg.is_percentage(-4)
 
         expected = '200 is not a legal percentage. 200 is not between 0 and 100.'
-        with self.assertRaisesRegexp(ValidationError, expected):
+        with self.assertRaisesRegex(ValidationError, expected):
             cfg.is_percentage(200)
 
 
@@ -127,26 +127,26 @@ class ConfigSchematicTests(unittest.TestCase):
         bad = deepcopy(data)
         del bad['column']
         expected = 'This field is required.'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             cfg.FilterAction(bad).validate()
 
         # comparator
         bad = deepcopy(data)
         del bad['comparator']
         expected = 'This field is required.'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             cfg.FilterAction(bad).validate()
 
         bad['comparator'] = 'foo'
         expected = 'foo is not a legal comparator.'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             cfg.FilterAction(bad).validate()
 
         # value
         bad = deepcopy(data)
         del bad['value']
         expected = 'This field is required.'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             cfg.FilterAction(bad).validate()
 
     def test_group_action(self):
@@ -161,19 +161,19 @@ class ConfigSchematicTests(unittest.TestCase):
         bad = deepcopy(data)
         del bad['columns']
         expected = 'This field is required.'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             cfg.GroupAction(bad).validate()
 
         # metric
         bad = deepcopy(data)
         del bad['metric']
         expected = 'This field is required.'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             cfg.GroupAction(bad).validate()
 
         bad['metric'] = 'foo'
         expected = 'foo is not a legal metric.'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             cfg.GroupAction(bad).validate()
 
         # datetime_column
@@ -194,7 +194,7 @@ class ConfigSchematicTests(unittest.TestCase):
         bad = deepcopy(data)
         del bad['columns']
         expected = 'This field is required.'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             cfg.PivotAction(bad).validate()
 
         # values
@@ -218,28 +218,28 @@ class ConfigSchematicTests(unittest.TestCase):
         bad = deepcopy(ow)
         bad['action'] = 'foo'
         expected = 'action.*Value.*must be one of.*overwrite.*substitute'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             cfg.ConformAction(bad).validate()
 
         # source_column
         bad = deepcopy(ow)
         del bad['source_column']
         expected = 'This field is required.'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             cfg.ConformAction(bad).validate()
 
         # target_column
         bad = deepcopy(ow)
         del bad['target_column']
         expected = 'This field is required.'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             cfg.ConformAction(bad).validate()
 
         # mapping
         bad = deepcopy(ow)
         del bad['mapping']
         expected = 'This field is required.'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             cfg.ConformAction(bad).validate()
 
         # mapping bad value
@@ -252,7 +252,7 @@ class ConfigSchematicTests(unittest.TestCase):
         bad = deepcopy(sub)
         bad['mapping'] = {'foo': 123}
         expected = "Couldn't interpret.*123.*as string"
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             cfg.ConformAction(bad).validate()
 
     def test_figure_item(self):
@@ -271,13 +271,13 @@ class ConfigSchematicTests(unittest.TestCase):
         # kind
         bad = dict(kind='foo')
         expected = 'foo is not a legal plot kind.'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             cfg.FigureItem(bad).validate()
 
         # bar mode
         bad = dict(bar_mode='foo')
         expected = 'foo is not a legal bar mode.'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             cfg.FigureItem(bad).validate()
 
     def test_plot_item(self):
@@ -291,7 +291,7 @@ class ConfigSchematicTests(unittest.TestCase):
 
         bad = dict(figure=dict(kind='foo'))
         expected = 'foo is not a legal plot kind.'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             cfg.PlotItem(bad).validate()
 
     def get_config(self, root):
@@ -363,12 +363,12 @@ class ConfigSchematicTests(unittest.TestCase):
             bad = deepcopy(config)
             bad['data_path'] = re.sub('csv', 'tsv', config['data_path'])
             expected = '.* is not a valid CSV file.'
-            with self.assertRaisesRegexp(DataError, expected):
+            with self.assertRaisesRegex(DataError, expected):
                 cfg.Config(bad).validate()
 
             # data_path not exist
             bad['data_path'] = Path(root, 'foo.csv').as_posix()
-            with self.assertRaisesRegexp(DataError, expected):
+            with self.assertRaisesRegex(DataError, expected):
                 cfg.Config(bad).validate()
 
             # conform
@@ -376,7 +376,7 @@ class ConfigSchematicTests(unittest.TestCase):
             bad['action'] = 'foo'
             config['conform'] = [ow, sub, bad]
             expected = 'action.*Value.*must be one of .*overwrite.*substitute'
-            with self.assertRaisesRegexp(DataError, expected):
+            with self.assertRaisesRegex(DataError, expected):
                 cfg.Config(config).validate()
 
             # color scheme
@@ -385,5 +385,5 @@ class ConfigSchematicTests(unittest.TestCase):
             cs['foo'] = 'bar'
             bad['color_scheme'] = cs
             expected = 'Invalid color scheme keys:.*foo'
-            with self.assertRaisesRegexp(DataError, expected):
+            with self.assertRaisesRegex(DataError, expected):
                 cfg.Config(bad).validate()

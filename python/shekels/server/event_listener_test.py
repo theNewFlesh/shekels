@@ -45,7 +45,7 @@ class EventListenerTests(unittest.TestCase):
         # memory
         app = dash.Dash(name='test')
         expected = 'Memory must be greater or equal to 1. 0 < 1.'
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             sev.EventListener(app, {}, memory=0)
 
     def test_listen(self):
@@ -65,7 +65,7 @@ class EventListenerTests(unittest.TestCase):
         event = sev.EventListener(app, store)
 
         expected = 'Event name must be a string. 99 is not a string.'
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             event.listen(99, lambda v, s, a: s)
 
     def test_emit(self):
@@ -93,7 +93,7 @@ class EventListenerTests(unittest.TestCase):
         event = sev.EventListener(app, store)
 
         expected = 'Event name must be a string. 99 is not a string.'
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             event.emit(99, callback)
 
     def test_store(self):

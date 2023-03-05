@@ -171,7 +171,7 @@ class DatabaseTests(unittest.TestCase):
             self.assertEqual(result, expected)
 
             expected = 'Database not updated. Please call update.'
-            with self.assertRaisesRegexp(RuntimeError, expected):
+            with self.assertRaisesRegex(RuntimeError, expected):
                 db.Database(config).read()
 
     def test_search(self):

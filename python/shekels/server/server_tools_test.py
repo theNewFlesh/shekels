@@ -108,7 +108,7 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
         expected = 'File header is not JSON. Header: '
         expected += 'data:application/text;base64.'
         content = re.sub('json', 'text', content)
-        with self.assertRaisesRegexp(ValueError, expected):
+        with self.assertRaisesRegex(ValueError, expected):
             svt.parse_json_file_content(content)
 
     def get_client(self):
