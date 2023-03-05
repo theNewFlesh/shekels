@@ -517,8 +517,15 @@ x_library_update_pdm () {
 }
 
 # SESSION-FUNCTIONS-------------------------------------------------------------
-x_session_app () {
-    # Run app
+x_session_app_dev () {
+    # Run app in dev mode
+    x_env_activate_dev;
+    echo "${CYAN2}APP${CLEAR}\n";
+    DEBUG_MODE=True python3 $REPO_SUBPACKAGE/server/app.py;
+}
+
+x_session_app_prod () {
+    # Run app in prod mode
     x_env_activate_dev;
     echo "${CYAN2}APP${CLEAR}\n";
     python3 $REPO_SUBPACKAGE/server/app.py;

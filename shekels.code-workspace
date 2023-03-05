@@ -278,15 +278,24 @@
                     "x_library_update_pdm"
                 ]
             },
-            // {
-            //     "label": "[session] app",
-            //     "detail": "Run app",
-            //     "icon": {"id": "beaker", "color": "terminal.ansiWhite"},
-            //     "command": [
-            //         "source $X_TOOLS_PATH &&",
-            //         "x_session_app"
-            //     ],
-            // },
+            {
+                "label": "[session] app-dev",
+                "detail": "Run app",
+                "icon": {"id": "beaker", "color": "terminal.ansiWhite"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_session_app_dev"
+                ],
+            },
+            {
+                "label": "[session] app-prod",
+                "detail": "Run app",
+                "icon": {"id": "beaker", "color": "terminal.ansiWhite"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_session_app_prod"
+                ],
+            },
             {
                 "label": "[session] lab",
                 "detail": "Run jupyter lab server",
