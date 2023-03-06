@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                1.0.4
+                1.1.0
               </div>
             
           
@@ -765,7 +765,7 @@
     <span class="k">return</span> <span class="n">grammar</span></div>
 
 
-<div class="viewcode-block" id="query_data"><a class="viewcode-back" href="../../../core.html#shekels.core.data_tools.query_data">[docs]</a><span class="k">def</span> <span class="nf">query_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+<div class="viewcode-block" id="query_data"><a class="viewcode-back" href="../../../core.html#shekels.core.data_tools.query_data">[docs]</a><span class="k">def</span> <span class="nf">query_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">uri</span><span class="o">=</span><span class="s1">&#39;sqlite:///:memory:&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Parses SQL + regex query and applies it to given data.</span>
 
@@ -793,7 +793,7 @@
 
     <span class="c1"># if no regex operator is found just submit query to pandasql</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">has_regex</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">pandasql</span><span class="o">.</span><span class="n">sqldf</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pandasql</span><span class="o">.</span><span class="n">PandaSQL</span><span class="p">(</span><span class="n">uri</span><span class="p">)(</span><span class="n">query</span><span class="p">,</span> <span class="nb">locals</span><span class="p">())</span>
 
     <span class="k">else</span><span class="p">:</span>
         <span class="n">grammar</span> <span class="o">=</span> <span class="n">get_sql_grammar</span><span class="p">()</span>
@@ -810,7 +810,7 @@
 
             <span class="c1"># initial select statement</span>
             <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;select&#39;</span><span class="p">:</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">pandasql</span><span class="o">.</span><span class="n">sqldf</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">pandasql</span><span class="o">.</span><span class="n">PandaSQL</span><span class="p">(</span><span class="n">uri</span><span class="p">)(</span><span class="n">q</span><span class="p">,</span> <span class="nb">locals</span><span class="p">())</span>
 
             <span class="c1"># regex search</span>
             <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;~&#39;</span><span class="p">:</span>

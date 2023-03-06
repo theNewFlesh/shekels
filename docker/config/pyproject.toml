@@ -1,6 +1,6 @@
 [project]
 name = "shekels"
-version = "1.0.4"
+version = "1.1.0"
 description = "Shekels is a local service which consumes a transactions CSV file downloaded from mint.intuit.com. It conforms this data into a database, and displays it as a searchable table and dashboard of configurable plots in web frontend."
 authors = [
     {name = "Alex Braun", email = "alexander.g.braun@gmail.com"},
