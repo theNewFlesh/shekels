@@ -557,7 +557,6 @@ x_test_coverage () {
     cd /tmp/coverage;
     pytest \
         -c $CONFIG_DIR/pyproject.toml \
-        --numprocesses $TEST_PROCS \
         --verbosity $TEST_VERBOSITY \
         --cov=$REPO_DIR/python \
         --cov-config=$CONFIG_DIR/pyproject.toml \
