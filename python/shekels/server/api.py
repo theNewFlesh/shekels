@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any  # noqa: F401
 
 from json import JSONDecodeError
 import json
@@ -88,11 +88,11 @@ def initialize():
     Returns:
         Response: Flask Response instance.
     '''
-    config = flask.request.get_json()
     msg = 'Please supply a config dictionary.'
-    if config is None:
+    if len(flask.request.get_data()) == 0:
         raise RuntimeError(msg)
 
+    config = flask.request.get_json()  # type: Any
     config = json.loads(config)
     if not isinstance(config, dict):
         raise RuntimeError(msg)

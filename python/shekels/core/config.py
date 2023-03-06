@@ -1,4 +1,4 @@
-from typing import Any, Dict, Union
+from typing import Any, Dict, Union  # noqa: F401
 
 import os
 from pathlib import Path

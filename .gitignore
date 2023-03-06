@@ -43,6 +43,9 @@ var
 resources/shekels_config.json
 resources/*transactions.csv
 
+# pdm
+__pypackages__
+
 # python
 __pycache__
 *.py[cod]

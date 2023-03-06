@@ -2,7 +2,6 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 import base64
 import json
-import os
 import re
 import unittest
 
@@ -17,9 +16,8 @@ import shekels.server.server_tools as svt
 # ------------------------------------------------------------------------------
 
 
-RESOURCES_DIR = lbt.relative_path(__file__, '../resources').as_posix()
-if 'REPO_ENV' in os.environ.keys():
-    RESOURCES_DIR = lbt.relative_path(__file__, '../../../resources').as_posix()
+CONFIG_PATH = lbt \
+    .relative_path(__file__, '../../../resources/test_config.json').as_posix()
 
 
 class ServerToolsTests(unittest.TestCase):
@@ -110,7 +108,7 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
         expected = 'File header is not JSON. Header: '
         expected += 'data:application/text;base64.'
         content = re.sub('json', 'text', content)
-        with self.assertRaisesRegexp(ValueError, expected):
+        with self.assertRaisesRegex(ValueError, expected):
             svt.parse_json_file_content(content)
 
     def get_client(self):
@@ -379,9 +377,7 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
 
     def test_upload_event(self):
         app = self.get_app()
-
-        config_path = Path(RESOURCES_DIR, 'test_config.json')
-        with open(config_path) as f:
+        with open(CONFIG_PATH) as f:
             config = jsonc.JsonComment().load(f)
 
         value = json.dumps(config)
@@ -411,9 +407,7 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
 
     def test_save_event(self):
         app = self.get_app()
-
-        config_path = Path(RESOURCES_DIR, 'test_config.json')
-        with open(config_path) as f:
+        with open(CONFIG_PATH) as f:
             config = jsonc.JsonComment().load(f)
 
         store = {'/config': config}
@@ -428,15 +422,13 @@ ewogICAgImZvbyI6ICJiYXIiCiAgICAvLyAicGl6emEiOiAidGFjbyIKfQo = '''
             result = svt.save_event(value, store, app)
             self.assertTrue(config_path.is_file())
 
-            with open(config_path) as f:
-                result = json.load(f)
+            with open(CONFIG_PATH) as f:
+                result = jsonc.JsonComment().load(f)
             self.assertEqual(result, config)
 
     def test_save_event_error(self):
         app = self.get_app()
-
-        config_path = Path(RESOURCES_DIR, 'test_config.json')
-        with open(config_path) as f:
+        with open(CONFIG_PATH) as f:
             config = jsonc.JsonComment().load(f)
 
         config['rogue'] = 'field'

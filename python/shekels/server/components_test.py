@@ -16,7 +16,7 @@ class ComponentsTests(unittest.TestCase):
 
     def test_get_button(self):
         expected = '10 is not a string.'
-        with self.assertRaisesRegexp(TypeError, expected):
+        with self.assertRaisesRegex(TypeError, expected):
             svc.get_button(10)
 
         result = svc.get_button('foo')
@@ -94,20 +94,20 @@ class ComponentsTests(unittest.TestCase):
     def test_get_plots_errors(self):
         # data
         expected = 'Data must be a list of dictionaries. Given value: foo.'
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             svc.get_plots('foo', [])
 
         expected = 'Data must be a list of dictionaries. Given value: foo.'
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             svc.get_plots(['foo'], [])
 
         # plots
         expected = 'Plots must be a list of dictionaries. Given value: foo.'
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             svc.get_plots([], 'foo')
 
         expected = 'Plots must be a list of dictionaries. Given value: foo.'
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             svc.get_plots([], ['foo'])
 
     def test_get_plots(self):
@@ -224,5 +224,5 @@ class ComponentsTests(unittest.TestCase):
         }
         order = ['first', 'second', 'not_a_key']
         expected = r"Invalid key order. Keys not found in data: \['not_a_key'\]\."
-        with self.assertRaisesRegexp(KeyError, expected):
+        with self.assertRaisesRegex(KeyError, expected):
             svc.get_key_value_table(data, key_order=order)

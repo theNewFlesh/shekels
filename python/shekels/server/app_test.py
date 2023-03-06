@@ -20,9 +20,7 @@ import shekels.server.event_listener as sev
 # ------------------------------------------------------------------------------
 
 
-RESOURCES_DIR = lbt.relative_path(__file__, '../resources').as_posix()
-if 'REPO_ENV' in os.environ.keys():
-    RESOURCES_DIR = lbt.relative_path(__file__, '../../../resources').as_posix()
+RESOURCES_DIR = lbt.relative_path(__file__, '../../../resources').as_posix()
 
 
 def test_liveness():

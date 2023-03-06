@@ -28,7 +28,7 @@ class EnforceDataFrameTests(unittest.TestCase):
         b = self.get_data()
         b['taco'] = [0, 0, 0]
         expected = r"A and b have different columns: \['pizza', 'taco'\]\."
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             eft.enforce_dataframes_are_equal(a, b)
 
     def test_enforce_dataframes_are_equal_shape(self):
@@ -36,7 +36,7 @@ class EnforceDataFrameTests(unittest.TestCase):
         a.loc[3] = [0, 0, 0]
         b = self.get_data()
         expected = r'A and b have different shapes. \(4, 3\) != \(3, 3\).'
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             eft.enforce_dataframes_are_equal(a, b)
 
     def test_enforce_dataframes_are_equal_values(self):
@@ -53,7 +53,7 @@ class EnforceDataFrameTests(unittest.TestCase):
         ]
         msg = DataFrame(msg, columns=['column', 'a', 'b']).to_string()
         expected = f'DatFrames have different values:\n{msg}'
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             eft.enforce_dataframes_are_equal(a, b)
 
     def test_enforce_columns_in_dataframe(self):
@@ -64,5 +64,5 @@ class EnforceDataFrameTests(unittest.TestCase):
         cols = ['foo', 'bar', 'taco']
         expected = 'Given columns not found in data. '
         expected += r"\['taco'\] not in \['foo', 'bar', 'baz'\]\."
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             eft.enforce_columns_in_dataframe(cols, data)

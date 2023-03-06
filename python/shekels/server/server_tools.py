@@ -1,16 +1,15 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional  # noqa: F401
+import dash  # noqa: F401
 
 from copy import deepcopy
 from pprint import pformat
 import base64
 import json
-import os
 import re
 import traceback
 
 from dash.exceptions import PreventUpdate
 from schematics.exceptions import DataError
-import dash
 import flask
 import jinja2
 import jsoncomment as jsonc
@@ -23,9 +22,7 @@ import shekels.server.components as svc
 # ------------------------------------------------------------------------------
 
 
-TEMPLATE_DIR = lbt.relative_path(__file__, '../templates').as_posix()
-if 'REPO_ENV' in os.environ.keys():
-    TEMPLATE_DIR = lbt.relative_path(__file__, '../../../templates').as_posix()
+TEMPLATE_DIR = lbt.relative_path(__file__, '../../../templates').as_posix()
 
 
 def error_to_dict(error):

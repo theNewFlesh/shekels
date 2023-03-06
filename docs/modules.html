@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>&lt;no title&gt; &mdash; shekels  documentation</title>
@@ -33,9 +34,8 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -92,16 +92,22 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html#production-cli">Production CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html#development-cli">Development CLI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="core.html">core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="server.html">server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="enforce.html">enforce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">cli</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development CLI</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">cli</a></li>
 </ul>
 
@@ -173,24 +179,254 @@
   <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="core.html">core</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-shekels.core.config">config</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-shekels.core.database">database</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-shekels.core.data_tools">data_tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-shekels.core.config">config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.config.Config"><code class="docutils literal notranslate"><span class="pre">Config</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.Config.data_path"><code class="docutils literal notranslate"><span class="pre">Config.data_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.Config.columns"><code class="docutils literal notranslate"><span class="pre">Config.columns</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.Config.default_query"><code class="docutils literal notranslate"><span class="pre">Config.default_query</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.Config.font_family"><code class="docutils literal notranslate"><span class="pre">Config.font_family</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.Config.color_scheme"><code class="docutils literal notranslate"><span class="pre">Config.color_scheme</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.Config.conform"><code class="docutils literal notranslate"><span class="pre">Config.conform</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.Config.plots"><code class="docutils literal notranslate"><span class="pre">Config.plots</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.Config._schema"><code class="docutils literal notranslate"><span class="pre">Config._schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id0"><code class="docutils literal notranslate"><span class="pre">Config.color_scheme</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id1"><code class="docutils literal notranslate"><span class="pre">Config.columns</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id2"><code class="docutils literal notranslate"><span class="pre">Config.conform</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id3"><code class="docutils literal notranslate"><span class="pre">Config.data_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id4"><code class="docutils literal notranslate"><span class="pre">Config.default_query</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id5"><code class="docutils literal notranslate"><span class="pre">Config.font_family</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id6"><code class="docutils literal notranslate"><span class="pre">Config.plots</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.config.ConformAction"><code class="docutils literal notranslate"><span class="pre">ConformAction</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.ConformAction.action"><code class="docutils literal notranslate"><span class="pre">ConformAction.action</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.ConformAction.source_column"><code class="docutils literal notranslate"><span class="pre">ConformAction.source_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.ConformAction.target_column"><code class="docutils literal notranslate"><span class="pre">ConformAction.target_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.ConformAction.mapping"><code class="docutils literal notranslate"><span class="pre">ConformAction.mapping</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.ConformAction._schema"><code class="docutils literal notranslate"><span class="pre">ConformAction._schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id7"><code class="docutils literal notranslate"><span class="pre">ConformAction.action</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id8"><code class="docutils literal notranslate"><span class="pre">ConformAction.mapping</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id9"><code class="docutils literal notranslate"><span class="pre">ConformAction.source_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id10"><code class="docutils literal notranslate"><span class="pre">ConformAction.target_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.ConformAction.validate"><code class="docutils literal notranslate"><span class="pre">ConformAction.validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.config.FigureItem"><code class="docutils literal notranslate"><span class="pre">FigureItem</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.FigureItem.kind"><code class="docutils literal notranslate"><span class="pre">FigureItem.kind</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.FigureItem.color_scheme"><code class="docutils literal notranslate"><span class="pre">FigureItem.color_scheme</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.FigureItem.x_axis"><code class="docutils literal notranslate"><span class="pre">FigureItem.x_axis</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.FigureItem.y_axis"><code class="docutils literal notranslate"><span class="pre">FigureItem.y_axis</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.FigureItem.title"><code class="docutils literal notranslate"><span class="pre">FigureItem.title</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.FigureItem.x_title"><code class="docutils literal notranslate"><span class="pre">FigureItem.x_title</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.FigureItem.y_title"><code class="docutils literal notranslate"><span class="pre">FigureItem.y_title</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.FigureItem.bins"><code class="docutils literal notranslate"><span class="pre">FigureItem.bins</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.FigureItem.bar_mode"><code class="docutils literal notranslate"><span class="pre">FigureItem.bar_mode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.FigureItem._schema"><code class="docutils literal notranslate"><span class="pre">FigureItem._schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id11"><code class="docutils literal notranslate"><span class="pre">FigureItem.bar_mode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id12"><code class="docutils literal notranslate"><span class="pre">FigureItem.bins</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id13"><code class="docutils literal notranslate"><span class="pre">FigureItem.color_scheme</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id14"><code class="docutils literal notranslate"><span class="pre">FigureItem.kind</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id15"><code class="docutils literal notranslate"><span class="pre">FigureItem.title</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id16"><code class="docutils literal notranslate"><span class="pre">FigureItem.x_axis</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id17"><code class="docutils literal notranslate"><span class="pre">FigureItem.x_title</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id18"><code class="docutils literal notranslate"><span class="pre">FigureItem.y_axis</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id19"><code class="docutils literal notranslate"><span class="pre">FigureItem.y_title</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.config.FilterAction"><code class="docutils literal notranslate"><span class="pre">FilterAction</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.FilterAction.column"><code class="docutils literal notranslate"><span class="pre">FilterAction.column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.FilterAction.comparator"><code class="docutils literal notranslate"><span class="pre">FilterAction.comparator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.FilterAction.value"><code class="docutils literal notranslate"><span class="pre">FilterAction.value</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.FilterAction._schema"><code class="docutils literal notranslate"><span class="pre">FilterAction._schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id20"><code class="docutils literal notranslate"><span class="pre">FilterAction.column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id21"><code class="docutils literal notranslate"><span class="pre">FilterAction.comparator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id22"><code class="docutils literal notranslate"><span class="pre">FilterAction.value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.config.GroupAction"><code class="docutils literal notranslate"><span class="pre">GroupAction</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.GroupAction.columns"><code class="docutils literal notranslate"><span class="pre">GroupAction.columns</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.GroupAction.metric"><code class="docutils literal notranslate"><span class="pre">GroupAction.metric</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.GroupAction.datetime_column"><code class="docutils literal notranslate"><span class="pre">GroupAction.datetime_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.GroupAction._schema"><code class="docutils literal notranslate"><span class="pre">GroupAction._schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id23"><code class="docutils literal notranslate"><span class="pre">GroupAction.columns</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id24"><code class="docutils literal notranslate"><span class="pre">GroupAction.datetime_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id25"><code class="docutils literal notranslate"><span class="pre">GroupAction.metric</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.config.PivotAction"><code class="docutils literal notranslate"><span class="pre">PivotAction</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.PivotAction.columns"><code class="docutils literal notranslate"><span class="pre">PivotAction.columns</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.PivotAction.values"><code class="docutils literal notranslate"><span class="pre">PivotAction.values</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.PivotAction.index"><code class="docutils literal notranslate"><span class="pre">PivotAction.index</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.PivotAction._schema"><code class="docutils literal notranslate"><span class="pre">PivotAction._schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id26"><code class="docutils literal notranslate"><span class="pre">PivotAction.columns</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id27"><code class="docutils literal notranslate"><span class="pre">PivotAction.index</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id28"><code class="docutils literal notranslate"><span class="pre">PivotAction.values</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.config.PlotItem"><code class="docutils literal notranslate"><span class="pre">PlotItem</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.PlotItem.filters"><code class="docutils literal notranslate"><span class="pre">PlotItem.filters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.PlotItem.group"><code class="docutils literal notranslate"><span class="pre">PlotItem.group</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.PlotItem.pivot"><code class="docutils literal notranslate"><span class="pre">PlotItem.pivot</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.PlotItem.figure"><code class="docutils literal notranslate"><span class="pre">PlotItem.figure</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.PlotItem.min_width"><code class="docutils literal notranslate"><span class="pre">PlotItem.min_width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.config.PlotItem._schema"><code class="docutils literal notranslate"><span class="pre">PlotItem._schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id29"><code class="docutils literal notranslate"><span class="pre">PlotItem.figure</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id30"><code class="docutils literal notranslate"><span class="pre">PlotItem.filters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id31"><code class="docutils literal notranslate"><span class="pre">PlotItem.group</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id32"><code class="docutils literal notranslate"><span class="pre">PlotItem.min_width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id33"><code class="docutils literal notranslate"><span class="pre">PlotItem.pivot</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.config.is_bar_mode"><code class="docutils literal notranslate"><span class="pre">is_bar_mode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.config.is_color_scheme"><code class="docutils literal notranslate"><span class="pre">is_color_scheme()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.config.is_comparator"><code class="docutils literal notranslate"><span class="pre">is_comparator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.config.is_csv"><code class="docutils literal notranslate"><span class="pre">is_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.config.is_metric"><code class="docutils literal notranslate"><span class="pre">is_metric()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.config.is_percentage"><code class="docutils literal notranslate"><span class="pre">is_percentage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.config.is_plot_kind"><code class="docutils literal notranslate"><span class="pre">is_plot_kind()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-shekels.core.database">database</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.database.Database"><code class="docutils literal notranslate"><span class="pre">Database</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.database.Database.__init__"><code class="docutils literal notranslate"><span class="pre">Database.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.database.Database._to_records"><code class="docutils literal notranslate"><span class="pre">Database._to_records()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.database.Database.config"><code class="docutils literal notranslate"><span class="pre">Database.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.database.Database.data"><code class="docutils literal notranslate"><span class="pre">Database.data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.database.Database.from_json"><code class="docutils literal notranslate"><span class="pre">Database.from_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.database.Database.read"><code class="docutils literal notranslate"><span class="pre">Database.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.database.Database.search"><code class="docutils literal notranslate"><span class="pre">Database.search()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#shekels.core.database.Database.update"><code class="docutils literal notranslate"><span class="pre">Database.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-shekels.core.data_tools">data_tools</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.data_tools.conform"><code class="docutils literal notranslate"><span class="pre">conform()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.data_tools.conform_figure"><code class="docutils literal notranslate"><span class="pre">conform_figure()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.data_tools.filter_data"><code class="docutils literal notranslate"><span class="pre">filter_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.data_tools.get_figure"><code class="docutils literal notranslate"><span class="pre">get_figure()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.data_tools.get_sql_grammar"><code class="docutils literal notranslate"><span class="pre">get_sql_grammar()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.data_tools.group_data"><code class="docutils literal notranslate"><span class="pre">group_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.data_tools.parse_rgba"><code class="docutils literal notranslate"><span class="pre">parse_rgba()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.data_tools.pivot_data"><code class="docutils literal notranslate"><span class="pre">pivot_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.data_tools.query_data"><code class="docutils literal notranslate"><span class="pre">query_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#shekels.core.data_tools.query_dict"><code class="docutils literal notranslate"><span class="pre">query_dict()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="server.html">server</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="server.html#module-shekels.server.api">api</a></li>
-<li class="toctree-l2"><a class="reference internal" href="server.html#module-shekels.server.app">app</a></li>
-<li class="toctree-l2"><a class="reference internal" href="server.html#module-shekels.server.components">components</a></li>
-<li class="toctree-l2"><a class="reference internal" href="server.html#module-shekels.server.event_listener">event_listener</a></li>
-<li class="toctree-l2"><a class="reference internal" href="server.html#module-shekels.server.server_tools">server_tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#module-shekels.server.api">api</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.api.api"><code class="docutils literal notranslate"><span class="pre">api()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.api.get_api"><code class="docutils literal notranslate"><span class="pre">get_api()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.api.handle_data_error"><code class="docutils literal notranslate"><span class="pre">handle_data_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.api.handle_json_decode_error"><code class="docutils literal notranslate"><span class="pre">handle_json_decode_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.api.handle_runtime_error"><code class="docutils literal notranslate"><span class="pre">handle_runtime_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.api.handle_sql_error"><code class="docutils literal notranslate"><span class="pre">handle_sql_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.api.initialize"><code class="docutils literal notranslate"><span class="pre">initialize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.api.read"><code class="docutils literal notranslate"><span class="pre">read()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.api.search"><code class="docutils literal notranslate"><span class="pre">search()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.api.update"><code class="docutils literal notranslate"><span class="pre">update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#module-shekels.server.app">app</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.app.get_app"><code class="docutils literal notranslate"><span class="pre">get_app()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.app.liveness"><code class="docutils literal notranslate"><span class="pre">liveness()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.app.on_config_update"><code class="docutils literal notranslate"><span class="pre">on_config_update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.app.on_datatable_update"><code class="docutils literal notranslate"><span class="pre">on_datatable_update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.app.on_event"><code class="docutils literal notranslate"><span class="pre">on_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.app.on_get_tab"><code class="docutils literal notranslate"><span class="pre">on_get_tab()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.app.on_plots_update"><code class="docutils literal notranslate"><span class="pre">on_plots_update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.app.readiness"><code class="docutils literal notranslate"><span class="pre">readiness()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.app.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.app.serve_stylesheet"><code class="docutils literal notranslate"><span class="pre">serve_stylesheet()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#module-shekels.server.components">components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.components.get_button"><code class="docutils literal notranslate"><span class="pre">get_button()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.components.get_config_tab"><code class="docutils literal notranslate"><span class="pre">get_config_tab()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.components.get_configbar"><code class="docutils literal notranslate"><span class="pre">get_configbar()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.components.get_dash_app"><code class="docutils literal notranslate"><span class="pre">get_dash_app()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.components.get_data_tab"><code class="docutils literal notranslate"><span class="pre">get_data_tab()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.components.get_datatable"><code class="docutils literal notranslate"><span class="pre">get_datatable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.components.get_dummy_elements"><code class="docutils literal notranslate"><span class="pre">get_dummy_elements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.components.get_key_value_table"><code class="docutils literal notranslate"><span class="pre">get_key_value_table()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.components.get_plots"><code class="docutils literal notranslate"><span class="pre">get_plots()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.components.get_plots_tab"><code class="docutils literal notranslate"><span class="pre">get_plots_tab()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.components.get_searchbar"><code class="docutils literal notranslate"><span class="pre">get_searchbar()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#module-shekels.server.event_listener">event_listener</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.event_listener.EventListener"><code class="docutils literal notranslate"><span class="pre">EventListener</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="server.html#shekels.server.event_listener.EventListener.__init__"><code class="docutils literal notranslate"><span class="pre">EventListener.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server.html#shekels.server.event_listener.EventListener.emit"><code class="docutils literal notranslate"><span class="pre">EventListener.emit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server.html#shekels.server.event_listener.EventListener.listen"><code class="docutils literal notranslate"><span class="pre">EventListener.listen()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server.html#shekels.server.event_listener.EventListener.store"><code class="docutils literal notranslate"><span class="pre">EventListener.store</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#module-shekels.server.server_tools">server_tools</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.server_tools.config_edit_event"><code class="docutils literal notranslate"><span class="pre">config_edit_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.server_tools.config_query_event"><code class="docutils literal notranslate"><span class="pre">config_query_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.server_tools.data_query_event"><code class="docutils literal notranslate"><span class="pre">data_query_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.server_tools.error_to_dict"><code class="docutils literal notranslate"><span class="pre">error_to_dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.server_tools.error_to_response"><code class="docutils literal notranslate"><span class="pre">error_to_response()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.server_tools.init_event"><code class="docutils literal notranslate"><span class="pre">init_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.server_tools.parse_json_file_content"><code class="docutils literal notranslate"><span class="pre">parse_json_file_content()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.server_tools.render_template"><code class="docutils literal notranslate"><span class="pre">render_template()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.server_tools.save_event"><code class="docutils literal notranslate"><span class="pre">save_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.server_tools.solve_component_state"><code class="docutils literal notranslate"><span class="pre">solve_component_state()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.server_tools.store_key_is_valid"><code class="docutils literal notranslate"><span class="pre">store_key_is_valid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.server_tools.update_event"><code class="docutils literal notranslate"><span class="pre">update_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.server_tools.update_store"><code class="docutils literal notranslate"><span class="pre">update_store()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#shekels.server.server_tools.upload_event"><code class="docutils literal notranslate"><span class="pre">upload_event()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="enforce.html">enforce</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="enforce.html#module-shekels.enforce.enforce_tools">enforce_tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enforce.html#module-shekels.enforce.enforce_tools">enforce_tools</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="enforce.html#shekels.enforce.enforce_tools.enforce_columns_in_dataframe"><code class="docutils literal notranslate"><span class="pre">enforce_columns_in_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="enforce.html#shekels.enforce.enforce_tools.enforce_dataframes_are_equal"><code class="docutils literal notranslate"><span class="pre">enforce_dataframes_are_equal()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="cli.html">cli</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">cli</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.PORT"><code class="docutils literal notranslate"><span class="pre">PORT</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.build_dev_command"><code class="docutils literal notranslate"><span class="pre">build_dev_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.build_prod_command"><code class="docutils literal notranslate"><span class="pre">build_prod_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.container_id_command"><code class="docutils literal notranslate"><span class="pre">container_id_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.destroy_dev_command"><code class="docutils literal notranslate"><span class="pre">destroy_dev_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.destroy_prod_command"><code class="docutils literal notranslate"><span class="pre">destroy_prod_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.docker_exec"><code class="docutils literal notranslate"><span class="pre">docker_exec()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.enter_repo"><code class="docutils literal notranslate"><span class="pre">enter_repo()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.exit_repo"><code class="docutils literal notranslate"><span class="pre">exit_repo()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.get_illegal_mode_command"><code class="docutils literal notranslate"><span class="pre">get_illegal_mode_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.get_info"><code class="docutils literal notranslate"><span class="pre">get_info()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.image_id_command"><code class="docutils literal notranslate"><span class="pre">image_id_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.line"><code class="docutils literal notranslate"><span class="pre">line()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.prod_command"><code class="docutils literal notranslate"><span class="pre">prod_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.push_command"><code class="docutils literal notranslate"><span class="pre">push_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.remove_command"><code class="docutils literal notranslate"><span class="pre">remove_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.remove_container"><code class="docutils literal notranslate"><span class="pre">remove_container()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.resolve"><code class="docutils literal notranslate"><span class="pre">resolve()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.restart_command"><code class="docutils literal notranslate"><span class="pre">restart_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.start"><code class="docutils literal notranslate"><span class="pre">start()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.start_command"><code class="docutils literal notranslate"><span class="pre">start_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.state_command"><code class="docutils literal notranslate"><span class="pre">state_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.stop"><code class="docutils literal notranslate"><span class="pre">stop()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.stop_command"><code class="docutils literal notranslate"><span class="pre">stop_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.version_variable"><code class="docutils literal notranslate"><span class="pre">version_variable()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.x_tools"><code class="docutils literal notranslate"><span class="pre">x_tools()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.x_tools_command"><code class="docutils literal notranslate"><span class="pre">x_tools_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.zsh_command"><code class="docutils literal notranslate"><span class="pre">zsh_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.zsh_complete_command"><code class="docutils literal notranslate"><span class="pre">zsh_complete_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#cli.zsh_root_command"><code class="docutils literal notranslate"><span class="pre">zsh_root_command()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </div>
 
@@ -208,7 +444,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2019, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.
+        &#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.
 
     </p>
   </div>

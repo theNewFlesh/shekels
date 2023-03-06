@@ -1,4 +1,5 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union  # noqa: F401
+import cufflinks as cf  # noqa: F401
 
 from copy import copy
 from random import randint
@@ -8,7 +9,6 @@ import re
 from lunchbox.enforce import Enforce
 from pandas import DataFrame, DatetimeIndex
 from schematics.exceptions import DataError
-import cufflinks as cf  # noqa: F401
 import lunchbox.tools as lbt
 import numpy as np
 import pandasql
@@ -568,20 +568,20 @@ def get_sql_grammar():
        MatchFirst: SQL parser.
     '''
     select = pp.Regex('select', flags=re.I) \
-        .setParseAction(lambda s, l, t: 'select') \
+        .setParseAction(lambda s, _, t: 'select') \
         .setResultsName('operator')
     from_ = pp.Suppress(pp.Regex('from', flags=re.I))
     table = (from_ + pp.Regex('[a-z]+', flags=re.I)) \
-        .setParseAction(lambda s, l, t: t[0]) \
+        .setParseAction(lambda s, _, t: t[0]) \
         .setResultsName('table')
-    regex = pp.Regex('~|regex').setParseAction(lambda s, l, t: '~')
-    not_regex = pp.Regex('!~|not regex').setParseAction(lambda s, l, t: '!~')
+    regex = pp.Regex('~|regex').setParseAction(lambda s, _, t: '~')
+    not_regex = pp.Regex('!~|not regex').setParseAction(lambda s, _, t: '!~')
     any_op = pp.Regex('[^ ]*')
     operator = pp.Or([not_regex, regex, any_op]).setResultsName('operator')
     quote = pp.Suppress(pp.Optional("'"))
     value = (quote + pp.Regex('[^\']+', flags=re.I) + quote) \
         .setResultsName('value') \
-        .setParseAction(lambda s, l, t: t[0])
+        .setParseAction(lambda s, _, t: t[0])
     columns = pp.delimitedList(pp.Regex('[^, ]*'), delim=pp.Regex(', *')) \
         .setResultsName('display_columns')
     column = pp.Regex('[a-z]+', flags=re.I).setResultsName('column')
@@ -591,7 +591,7 @@ def get_sql_grammar():
     return grammar
 
 
-def query_data(data, query):
+def query_data(data, query, uri='sqlite:///:memory:'):
     '''
     Parses SQL + regex query and applies it to given data.
 
@@ -619,7 +619,7 @@ def query_data(data, query):
 
     # if no regex operator is found just submit query to pandasql
     if not has_regex:
-        data = pandasql.sqldf(query, {'data': data})
+        data = pandasql.PandaSQL(uri)(query, locals())
 
     else:
         grammar = get_sql_grammar()
@@ -636,7 +636,7 @@ def query_data(data, query):
 
             # initial select statement
             if op == 'select':
-                data = pandasql.sqldf(q, {'data': data})
+                data = pandasql.PandaSQL(uri)(q, locals())
 
             # regex search
             elif op == '~':

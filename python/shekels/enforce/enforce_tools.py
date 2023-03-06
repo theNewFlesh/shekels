@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, List  # noqa: F401
 
 from lunchbox.enforce import Enforce, EnforceError
 from pandas import DataFrame
