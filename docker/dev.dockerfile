@@ -42,6 +42,7 @@ RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${CLEAR}"; \
         parallel \
         ripgrep \
         software-properties-common \
+        unzip \
         vim \
         wget && \
     rm -rf /var/lib/apt/lists/*
@@ -148,12 +149,19 @@ RUN echo "\n${CYAN}REMOVE DIRECTORIES${CLEAR}"; \
 
 # install chrome driver
 USER root
+ARG VERSION='110.0.5481.77'
 RUN echo "\n${CYAN}INSTALL CHROME DRIVER${CLEAR}"; \
     apt update && \
     curl -fsSL https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
         -o google-chrome.deb && \
     apt install -y --fix-missing ./google-chrome.deb && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    cd /usr/bin && \
+    curl -fsSL https://chromedriver.storage.googleapis.com/$VERSION/chromedriver_linux64.zip \
+        -o chromedriver.zip && \
+    unzip chromedriver.zip && \
+    chmod +x chromedriver && \
+    rm chromedriver.zip LICENSE.chromedriver
 
 USER ubuntu
 ENV REPO='shekels'

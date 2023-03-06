@@ -13,6 +13,7 @@ def pytest_setup_options():
     Configures Chrome webdriver.
     '''
     options = Options()
+    options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     return options
 
