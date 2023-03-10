@@ -26,6 +26,8 @@
     </a>
 </p>
 
+[![PyPI version](https://badge.fury.io/py/shekels.svg)](https://badge.fury.io/py/shekels)
+
 
 # Introduction
 Shekels is a local service which consumes a transactions CSV file downloaded
