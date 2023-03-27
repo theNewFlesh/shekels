@@ -84,7 +84,8 @@ def get_info():
     library-sync-prod    - Sync prod environment with packages listed in prod.lock
     library-update       - Update dev dependencies
     library-update-pdm   - Update PDM
-    session-app          - Run app
+    session-app-dev      - Run app in dev mode
+    session-app-prod     - Run app in prod mode
     session-lab          - Run jupyter lab server
     session-python       - Run python session with dev dependencies
     state                - State of {repo}
@@ -708,7 +709,8 @@ def main():
         'library-sync-dev': x_tools_command('x_library_sync_dev', args),
         'library-sync-prod': x_tools_command('x_library_sync_prod', args),
         'library-update': x_tools_command('x_library_update', args),
-        'session-app': x_tools_command('x_session_app', args),
+        'session-app-dev': x_tools_command('x_session_app_dev', args),
+        'session-app-prod': x_tools_command('x_session_app_prod', args),
         'library-update-pdm': x_tools_command('x_library_update_pdm', args),
         'session-lab': x_tools_command('x_session_lab', args),
         'session-python': x_tools_command('x_session_python', args),
