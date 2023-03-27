@@ -1,6 +1,7 @@
 {
     "folders": [{"path": "./"}],
     "settings": {
+        "ansibleVault.keyfile": "ansible/password.txt",
         "debug.allowBreakpointsEverywhere": true,
         "forbeslindesay-taskrunner.prefix": "[",
         "forbeslindesay-taskrunner.separator": "] ",
