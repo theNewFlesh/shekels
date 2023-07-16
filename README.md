@@ -112,7 +112,6 @@ Its usage pattern is: `bin/shekels COMMAND [-a --args]=ARGS [-h --help] [--dryru
 | docker-build         | Build image of shekels                                              |
 | docker-build-prod    | Build production image of shekels                                   |
 | docker-container     | Display the Docker container id of shekels                          |
-| docker-coverage      | Generate coverage report for shekels                                |
 | docker-destroy       | Shutdown shekels container and destroy its image                    |
 | docker-destroy-prod  | Shutdown shekels production container and destroy its image         |
 | docker-image         | Display the Docker image id of shekels                              |
