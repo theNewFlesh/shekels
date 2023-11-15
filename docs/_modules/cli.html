@@ -32,6 +32,8 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
@@ -229,7 +231,6 @@
 <span class="s1">    docker-build         - Build image of </span><span class="si">{repo}</span>
 <span class="s1">    docker-build-prod    - Build production image of </span><span class="si">{repo}</span>
 <span class="s1">    docker-container     - Display the Docker container id of </span><span class="si">{repo}</span>
-<span class="s1">    docker-coverage      - Generate coverage report for </span><span class="si">{repo}</span>
 <span class="s1">    docker-destroy       - Shutdown </span><span class="si">{repo}</span><span class="s1"> container and destroy its image</span>
 <span class="s1">    docker-destroy-prod  - Shutdown </span><span class="si">{repo}</span><span class="s1"> production container and destroy its image</span>
 <span class="s1">    docker-image         - Display the Docker image id of </span><span class="si">{repo}</span>
@@ -258,7 +259,8 @@
 <span class="s1">    library-sync-prod    - Sync prod environment with packages listed in prod.lock</span>
 <span class="s1">    library-update       - Update dev dependencies</span>
 <span class="s1">    library-update-pdm   - Update PDM</span>
-<span class="s1">    session-app          - Run app</span>
+<span class="s1">    session-app-dev      - Run app in dev mode</span>
+<span class="s1">    session-app-prod     - Run app in prod mode</span>
 <span class="s1">    session-lab          - Run jupyter lab server</span>
 <span class="s1">    session-python       - Run python session with dev dependencies</span>
 <span class="s1">    state                - State of </span><span class="si">{repo}</span>
@@ -882,7 +884,8 @@
         <span class="s1">&#39;library-sync-dev&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_library_sync_dev&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
         <span class="s1">&#39;library-sync-prod&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_library_sync_prod&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
         <span class="s1">&#39;library-update&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_library_update&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
-        <span class="s1">&#39;session-app&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_session_app&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;session-app-dev&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_session_app_dev&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;session-app-prod&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_session_app_prod&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
         <span class="s1">&#39;library-update-pdm&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_library_update_pdm&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
         <span class="s1">&#39;session-lab&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_session_lab&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
         <span class="s1">&#39;session-python&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_session_python&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
