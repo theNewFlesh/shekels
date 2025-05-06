@@ -8,7 +8,7 @@ import shekels.server.app as app
 # ------------------------------------------------------------------------------
 
 
-def pytest_setup_options():
+def pytest_configure():
     '''
     Configures Chrome webdriver.
     '''
