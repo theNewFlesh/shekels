@@ -5,7 +5,7 @@
 groups = ["default", "dev", "lab", "test"]
 strategy = ["cross_platform"]
 lock_version = "4.5.0"
-content_hash = "sha256:75dee483f5d3d6feb0b01193f8ce2fdfaf02c3e0d902d5a3cde76c2dd124e5e9"
+content_hash = "sha256:ae4dcf55ee89fcb8a047507418fcec85da4df248d5baec9c1a23881ec8bd197e"
 
 [[metadata.targets]]
 requires_python = ">=3.10"
@@ -357,6 +357,15 @@ files = [
 ]
 
 [[package]]
+name = "colorlover"
+version = "0.3.0"
+summary = ""
+files = [
+    {file = "colorlover-0.3.0-py3-none-any.whl", hash = "sha256:58705cdd1f1c3903b5cbc15ac5ad816779363400a74e5f407563b0b3627902e5"},
+    {file = "colorlover-0.3.0.tar.gz", hash = "sha256:b8fb7246ab46e1f5e6715649453c1762e245a515de5ff2d2b4aab7a6e67fa4e2"},
+]
+
+[[package]]
 name = "comm"
 version = "0.2.2"
 summary = ""
@@ -500,6 +509,25 @@ files = [
     {file = "coverage-7.8.0-pp39.pp310.pp311-none-any.whl", hash = "sha256:b8194fb8e50d556d5849753de991d390c5a1edeeba50f68e3a9253fbd8bf8ccd"},
     {file = "coverage-7.8.0-py3-none-any.whl", hash = "sha256:dbf364b4c5e7bae9250528167dfe40219b62e2d573c854d74be213e1e52069f7"},
     {file = "coverage-7.8.0.tar.gz", hash = "sha256:7a3d62b3b03b4b6fd41a085f3574874cf946cb4604d2b4d3e8dca8cd570ca501"},
+]
+
+[[package]]
+name = "cufflinks"
+version = "0.17.3"
+summary = ""
+dependencies = [
+    "colorlover",
+    "ipython==8.36.0; python_full_version < \"3.11\"",
+    "ipython==9.2.0; python_full_version >= \"3.11\"",
+    "ipywidgets",
+    "numpy",
+    "pandas",
+    "plotly",
+    "setuptools",
+    "six",
+]
+files = [
+    {file = "cufflinks-0.17.3.tar.gz", hash = "sha256:48c1b3406dc030004121966489eebc5518cea70fd4e3f16379b491328501a644"},
 ]
 
 [[package]]
@@ -962,6 +990,23 @@ files = [
 ]
 
 [[package]]
+name = "ipywidgets"
+version = "8.1.7"
+summary = ""
+dependencies = [
+    "comm",
+    "ipython==8.36.0; python_full_version < \"3.11\"",
+    "ipython==9.2.0; python_full_version >= \"3.11\"",
+    "jupyterlab-widgets",
+    "traitlets",
+    "widgetsnbextension",
+]
+files = [
+    {file = "ipywidgets-8.1.7-py3-none-any.whl", hash = "sha256:764f2602d25471c213919b8a1997df04bef869251db4ca8efba1b76b1bd9f7bb"},
+    {file = "ipywidgets-8.1.7.tar.gz", hash = "sha256:15f1ac050b9ccbefd45dccfbb2ef6bed0029d8278682d569d71b8dd96bee0376"},
+]
+
+[[package]]
 name = "isoduration"
 version = "20.11.0"
 summary = ""
@@ -1285,6 +1330,15 @@ dependencies = [
 files = [
     {file = "jupyterlab_server-2.27.3-py3-none-any.whl", hash = "sha256:e697488f66c3db49df675158a77b3b017520d772c6e1548c7d9bcc5df7944ee4"},
     {file = "jupyterlab_server-2.27.3.tar.gz", hash = "sha256:eb36caca59e74471988f0ae25c77945610b887f777255aa21f8065def9e51ed4"},
+]
+
+[[package]]
+name = "jupyterlab-widgets"
+version = "3.0.15"
+summary = ""
+files = [
+    {file = "jupyterlab_widgets-3.0.15-py3-none-any.whl", hash = "sha256:d59023d7d7ef71400d51e6fee9a88867f6e65e10a4201605d2d7f3e8f012a31c"},
+    {file = "jupyterlab_widgets-3.0.15.tar.gz", hash = "sha256:2920888a0c2922351a9202817957a68c07d99673504d6cd37345299e971bb08b"},
 ]
 
 [[package]]
@@ -2989,6 +3043,15 @@ dependencies = [
 files = [
     {file = "werkzeug-3.0.6-py3-none-any.whl", hash = "sha256:1bc0c2310d2fbb07b1dd1105eba2f7af72f322e1e455f2f93c993bee8c8a5f17"},
     {file = "werkzeug-3.0.6.tar.gz", hash = "sha256:a8dd59d4de28ca70471a34cba79bed5f7ef2e036a76b3ab0835474246eb41f8d"},
+]
+
+[[package]]
+name = "widgetsnbextension"
+version = "4.0.14"
+summary = ""
+files = [
+    {file = "widgetsnbextension-4.0.14-py3-none-any.whl", hash = "sha256:4875a9eaf72fbf5079dc372a51a9f268fc38d46f767cbf85c43a36da5cb9b575"},
+    {file = "widgetsnbextension-4.0.14.tar.gz", hash = "sha256:a3629b04e3edb893212df862038c7232f62973373869db5084aed739b437b5af"},
 ]
 
 [[package]]
