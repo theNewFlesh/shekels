@@ -178,8 +178,8 @@ def get_info():
     quickstart                 - Display quickstart guide
     session-lab                - Run jupyter lab server
     session-python             - Run python session with dev dependencies
-    session-server-dev         - Run dev server inside Docker container
-    session-server-prod        - Run prod server inside Docker container
+    session-server-dev         - Run dev application server inside Docker container
+    session-server-prod        - Run prod application server inside Docker container
     state                      - State of repository and Docker container
     test-coverage              - Generate test coverage report
     test-dev                   - Run all tests
