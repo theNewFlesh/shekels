@@ -1,12 +1,12 @@
 .. shekels documentation master file
 
 Welcome to shekels's documentation!
-=================================
+===================================
 .. toctree::
    :maxdepth: 1
    :caption: Getting Started
 
-   intro
+   readme
 
 .. toctree::
    :maxdepth: 1
