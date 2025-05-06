@@ -69,6 +69,7 @@ dev = [
     "toml>=0.10.2",
 ]
 test = [
+    "dash[testing]",
     "mypy",
     "percy",
     "pytest-cov",
