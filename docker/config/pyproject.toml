@@ -32,7 +32,7 @@ dependencies = [
     "flask-caching",
     "jinja2",
     "jsoncomment",
-    "lunchbox>=0.1.2",
+    "lunchbox>=0.6.1",
     "numpy",
     "pandas",
     "pandasql",
@@ -55,28 +55,26 @@ shekels = "shekels.command:main"
 
 [tool.pdm.dev-dependencies]
 lab = [
-    "cufflinks",
     "jupyterlab-git>=0.39.3",
     "jupyterlab-henanigans>=0.2.2",
-    "jupyterlab-sublime",
     "jupyterlab",
 ]
 dev = [
-    "m2r2>=0.3.3.post2",
+    "myst-parser>=4.0.0",
     "sphinx-autodoc-typehints>=1.22",
-    "sphinx-rtd-theme",
+    "sphinx-rtd-theme>=2.0.0,<3.0.0",
     "sphinx>=5.3.0",
     "sphinxcontrib-jquery>=4.1",
+    "toml>=0.10.2",
 ]
 test = [
-    "dash[testing]>=2.0.0",
-    "flake8",
     "mypy",
     "percy",
     "pytest-cov",
     "pytest-forked",
     "pytest-xdist",
     "pytest",
+    "ruff",
     "selenium",
     "types-pyyaml>=6.0.12.1",
     "types-toml>=0.10.8",
@@ -110,6 +108,29 @@ omit = [
     "*/mock_*.py",
     "*/conftest.py",
 ]
+
+[tool.ruff]
+cache-dir = "/home/ubuntu/.cache/ruff"
+line-length = 100
+indent-width = 4
+exclude = ["*_test.py"]
+
+[tool.ruff.format]
+quote-style = "preserve"
+indent-style = "space"
+docstring-code-format = true
+skip-magic-trailing-comma = true
+
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = "single"
+inline-quotes = "single"
+
+[tool.ruff.lint]
+select = ["E", "F"]
+ignore = ["E731"]
+
+[tool.uv]
+cache-dir = "/home/ubuntu/pdm/cache"
 
 [tool.mypy]
 cache_dir = "/home/ubuntu/.mypy_cache"

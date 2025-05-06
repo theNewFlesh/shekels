@@ -23,25 +23,24 @@ WORKDIR /home/ubuntu
 RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${CLEAR}"; \
     apt update && \
     apt install -y \
-        software-properties-common \
-        wget && \
+        curl \
+        software-properties-common && \
     rm -rf /var/lib/apt/lists/*
 
 # install python3.10 and pip
 RUN echo "\n${CYAN}SETUP PYTHON3.10${CLEAR}"; \
     add-apt-repository -y ppa:deadsnakes/ppa && \
     apt update && \
-    apt install --fix-missing -y python3.10 && \
+    apt install --fix-missing -y python3.10-dev && \
     rm -rf /var/lib/apt/lists/* && \
-    wget https://bootstrap.pypa.io/get-pip.py && \
+    curl -fsSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
     python3.10 get-pip.py && \
     rm -rf /home/ubuntu/get-pip.py
 
 # install shekels
 USER ubuntu
-ENV REPO='shekels'
-ENV PYTHONPATH "${PYTHONPATH}:/home/ubuntu/$REPO/python"
-RUN echo "\n${CYAN}INSTALL SHEKELS{CLEAR}"; \
-    pip3.10 install --user --upgrade shekels
+ARG VERSION
+RUN echo "\n${CYAN}INSTALL SHEKELS${CLEAR}"; \
+    pip3.10 install --user shekels==$VERSION
 
-ENTRYPOINT ["shekels app"]
+ENV PATH="$PATH:/home/ubuntu/.local/bin"
