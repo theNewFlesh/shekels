@@ -246,7 +246,7 @@ RUN echo "\n${CYAN}INSTALL CHROME DRIVER${CLEAR}"; \
         -o chromedriver.zip && \
     unzip chromedriver.zip && \
     chmod +x chromedriver && \
-    rm chromedriver.zip LICENSE.chromedriver
+    rm -f chromedriver.zip LICENSE.chromedriver
 
 USER ubuntu
 ENV REPO='shekels'
