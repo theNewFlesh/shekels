@@ -178,7 +178,8 @@ def get_info():
     quickstart                 - Display quickstart guide
     session-lab                - Run jupyter lab server
     session-python             - Run python session with dev dependencies
-    session-server             - Run application server inside Docker container
+    session-server-dev         - Run dev server inside Docker container
+    session-server-prod        - Run prod server inside Docker container
     state                      - State of repository and Docker container
     test-coverage              - Generate test coverage report
     test-dev                   - Run all tests
@@ -910,7 +911,8 @@ def main():
         'quickstart': quickstart_command(),
         'session-lab': x_tools_command('x_session_lab', args, tty=True),
         'session-python': x_tools_command('x_session_python', args, tty=True),
-        'session-server': x_tools_command('x_session_server', args),
+        'session-server-dev': x_tools_command('x_session_server_dev', args),
+        'session-server-prod': x_tools_command('x_session_server_prod', args),
         'state': state_command(),
         'test-coverage': x_tools_command('x_test_coverage', args),
         'test-dev': x_tools_command('x_test_dev', args),
